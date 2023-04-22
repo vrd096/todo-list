@@ -1,16 +1,49 @@
 @import './variables';
 @import './libs/normalize';
+@import './reset.scss';
 @import './components/all';
 
-.wrapper {
-    width: calc(100vw - 100px);
-    height: 100%;
-    background-color: #fff;
-    margin: 50px auto;
+body {
+  color: #fff;
+  background-color: #11100F;
+  margin: 0;
+}
+p {
+  color: #fff;
+}
+span {
+  color: #fff;
+}
+.app {
+ 
+    display: grid; 
+    // grid-template-rows: 0.2fr 1.8fr; 
+    grid-template: 1fr 1fr 2fr;
+    // gap: 0px 0px; 
+    grid-template-areas: 
+      "a a a "
+      "b c c "
+      "b c c"; 
+  
+}
+
+
+.container {
     border-radius: 10px;
-    max-width: 1400px;
+    
     @media (max-width: 645px) {
       width: calc(100vw - 30px);
       margin-top: 15px;
     }
   }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .settings {
+    margin-right: 35px;
+  }
+
+ 
