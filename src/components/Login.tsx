@@ -8,8 +8,8 @@ export const Login = () => {
         id="Capa_1"
         x="0"
         y="0"
-        width="24px"
-        height="24px"
+        width="20px"
+        height="20px"
         viewBox="0 0 683.721 683.721"
         fill="#fff">
         <g>
