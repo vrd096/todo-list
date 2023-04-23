@@ -16,8 +16,6 @@ export type PropsType = {
   changeFilter: (value: FilterValuesType) => void;
 };
 
-const TodoTitle = 'What to learn';
-
 export const Tasks = () => {
   let initTasks: TaskType[] = [
     { id: 1, title: 'CSS', isDone: true },
@@ -48,7 +46,6 @@ export const Tasks = () => {
   console.log(tasks);
   return (
     <div className={styles.todo}>
-      <h3 className={styles.title}>{TodoTitle} </h3>
       <div>
         <input />
         <button></button>
