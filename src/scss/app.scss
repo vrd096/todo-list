@@ -17,14 +17,11 @@ span {
 .app {
  
     display: grid; 
-    // grid-template-rows: 0.2fr 1.8fr; 
-    grid-template: 1fr 1fr 2fr;
-    // gap: 0px 0px; 
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: auto 1fr;
     grid-template-areas: 
-      "a a a "
-      "b c c "
-      "b c c"; 
-  
+    "header header"
+    "sidebar content";
 }
 
 
@@ -39,11 +36,18 @@ span {
 
   .wrapper {
     display: flex;
-    flex-direction: row;
   }
 
   .settings {
     margin-right: 35px;
   }
 
- 
+ .header {
+  grid-area: header;
+ }
+ .sidebar {
+  grid-area: sidebar;
+ }
+ .content {
+  grid-area: content;
+ }

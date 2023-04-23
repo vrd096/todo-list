@@ -1,0 +1,21 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+h2 {
+    svg {
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    span {
+        font-size: 20px;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+}
+
+.data {
+    font-size: 12px;
+    color: #A19F9D;
+}
