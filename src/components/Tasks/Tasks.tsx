@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Scrollbar } from 'react-scrollbars-custom';
 import styles from './Tasks.module.scss';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
@@ -46,49 +47,110 @@ export const Tasks = () => {
   console.log(tasks);
   return (
     <div className={styles.todo}>
-      <div>
+      <div className={styles.addToTop}>
         <input />
         <button></button>
       </div>
-      <ul>
-        {tasks.map((t) => (
-          <li key={t.id}>
-            <input type="checkbox" checked={t.isDone} />
-            <span>{t.title}</span>
-            <button
-              onClick={() => {
-                removeTask(t.id);
-              }}>
-              X
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <button
-          onClick={() => {
-            changeFilter('all');
-          }}>
-          All
-        </button>
-        <button
-          onClick={() => {
-            changeFilter('completed');
-          }}>
-          Active
-        </button>
-        <button
-          onClick={() => {
-            changeFilter('active');
-          }}>
-          Completed
-        </button>
+      <div className={styles.tasks}>
+        {/* <Scrollbar className={styles.scrollBar}> */}
+        <ul>
+          {tasks.map((t) => (
+            <li key={t.id}>
+              <input type="checkbox" checked={t.isDone} />
+              <span>{t.title}</span>
+              <button
+                onClick={() => {
+                  removeTask(t.id);
+                }}>
+                X
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div>
+          <button
+            onClick={() => {
+              changeFilter('all');
+            }}>
+            All
+          </button>
+          <button
+            onClick={() => {
+              changeFilter('completed');
+            }}>
+            Active
+          </button>
+          <button
+            onClick={() => {
+              changeFilter('active');
+            }}>
+            Completed
+          </button>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam
+            ex error voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat. Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat. Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat. Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat. Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat. Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat. Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat. Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.Lorem ipsum dolor
+            sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex error
+            voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
+            repellendus a quia optio fugiat.Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit. Soluta libero aspernatur quam ex error voluptatibus ducimus, vitae sunt nisi vel
+            eum deserunt architecto itaque omnis repellendus a quia optio fugiat.
+          </p>
+        </div>
+        {/* </Scrollbar> */}
       </div>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta libero aspernatur quam ex
-        error voluptatibus ducimus, vitae sunt nisi vel eum deserunt architecto itaque omnis
-        repellendus a quia optio fugiat.
-      </p>
     </div>
   );
 };

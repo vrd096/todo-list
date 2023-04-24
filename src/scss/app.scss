@@ -15,7 +15,7 @@ span {
   color: #fff;
 }
 .app {
- 
+    height: 100vh;
     display: grid; 
     grid-template-columns: 1fr 5fr;
     grid-template-rows: auto 1fr;
@@ -50,4 +50,5 @@ span {
  }
  .content {
   grid-area: content;
+  // overflow: hidden;
  }
