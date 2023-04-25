@@ -30,6 +30,7 @@ export const Tasks = () => {
     { id: 11, title: 'Elixir', isDone: false },
     { id: 12, title: 'Ruby', isDone: false },
     { id: 13, title: 'Basic', isDone: false },
+    { id: 14, title: 'Vue', isDone: false },
   ];
   const [tasks, setTasks] = useState(initTasks);
   const [filter, setFilter] = useState<FilterValuesType>('all');
@@ -131,19 +132,22 @@ export const Tasks = () => {
         </div>
       </div>
       <div className={styles.tasks}>
-        <ul>
-          {tasks.map((t) => (
-            <li className={styles.taskItem} key={t.id}>
-              <button
-                className={styles.circle}
-                onClick={() => {
-                  removeTask(t.id);
-                }}></button>
-              <input type="checkbox" checked={t.isDone} onChange={() => {}} />
-              <span>{t.title}</span>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <ul>
+            {tasks.map((t) => (
+              <li className={styles.taskItem} key={t.id}>
+                <button
+                  className={styles.circle}
+                  onClick={() => {
+                    removeTask(t.id);
+                  }}></button>
+                {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
+                <span>{t.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* <div>
           <button
             onClick={() => {
