@@ -18,7 +18,7 @@ export type PropsType = {
 
 export const Tasks = () => {
   let initTasks: TaskType[] = [
-    { id: 1, title: 'CSS', isDone: true },
+    { id: 1, title: ' CSS ', isDone: true },
     { id: 2, title: 'JS', isDone: true },
     { id: 4, title: 'React', isDone: false },
     { id: 5, title: 'Python', isDone: true },
@@ -136,7 +136,7 @@ export const Tasks = () => {
           <ul>
             {tasks.map((t) => (
               <li className={styles.taskItem} key={t.id}>
-                <div>
+                <div className={styles.titleWrapper}>
                   <button
                     className={styles.circle}
                     onClick={() => {
