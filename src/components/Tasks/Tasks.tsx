@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import styles from './Tasks.module.scss';
+import { v1 } from 'uuid';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
 
 export type TaskType = {
-  id: number;
+  id: string;
   title: string;
   isDone: boolean;
 };
@@ -12,37 +13,43 @@ export type TaskType = {
 export type PropsType = {
   title: string;
   tasks: TaskType[];
-  removeTask: (id: number) => void;
+  removeTask: (id: string) => void;
   changeFilter: (value: FilterValuesType) => void;
+  addTask: () => void;
 };
 
 export const Tasks = () => {
   let initTasks: TaskType[] = [
-    { id: 1, title: ' CSS ', isDone: true },
-    { id: 2, title: 'JS', isDone: true },
-    { id: 4, title: 'React', isDone: false },
-    { id: 5, title: 'Python', isDone: true },
-    { id: 6, title: 'Golang', isDone: false },
-    { id: 7, title: 'C++', isDone: true },
-    { id: 8, title: 'Node js', isDone: true },
-    { id: 9, title: 'PHP', isDone: false },
-    { id: 10, title: 'Rusk', isDone: true },
-    { id: 11, title: 'Elixir', isDone: false },
-    { id: 12, title: 'Ruby', isDone: false },
-    { id: 13, title: 'Basic', isDone: false },
-    { id: 14, title: 'Vue', isDone: false },
+    { id: v1(), title: ' CSS ', isDone: true },
+    { id: v1(), title: 'JS', isDone: true },
+    { id: v1(), title: 'React', isDone: false },
+    { id: v1(), title: 'Python', isDone: true },
+    { id: v1(), title: 'Golang', isDone: false },
   ];
+
   const [tasks, setTasks] = useState(initTasks);
   const [filter, setFilter] = useState<FilterValuesType>('all');
 
-  function removeTask(id: number) {
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  function removeTask(id: string) {
     let filterTasks = tasks.filter((t) => t.id !== id);
     setTasks(filterTasks);
   }
 
+  function createTask() {
+    let newTask = { id: v1(), title: newTaskTitle, isDone: false };
+    let newTasks = [newTask, ...tasks];
+    setTasks(newTasks);
+  }
   function changeFilter(value: FilterValuesType) {
     setFilter(value);
   }
+
+  const addTask = () => {
+    createTask(newTaskTitle);
+    setNewTaskTitle('');
+  };
 
   let taskForTodolist = tasks;
   if (filter === 'completed') {
@@ -52,12 +59,41 @@ export const Tasks = () => {
     taskForTodolist = tasks.filter((t) => t.isDone === false);
   }
 
+  const onAllClickHandler = () => {
+    changeFilter('all');
+  };
+  const onCompletedClickHandler = () => {
+    changeFilter('completed');
+  };
+
+  const onActiveClickHandler = () => {
+    changeFilter('active');
+  };
+
+  const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTaskTitle(e.currentTarget.value);
+  };
+
+  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      addTask(newTaskTitle);
+      setNewTaskTitle('');
+    }
+  };
+
   return (
     <div className={styles.todo}>
       <div className={styles.addToTop}>
         <div className={styles.inputWrapper}>
           <span className={styles.circle}> </span>
-          <input className={styles.input} type="text" placeholder="Добавить задачу" />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Добавить задачу"
+            value={newTaskTitle}
+            onKeyUp={onKeyUpHandler}
+            onChange={onNewTitleChangeHandler}
+          />
         </div>
 
         <div className={styles.addToSet}>
@@ -128,64 +164,49 @@ export const Tasks = () => {
               </g>
             </svg>
           </span>
-          <button>Добавить</button>
+          <button onClick={addTask}>Добавить</button>
         </div>
       </div>
       <div className={styles.tasks}>
         <div>
           <ul>
-            {tasks.map((t) => (
-              <li className={styles.taskItem} key={t.id}>
-                <div className={styles.titleWrapper}>
-                  <button
-                    className={styles.circle}
-                    onClick={() => {
-                      removeTask(t.id);
-                    }}></button>
-                  {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
-                  <span>{t.title}</span>
-                </div>
-                <span className={styles.star}></span>
-                <svg
-                  className={styles.star}
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18px"
-                  height="18px"
-                  strokeWidth="3px"
-                  viewBox="0 0 64.00 64.00"
-                  enableBackground="new 0 0 64 64">
-                  <g id="SVGRepo_bgCarrier"></g>
-                  <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                  <g id="SVGRepo_iconCarrier">
-                    {' '}
-                    <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
-                  </g>
-                </svg>
-              </li>
-            ))}
+            {tasks.map((t) => {
+              const onRemoveHandler = () => removeTask(t.id);
+
+              return (
+                <li className={styles.taskItem} key={t.id}>
+                  <div className={styles.titleWrapper}>
+                    <button className={styles.circle} onClick={onRemoveHandler}></button>
+                    {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
+                    <span>{t.title}</span>
+                  </div>
+                  <span className={styles.star}></span>
+                  <svg
+                    className={styles.star}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18px"
+                    height="18px"
+                    strokeWidth="3px"
+                    viewBox="0 0 64.00 64.00"
+                    enableBackground="new 0 0 64 64">
+                    <g id="SVGRepo_bgCarrier"></g>
+                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                      {' '}
+                      <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
+                    </g>
+                  </svg>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
-        {/* <div>
-          <button
-            onClick={() => {
-              changeFilter('all');
-            }}>
-            All
-          </button>
-          <button
-            onClick={() => {
-              changeFilter('completed');
-            }}>
-            Active
-          </button>
-          <button
-            onClick={() => {
-              changeFilter('active');
-            }}>
-            Completed
-          </button>
-        </div> */}
+        <div>
+          <button onClick={onAllClickHandler}>All</button>
+          <button onClick={onCompletedClickHandler}>Active</button>
+          <button onClick={onActiveClickHandler}>Completed</button>
+        </div>
       </div>
     </div>
   );

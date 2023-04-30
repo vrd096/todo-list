@@ -17,6 +17,7 @@
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "@types/uuid": "^9.0.1",
     "axios": "^1.2.1",
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
@@ -28,7 +29,8 @@
     "react-scripts": "5.0.1",
     "react-scrollbars-custom": "^4.1.1",
     "sass": "^1.56.2",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
