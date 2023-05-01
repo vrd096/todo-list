@@ -10,10 +10,9 @@ body {
   overflow: hidden;
   height: 100%;
   color: #fff;
-  background-color: #11100F;
+  background-color: #11100f;
   margin: 0;
 }
-
 
 p {
   color: #fff;
@@ -22,52 +21,59 @@ span {
   color: #fff;
 }
 .app {
-    height: 100vh;
-    display: grid; 
-    grid-template-columns: 1fr 5fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas: 
-    "header header"
-    "sidebar content";
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header header'
+    'sidebar content';
 }
 
-
 .container {
-    border-radius: 10px;
-    
-    @media (max-width: 645px) {
-      width: calc(100vw - 30px);
-      margin-top: 15px;
-    }
-  }
+  border-radius: 10px;
 
-  .wrapper {
-    display: flex;
+  @media (max-width: 645px) {
+    width: calc(100vw - 30px);
+    margin-top: 15px;
   }
+}
 
-  .settings {
-    margin-right: 35px;
-  }
+.wrapper {
+  display: flex;
+}
 
- .header {
+.settings {
+  margin-right: 35px;
+}
+
+.header {
   grid-area: header;
- }
- .sidebar {
+}
+.sidebar {
   grid-area: sidebar;
- }
- .content {
+}
+.content {
   grid-area: content;
-  
+
   // overflow: hidden
- }
- ::-webkit-scrollbar {
-  width: 8px;  
+}
+::-webkit-scrollbar {
+  width: 8px;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-track {
-  background-color: #11100F;
+  background-color: #11100f;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #484644;
+}
+
+.error {
+  border: red 1px solid;
+}
+
+.error-message {
+  color: red;
 }

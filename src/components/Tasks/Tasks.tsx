@@ -42,14 +42,17 @@ export const Tasks = () => {
     let newTasks = [newTask, ...tasks];
     setTasks(newTasks);
   }
+
+  const addTask = () => {
+    if (newTaskTitle.trim() !== '') {
+      createTask(newTaskTitle.trim());
+      setNewTaskTitle('');
+    }
+  };
+
   function changeFilter(value: FilterValuesType) {
     setFilter(value);
   }
-
-  const addTask = () => {
-    createTask(newTaskTitle);
-    setNewTaskTitle('');
-  };
 
   let taskForTodolist = tasks;
   if (filter === 'completed') {
