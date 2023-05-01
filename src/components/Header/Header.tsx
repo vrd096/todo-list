@@ -3,7 +3,7 @@ import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 import { Search } from '../Search';
 import { Settings } from '../Settings';
-import { Login } from '../Login';
+import { LoginForm } from '../Login';
 
 export const Header: React.FC = () => {
   return (
@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
       <Search />
       <div className="wrapper">
         <Settings />
-        <Login />
+        <LoginForm />
       </div>
     </div>
   );
