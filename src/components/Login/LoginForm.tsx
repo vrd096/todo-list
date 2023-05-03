@@ -13,10 +13,14 @@ export const LoginForm = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-  const { register, handleSubmit, reset } = useForm<LoginFormInputs>();
+  const { register, handleSubmit, reset, watch } = useForm<LoginFormInputs>();
 
-  const onSubmit = (data: LoginFormInputs, e: any) => {
-    console.log(JSON.stringify(data));
+  const onSubmit = (data: LoginFormInputs) => {
+    let pass = watch('password').replace(/\s/g, '');
+
+    console.log(pass);
+    data.password = pass;
+    console.log(JSON.stringify(data.password));
 
     setIsSubmitDisabled(true);
     reset();
@@ -35,7 +39,7 @@ export const LoginForm = () => {
 
   return (
     <div>
-      <button onClick={() => setShowForm(true)}>
+      <button className={styles.openModalButton} onClick={() => setShowForm(true)}>
         <svg x="0" y="0" width="20px" height="20px" viewBox="0 0 683.721 683.721" fill="#fff">
           <g>
             <g>
