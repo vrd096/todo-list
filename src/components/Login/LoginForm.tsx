@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import React from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import styles from './Login.module.scss';
 
 type LoginFormInputs = {
   username: string;
@@ -8,12 +10,27 @@ type LoginFormInputs = {
 
 export const LoginForm = () => {
   const [showForm, setShowForm] = useState(false);
-  const { register, handleSubmit } = useForm<LoginFormInputs>();
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const { register, handleSubmit, reset } = useForm<LoginFormInputs>();
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log('Username:', data.username);
-    console.log('Password:', data.password);
+  const onSubmit = (data: LoginFormInputs, e: any) => {
+    console.log(JSON.stringify(data));
+
+    setIsSubmitDisabled(true);
+    reset();
     setShowForm(false);
+  };
+  // console.log(errors);
+
+  const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLogin(e.currentTarget.value);
+    setIsSubmitDisabled(e.target.value === '' || password === '');
+  };
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setIsSubmitDisabled(login === '' || e.target.value === '');
   };
 
   return (
@@ -45,19 +62,29 @@ export const LoginForm = () => {
         </svg>
       </button>
       {showForm && (
-        <div>
+        <div className={styles.loginForm}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <label>
-              Username:
-              <input type="text" {...register('username')} />
-            </label>
-            <label>
-              Password:
-              <input type="password" {...register('password')} />
-            </label>
-            <button type="submit">Отправить</button>
+            <input
+              type="email"
+              {...register('username', { required: true, minLength: 6 })}
+              placeholder="Email:"
+              onChange={handleLoginChange}
+            />
+
+            <input
+              type="password"
+              {...register('password', { required: true, minLength: 6 })}
+              placeholder="Password:"
+              onChange={handlePasswordChange}
+            />
+
+            <button className={styles.buttonSubmit} type="submit" disabled={isSubmitDisabled}>
+              Отправить
+            </button>
           </form>
-          <button onClick={() => setShowForm(false)}>X</button>
+          <button className={styles.buttonClose} onClick={() => setShowForm(false)}>
+            X
+          </button>
         </div>
       )}
     </div>

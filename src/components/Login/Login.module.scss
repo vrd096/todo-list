@@ -1,0 +1,49 @@
+.loginForm {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 400px;
+  height: 250px;
+  padding: 35px;
+  background-color: #11100f;
+  border-top: 1px solid #7a7676;
+  transition: transform 0.3;
+  input {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    min-width: 250px;
+    height: 35px;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: 0;
+    border-radius: 3px;
+    background-color: #252423;
+    color: #fff;
+  }
+}
+.buttonSubmit {
+  padding: 7px 10px;
+  border: 1px solid #7a7676;
+  background-color: #252423;
+  font-size: 12px;
+  font-weight: bold;
+  color: #78bafd;
+  vertical-align: middle;
+  cursor: pointer;
+  &:disabled {
+    color: #969f9d;
+  }
+}
+
+.buttonClose {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 30px;
+  height: 30px;
+  color: #78bafd;
+  background-color: #11100f;
+  border: 0;
+  cursor: pointer;
+}
