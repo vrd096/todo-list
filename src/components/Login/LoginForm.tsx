@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect } from 'react';
+import { ChangeEvent, useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './Login.module.scss';
 import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
@@ -11,6 +11,7 @@ export const LoginForm = () => {
   const [photoURL, setPhotoURL] = useState('');
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const modalRef = useRef(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -41,6 +42,20 @@ export const LoginForm = () => {
     auth.signOut();
     setShowForm(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        setShowForm(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [modalRef]);
 
   return (
     <div>
@@ -82,7 +97,7 @@ export const LoginForm = () => {
       )}
 
       {showForm && (
-        <div className={styles.loginForm}>
+        <div ref={modalRef} className={styles.loginForm}>
           {user ? (
             <div className={styles.modalWrapper}>
               <div className={styles.modalHeader}>
