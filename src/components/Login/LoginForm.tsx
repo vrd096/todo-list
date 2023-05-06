@@ -3,11 +3,6 @@ import { useForm } from 'react-hook-form';
 import styles from './Login.module.scss';
 import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 
-type LoginFormInputs = {
-  username: string;
-  password: string;
-};
-
 export const LoginForm = () => {
   const [showForm, setShowForm] = useState(false);
   const auth = getAuth();
@@ -21,46 +16,19 @@ export const LoginForm = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        setPhotoURL(String(user.photoURL));
+        setEmail(String(user.email));
+        setDisplayName(String(user.displayName));
       } else {
         setUser(null);
       }
     });
   }, []);
-  // const { auth } = useContext(Context);
-
-  // const [login, setLogin] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-  // const { register, handleSubmit, reset, watch } = useForm<LoginFormInputs>();
-
-  // const onSubmit = (data: LoginFormInputs) => {
-  //   let pass = watch('password').replace(/\s/g, '');
-
-  //   data.password = pass;
-  //   console.log(JSON.stringify(data.password));
-
-  //   setIsSubmitDisabled(true);
-  //   reset();
-  //   setShowForm(false);
-  // };
-  // console.log(errors);
-
-  // const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setLogin(e.currentTarget.value);
-  //   setIsSubmitDisabled(e.target.value === '' || password === '');
-  // };
-  // const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setPassword(e.target.value);
-  //   setIsSubmitDisabled(login === '' || e.target.value === '');
-  // };
 
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result.user);
-        setPhotoURL(String(result.user.photoURL));
-        setEmail(String(result.user.email));
-        setDisplayName(String(result.user.displayName));
 
         setShowForm(false);
       })
@@ -115,25 +83,6 @@ export const LoginForm = () => {
 
       {showForm && (
         <div className={styles.loginForm}>
-          {/* <form onSubmit={handleSubmit(onSubmit)}>
-            <input
-              type="email"
-              {...register('username', { required: true, minLength: 6 })}
-              placeholder="Email:"
-              onChange={handleLoginChange}
-            />
-
-            <input
-              type="password"
-              {...register('password', { required: true, minLength: 6 })}
-              placeholder="Password:"
-              onChange={handlePasswordChange}
-            />
-
-            <button className={styles.buttonSubmit} type="submit" disabled={isSubmitDisabled}>
-              Отправить
-            </button>
-          </form> */}
           {user ? (
             <div className={styles.modalWrapper}>
               <div className={styles.modalHeader}>
