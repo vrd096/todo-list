@@ -4,7 +4,7 @@
   top: 0;
   width: 400px;
   height: 250px;
-  padding: 35px;
+  padding: 20px;
   background-color: #11100f;
   border-top: 1px solid #7a7676;
   transition: transform 0.3;
@@ -23,10 +23,39 @@
   }
 }
 
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  button {
+    padding: 7px 10px;
+    border: 0;
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: bold;
+    color: #78bafd;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+}
+.modalLogo {
+  display: flex;
+  align-items: center;
+}
+
 .openModalButton {
   background-color: transparent;
   border: 0;
   cursor: pointer;
+}
+.aboutAccount {
+  display: flex;
+  margin-top: 30px;
+}
+.aboutDataAccount {
+  margin-left: 30px;
+  p {
+    margin-bottom: 10px;
+  }
 }
 
 .buttonSubmit {

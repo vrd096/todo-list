@@ -108,8 +108,10 @@ export const LoginForm = () => {
               </div>
               <div className={styles.aboutAccount}>
                 <img src={photoURL} />
-                <p>{displayName}</p>
-                <p>{email}</p>
+                <div className={styles.aboutDataAccount}>
+                  <p>{displayName}</p>
+                  <p>{email}</p>
+                </div>
               </div>
             </div>
           ) : (
@@ -118,13 +120,13 @@ export const LoginForm = () => {
             </button>
           )}
 
-          <button
+          {/* <button
             className={styles.buttonClose}
             onClick={() => {
               setShowForm(false);
             }}>
             X
-          </button>
+          </button> */}
         </div>
       )}
     </div>

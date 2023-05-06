@@ -1,23 +1,26 @@
 .header {
-
-    height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background-color: #1B1A19;
-    border-top: 1px solid #7a7676;
-    border-bottom: 1px solid #7a7676;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #1b1a19;
+  border-top: 1px solid #7a7676;
+  border-bottom: 1px solid #7a7676;
 }
 .headerLogo {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-
 .title {
-    display: inline;
-    margin-left: 15px;
-    font-size: 22px;
-    color: #fff
+  display: inline;
+  margin-left: 15px;
+  font-size: 22px;
+  color: #fff;
+}
+
+.toolbarWrapper {
+  display: flex;
+  align-items: center;
 }

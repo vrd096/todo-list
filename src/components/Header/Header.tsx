@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
         </div>
       </Link>
       <Search />
-      <div className="wrapper">
+      <div className={styles.toolbarWrapper}>
         <Settings />
         <LoginForm />
       </div>
