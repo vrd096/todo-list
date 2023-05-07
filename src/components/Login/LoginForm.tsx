@@ -69,8 +69,8 @@ export const LoginForm = () => {
           <img src={photoURL} />
         </button>
       ) : (
-        <div className={styles.openModalWrapper}>
-          <button className={styles.openModalButton} onClick={() => setShowForm(true)}>
+        <div className={styles.openLoginWrapper}>
+          <button className={styles.openLoginButton} onClick={() => setShowForm(true)}>
             <svg x="0" y="0" width="20px" height="20px" viewBox="0 0 683.721 683.721" fill="#fff">
               <g>
                 <g>

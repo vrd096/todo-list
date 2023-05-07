@@ -42,9 +42,7 @@
   display: flex;
   align-items: center;
 }
-.openModalWrapper {
-  width: 48px;
-  height: 48px;
+.openLoginWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,9 +51,13 @@
   }
 }
 
-.openModalButton {
+.openLoginButton {
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
+  justify-content: center;
+
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -108,12 +110,16 @@
 }
 
 .buttonExitAccount {
-  width: 35px;
-  height: 35px;
-  vertical-align: middle;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
   border: 0;
   cursor: pointer;
   img {
-    width: 100%;
+    width: 32px;
+    height: 32px;
   }
 }
