@@ -5,11 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 // import { getAnalytics } from 'firebase/analytics';
 
-const app = initializeApp({
+export const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
   authDomain: 'todotimekeeper.firebaseapp.com',
   projectId: 'todotimekeeper',
@@ -18,9 +16,6 @@ const app = initializeApp({
   appId: '1:1076102409898:web:142757f96e24e9311faad3',
   measurementId: 'G-M99G9VDTKJ',
 });
-
-const auth = getAuth(app);
-const firestore = getFirestore(app);
 
 // const analytics = getAnalytics(app);
 

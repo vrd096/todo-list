@@ -1,6 +1,8 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import styles from './Tasks.module.scss';
 import { v1 } from 'uuid';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
 
@@ -18,6 +20,17 @@ export type PropsType = {
   addTask: () => void;
 };
 
+const firebaseApp = initializeApp({
+  apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
+  authDomain: 'todotimekeeper.firebaseapp.com',
+  projectId: 'todotimekeeper',
+  storageBucket: 'todotimekeeper.appspot.com',
+  messagingSenderId: '1076102409898',
+  appId: '1:1076102409898:web:142757f96e24e9311faad3',
+  measurementId: 'G-M99G9VDTKJ',
+});
+const db = getFirestore(firebaseApp);
+
 export const Tasks = () => {
   let initTasks: TaskType[] = [
     { id: v1(), title: ' CSS ', isDone: true },
@@ -27,21 +40,49 @@ export const Tasks = () => {
     { id: v1(), title: 'Golang', isDone: false },
   ];
 
-  const [tasks, setTasks] = useState(initTasks);
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState<FilterValuesType>('all');
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(db, 'todos'));
+      const todos = [];
+      querySnapshot.forEach((doc) => {
+        todos.push(doc.data());
+      });
+      // console.log(todos[1].todo[0]);
+      setTasks(todos);
+    };
+
+    fetchData();
+  }, []);
 
   function removeTask(id: string) {
     let filterTasks = tasks.filter((t) => t.id !== id);
     setTasks(filterTasks);
   }
 
-  function createTask() {
+  const createTask = async () => {
     let newTask = { id: v1(), title: newTaskTitle, isDone: false };
     let newTasks = [newTask, ...tasks];
-    setTasks(newTasks);
-  }
+    try {
+      await addDoc(collection(db, 'todos'), {
+        todo: newTasks,
+      });
+      console.log('Document successfully written!');
+      const querySnapshot = await getDocs(collection(db, 'todos'));
+      const todos = [];
+      querySnapshot.forEach((doc) => {
+        todos.push(doc.data());
+      });
+      // console.log(todos);
+      // console.log(tasks);
+    } catch (error) {
+      console.error('Error writing document: ', error);
+    }
+  };
 
   const addTask = () => {
     if (newTaskTitle.trim() !== '') {
@@ -50,28 +91,28 @@ export const Tasks = () => {
     }
   };
 
-  function changeFilter(value: FilterValuesType) {
-    setFilter(value);
-  }
+  // function changeFilter(value: FilterValuesType) {
+  //   setFilter(value);
+  // }
 
-  let taskForTodolist = tasks;
-  if (filter === 'completed') {
-    taskForTodolist = tasks.filter((t) => t.isDone === true);
-  }
-  if (filter === 'active') {
-    taskForTodolist = tasks.filter((t) => t.isDone === false);
-  }
+  // let taskForTodolist = tasks;
+  // if (filter === 'completed') {
+  //   taskForTodolist = tasks.filter((t) => t.isDone === true);
+  // }
+  // if (filter === 'active') {
+  //   taskForTodolist = tasks.filter((t) => t.isDone === false);
+  // }
 
-  const onAllClickHandler = () => {
-    changeFilter('all');
-  };
-  const onCompletedClickHandler = () => {
-    changeFilter('completed');
-  };
+  // const onAllClickHandler = () => {
+  //   changeFilter('all');
+  // };
+  // const onCompletedClickHandler = () => {
+  //   changeFilter('completed');
+  // };
 
-  const onActiveClickHandler = () => {
-    changeFilter('active');
-  };
+  // const onActiveClickHandler = () => {
+  //   changeFilter('active');
+  // };
 
   const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTaskTitle(e.currentTarget.value);
@@ -175,13 +216,13 @@ export const Tasks = () => {
           <ul>
             {tasks.map((t) => {
               const onRemoveHandler = () => removeTask(t.id);
-
+              console.log(tasks);
               return (
                 <li className={styles.taskItem} key={t.id}>
                   <div className={styles.titleWrapper}>
                     <button className={styles.circle} onClick={onRemoveHandler}></button>
                     {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
-                    <span>{t.title}</span>
+                    <span>{t.todo[0].title}</span>
                   </div>
                   <span className={styles.star}></span>
                   <svg
@@ -205,11 +246,11 @@ export const Tasks = () => {
           </ul>
         </div>
 
-        <div>
+        {/* <div>
           <button onClick={onAllClickHandler}>All</button>
           <button onClick={onCompletedClickHandler}>Active</button>
           <button onClick={onActiveClickHandler}>Completed</button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
