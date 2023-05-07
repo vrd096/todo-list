@@ -42,8 +42,20 @@
   display: flex;
   align-items: center;
 }
+.openModalWrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: #323130;
+  }
+}
 
 .openModalButton {
+  display: flex;
+  align-items: center;
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -86,7 +98,15 @@
 }
 
 .enterGoogle {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  padding: 15px;
+  svg {
+    margin-right: 10px;
+  }
 }
+
 .buttonExitAccount {
   width: 35px;
   height: 35px;
