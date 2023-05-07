@@ -5,7 +5,12 @@ import { Link } from 'react-router-dom';
 export const Sidebar = () => {
   return (
     <div className={styles.sideBar}>
-      <svg viewBox="0 0 32 32" fill="transparent" height="22" width="22">
+      <svg
+        className={styles.sideBarBurger}
+        viewBox="0 0 32 32"
+        fill="transparent"
+        height="22"
+        width="22">
         <defs></defs>
         <title />
         <g data-name="Layer 2" id="Layer_2" fill="currentColor">
@@ -75,7 +80,7 @@ export const Sidebar = () => {
       </ul>
       <div className={styles.addList}>
         <button className={styles.addListButton}>+</button>
-        <input className={styles.input} type="text" placeholder="Создать список" />
+        <input className={styles.addListInput} type="text" placeholder="Создать список" />
       </div>
     </div>
   );

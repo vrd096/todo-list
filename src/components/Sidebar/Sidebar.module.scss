@@ -1,55 +1,68 @@
 .sideBar {
-    height: 100%;
-    padding: 25px;
-    background-color: #252423;
-    border-right: 1px solid  #252423 ;
-}
-
-li {
-    margin-top: 20px;
+  height: 100%;
+  padding: 25px 0;
+  background-color: #252423;
+  border-right: 1px solid #252423;
+  li {
     display: flex;
     justify-content: space-between;
-}
-
-.listItem {
+    align-items: center;
+    padding: 0 25px;
+    min-height: 45px;
+    &:hover {
+      background-color: #323130;
+    }
+  }
+  .sideBarBurger {
+    margin: 15px 25px;
+    cursor: pointer;
+  }
+  .listItem {
     display: flex;
     align-items: center;
-    
-    svg{
-        margin-right: 10px;
-    }
-}
 
-.lastStaticList {
+    svg {
+      margin-right: 10px;
+    }
+  }
+
+  .lastStaticList {
     margin-top: 20px;
     margin-bottom: 20px;
     height: 1px;
     background-color: #484644;
-}
-.addListButton {
-    margin-right: 10px;
-    width: 22px;
-    height: 22px;
-    border: 0;
-    background-color: #252423;
-    font-size: 24px;
-    color: #78BAFD;
-    
-}
-.input {
-    border: 0px;
-    padding: 8px 15px;
-    padding-left: 42px;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #252423;
-    &::placeholder{
-        color: #78BAFD;
+  }
+  .addList {
+    display: flex;
+    align-items: center;
+    min-height: 45px;
+    padding: 0 25px;
+
+    .addListButton {
+      height: 45px;
+      vertical-align: middle;
+      border: 0;
+      background-color: #252423;
+      font-size: 24px;
+      color: #78bafd;
     }
-    &:focus {
-        &::placeholder{
-            color: #969F9D;
+    .addListInput {
+      height: 45px;
+      border: 0px;
+      padding: 8px 15px;
+      padding-left: 42px;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #252423;
+      &::placeholder {
+        color: #78bafd;
+      }
+      &:focus {
+        &::placeholder {
+          color: #969f9d;
         }
+      }
     }
   }
+}

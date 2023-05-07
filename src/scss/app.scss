@@ -44,7 +44,12 @@ span {
 }
 
 .settings {
+  // width: 48px;
+  // height: 48px;
   margin-right: 35px;
+  &:hover {
+    background-color: #323130;
+  }
   svg {
     vertical-align: middle;
   }
