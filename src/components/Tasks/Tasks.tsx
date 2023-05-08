@@ -2,7 +2,15 @@ import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import styles from './Tasks.module.scss';
 import { v1 } from 'uuid';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
 import React from 'react';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
@@ -47,9 +55,11 @@ export const Tasks = React.memo(() => {
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   const fetchData = async () => {
-    const querySnapshot = await getDocs(collection(db, 'todos'));
+    const querySnapshot = await getDocs(
+      query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
+    );
     const data = querySnapshot.docs.map((doc) => doc.data());
-
+    console.log(data);
     const task = data.map((item) => item.todo);
     console.log(task);
     setTasks(task);
@@ -70,6 +80,7 @@ export const Tasks = React.memo(() => {
     try {
       await addDoc(collection(db, 'todos'), {
         todo: newTask,
+        myTimestamp: serverTimestamp(),
       });
       console.log('Document successfully written!');
       const querySnapshot = await getDocs(collection(db, 'todos'));
