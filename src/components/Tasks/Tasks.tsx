@@ -3,6 +3,7 @@ import styles from './Tasks.module.scss';
 import { v1 } from 'uuid';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import React from 'react';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
 
@@ -31,7 +32,7 @@ const firebaseApp = initializeApp({
 });
 const db = getFirestore(firebaseApp);
 
-export const Tasks = () => {
+export const Tasks = React.memo(() => {
   let initTasks: TaskType[] = [
     { id: v1(), title: ' CSS ', isDone: true },
     { id: v1(), title: 'JS', isDone: true },
@@ -47,12 +48,10 @@ export const Tasks = () => {
 
   const fetchData = async () => {
     const querySnapshot = await getDocs(collection(db, 'todos'));
-    // console.log(querySnapshot.docs);
     const data = querySnapshot.docs.map((doc) => doc.data());
-    data.shift();
-    const task = data.map((item) => item.todo[0]);
-    console.log(task);
 
+    const task = data.map((item) => item.todo);
+    console.log(task);
     setTasks(task);
   };
 
@@ -67,10 +66,10 @@ export const Tasks = () => {
 
   const createTask = async () => {
     let newTask = { id: v1(), title: newTaskTitle, isDone: false };
-    let newTasks = [newTask, ...tasks];
+    // let newTasks = [newTask, ...tasks];
     try {
       await addDoc(collection(db, 'todos'), {
-        todo: newTasks,
+        todo: newTask,
       });
       console.log('Document successfully written!');
       const querySnapshot = await getDocs(collection(db, 'todos'));
@@ -79,8 +78,6 @@ export const Tasks = () => {
         todos.push(doc.data());
         fetchData();
       });
-      // console.log(todos);
-      // console.log(tasks);
     } catch (error) {
       console.error('Error writing document: ', error);
     }
@@ -256,4 +253,4 @@ export const Tasks = () => {
       </div>
     </div>
   );
-};
+});
