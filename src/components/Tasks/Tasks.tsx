@@ -45,17 +45,18 @@ export const Tasks = () => {
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, 'todos'));
-      const todos = [];
-      querySnapshot.forEach((doc) => {
-        todos.push(doc.data());
-      });
-      // console.log(todos[1].todo[0]);
-      setTasks(todos);
-    };
+  const fetchData = async () => {
+    const querySnapshot = await getDocs(collection(db, 'todos'));
+    // console.log(querySnapshot.docs);
+    const data = querySnapshot.docs.map((doc) => doc.data());
+    data.shift();
+    const task = data.map((item) => item.todo[0]);
+    console.log(task);
 
+    setTasks(task);
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -76,6 +77,7 @@ export const Tasks = () => {
       const todos = [];
       querySnapshot.forEach((doc) => {
         todos.push(doc.data());
+        fetchData();
       });
       // console.log(todos);
       // console.log(tasks);
@@ -216,13 +218,13 @@ export const Tasks = () => {
           <ul>
             {tasks.map((t) => {
               const onRemoveHandler = () => removeTask(t.id);
-              console.log(tasks);
+              // console.log(tasks);
               return (
                 <li className={styles.taskItem} key={t.id}>
                   <div className={styles.titleWrapper}>
                     <button className={styles.circle} onClick={onRemoveHandler}></button>
                     {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
-                    <span>{t.todo[0].title}</span>
+                    <span>{t.title}</span>
                   </div>
                   <span className={styles.star}></span>
                   <svg
