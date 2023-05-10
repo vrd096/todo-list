@@ -7046,7 +7046,7 @@ ignore@^5.2.0:
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.2.4.tgz"
   integrity sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==
 
-immer@^9.0.21, immer@^9.0.7:
+immer@9.0.21, immer@^9.0.21, immer@^9.0.7:
   version "9.0.21"
   resolved "https://registry.npmjs.org/immer/-/immer-9.0.21.tgz"
   integrity sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==
@@ -10724,6 +10724,20 @@ redeyed@~2.1.0:
   integrity sha512-FNpGGo1DycYAdnrKFxCMmKYgo/mILAqtRYbkdQD8Ep/Hk2PQ5+aEAEx+IU713RTDmuBaH0c8P5ZozurNu5ObRQ==
   dependencies:
     esprima "~4.0.0"
+
+reduce-reducers@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-1.0.4.tgz#fb77e751a9eb0201760ac5a605ca8c9c2d0537f8"
+  integrity sha512-Mb2WZ2bJF597exiqX7owBzrqJ74DHLK3yOQjCyPAaNifRncE8OD0wFIuoMhXxTnHK07+8zZ2SJEKy/qtiyR7vw==
+
+redux-firestore@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/redux-firestore/-/redux-firestore-2.0.1.tgz#2da32fcc562f58db9843893f0656a8a222d623fd"
+  integrity sha512-JWQkOYcvCuJNGOxpgCr8psbYZ69KhKQ5ednwOpgk0i6NSFSUVgLS/sGDqcx8t64uCL4EP7aA+hwLge7zPG7dJw==
+  dependencies:
+    immer "9.0.21"
+    lodash "^4.17.21"
+    reduce-reducers "^1.0.4"
 
 redux-thunk@^2.4.2:
   version "2.4.2"

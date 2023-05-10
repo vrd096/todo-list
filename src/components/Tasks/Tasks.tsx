@@ -1,4 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+// import { addTodo, removeTodo, setTodoStatus } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
 import { v1 } from 'uuid';
 import { initializeApp } from 'firebase/app';
@@ -12,6 +15,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import React from 'react';
+import { addTask, fetchTodo } from '../../redux/tasks/asyncActions';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
 
@@ -29,75 +33,61 @@ export type PropsType = {
   addTask: () => void;
 };
 
-const firebaseApp = initializeApp({
-  apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
-  authDomain: 'todotimekeeper.firebaseapp.com',
-  projectId: 'todotimekeeper',
-  storageBucket: 'todotimekeeper.appspot.com',
-  messagingSenderId: '1076102409898',
-  appId: '1:1076102409898:web:142757f96e24e9311faad3',
-  measurementId: 'G-M99G9VDTKJ',
-});
-const db = getFirestore(firebaseApp);
-
 export const Tasks = React.memo(() => {
-  let initTasks: TaskType[] = [
-    { id: v1(), title: ' CSS ', isDone: true },
-    { id: v1(), title: 'JS', isDone: true },
-    { id: v1(), title: 'React', isDone: false },
-    { id: v1(), title: 'Python', isDone: true },
-    { id: v1(), title: 'Golang', isDone: false },
-  ];
+  const [todoDescription, setTodoDescription] = useState('');
 
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState<FilterValuesType>('all');
+  const todoList = useSelector((state: RootState) => state);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [newTaskTitle, setNewTaskTitle] = useState('');
+  // const [tasks, setTasks] = useState([]);
+  // const [filter, setFilter] = useState<FilterValuesType>('all');
 
-  const fetchData = async () => {
-    const querySnapshot = await getDocs(
-      query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
-    );
-    const data = querySnapshot.docs.map((doc) => doc.data());
-    console.log(data);
-    const task = data.map((item) => item.todo);
-    console.log(task);
-    setTasks(task);
-  };
+  // const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  // const fetchData = async () => {
+  //   const querySnapshot = await getDocs(
+  //     query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
+  //   );
+  //   const data = querySnapshot.docs.map((doc) => doc.data());
+
+  //   const task = data.map((item) => item.todo);
+  //   console.log(task);
+  //   setTasks(task);
+  // };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(fetchTodo());
+  }, [dispatch]);
 
-  function removeTask(id: string) {
-    let filterTasks = tasks.filter((t) => t.id !== id);
-    setTasks(filterTasks);
-  }
+  // function removeTask(id: string) {
+  //   let filterTasks = tasks.filter((t) => t.id !== id);
+  //   setTasks(filterTasks);
+  // }
 
-  const createTask = async () => {
-    let newTask = { id: v1(), title: newTaskTitle, isDone: false };
-    // let newTasks = [newTask, ...tasks];
-    try {
-      await addDoc(collection(db, 'todos'), {
-        todo: newTask,
-        myTimestamp: serverTimestamp(),
-      });
-      console.log('Document successfully written!');
-      const querySnapshot = await getDocs(collection(db, 'todos'));
-      const todos = [];
-      querySnapshot.forEach((doc) => {
-        todos.push(doc.data());
-        fetchData();
-      });
-    } catch (error) {
-      console.error('Error writing document: ', error);
-    }
-  };
+  // const createTask = async () => {
+  //   let newTask = { id: v1(), title: newTaskTitle, isDone: false };
+  //   // let newTasks = [newTask, ...tasks];
+  //   try {
+  //     await addDoc(collection(db, 'todos'), {
+  //       todo: newTask,
+  //       myTimestamp: serverTimestamp(),
+  //     });
+  //     console.log('Document successfully written!');
+  //     const querySnapshot = await getDocs(collection(db, 'todos'));
+  //     const todos = [];
+  //     querySnapshot.forEach((doc) => {
+  //       todos.push(doc.data());
+  //       fetchData();
+  //     });
+  //   } catch (error) {
+  //     console.error('Error writing document: ', error);
+  //   }
+  // };
 
-  const addTask = () => {
-    if (newTaskTitle.trim() !== '') {
-      createTask(newTaskTitle.trim());
-      setNewTaskTitle('');
+  const addButtonHandler = () => {
+    if (todoDescription.trim() !== '') {
+      dispatch(addTask(todoDescription.trim()));
+      setTodoDescription('');
     }
   };
 
@@ -124,16 +114,16 @@ export const Tasks = React.memo(() => {
   //   changeFilter('active');
   // };
 
-  const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.currentTarget.value);
-  };
+  // const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setNewTaskTitle(e.currentTarget.value);
+  // };
 
-  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      addTask(newTaskTitle);
-      setNewTaskTitle('');
-    }
-  };
+  // const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Enter') {
+  //     addTask(newTaskTitle);
+  //     setNewTaskTitle('');
+  //   }
+  // };
 
   return (
     <div className={styles.todo}>
@@ -144,9 +134,9 @@ export const Tasks = React.memo(() => {
             className={styles.input}
             type="text"
             placeholder="Добавить задачу"
-            value={newTaskTitle}
-            onKeyUp={onKeyUpHandler}
-            onChange={onNewTitleChangeHandler}
+            value={todoDescription}
+            // onKeyUp={onKeyUpHandler}
+            onChange={(e) => setTodoDescription(e.target.value)}
           />
         </div>
 
@@ -218,21 +208,25 @@ export const Tasks = React.memo(() => {
               </g>
             </svg>
           </span>
-          <button onClick={addTask}>Добавить</button>
+          <button onClick={addButtonHandler}>Добавить</button>
         </div>
       </div>
       <div className={styles.tasks}>
         <div>
           <ul>
-            {tasks.map((t) => {
-              const onRemoveHandler = () => removeTask(t.id);
-              // console.log(tasks);
+            {todoList.map((todo) => {
+              // const onRemoveHandler = () => removeTask(todo.id);
+              console.log(todoList);
               return (
-                <li className={styles.taskItem} key={t.id}>
+                <li className={styles.taskItem} key={todo.id}>
                   <div className={styles.titleWrapper}>
-                    <button className={styles.circle} onClick={onRemoveHandler}></button>
+                    <button
+                      className={styles.circle}
+                      onClick={() => {
+                        dispatch(removeTodo(todo.id));
+                      }}></button>
                     {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
-                    <span>{t.title}</span>
+                    <span>{todo.title}</span>
                   </div>
                   <span className={styles.star}></span>
                   <svg
