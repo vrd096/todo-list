@@ -1,21 +1,10 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-// import { addTodo, removeTodo, setTodoStatus } from '../../redux/tasks/slice';
+import { removeTodo, setTodoStatus } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
-import { v1 } from 'uuid';
-import { initializeApp } from 'firebase/app';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  orderBy,
-  query,
-  serverTimestamp,
-} from 'firebase/firestore';
 import React from 'react';
-import { addTask, fetchTodo } from '../../redux/tasks/asyncActions';
+import { addTask, deleteTask, fetchTodo } from '../../redux/tasks/asyncActions';
 
 export type FilterValuesType = 'all' | 'completed' | 'active';
 
@@ -34,55 +23,16 @@ export type PropsType = {
 };
 
 export const Tasks = React.memo(() => {
-  const [todoDescription, setTodoDescription] = useState('');
+  const [todoDescription, setTodoDescription] = useState<string>('');
 
   const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
 
-  // const [tasks, setTasks] = useState([]);
   // const [filter, setFilter] = useState<FilterValuesType>('all');
-
-  // const [newTaskTitle, setNewTaskTitle] = useState('');
-
-  // const fetchData = async () => {
-  //   const querySnapshot = await getDocs(
-  //     query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
-  //   );
-  //   const data = querySnapshot.docs.map((doc) => doc.data());
-
-  //   const task = data.map((item) => item.todo);
-  //   console.log(task);
-  //   setTasks(task);
-  // };
 
   useEffect(() => {
     dispatch(fetchTodo());
   }, [dispatch]);
-
-  // function removeTask(id: string) {
-  //   let filterTasks = tasks.filter((t) => t.id !== id);
-  //   setTasks(filterTasks);
-  // }
-
-  // const createTask = async () => {
-  //   let newTask = { id: v1(), title: newTaskTitle, isDone: false };
-  //   // let newTasks = [newTask, ...tasks];
-  //   try {
-  //     await addDoc(collection(db, 'todos'), {
-  //       todo: newTask,
-  //       myTimestamp: serverTimestamp(),
-  //     });
-  //     console.log('Document successfully written!');
-  //     const querySnapshot = await getDocs(collection(db, 'todos'));
-  //     const todos = [];
-  //     querySnapshot.forEach((doc) => {
-  //       todos.push(doc.data());
-  //       fetchData();
-  //     });
-  //   } catch (error) {
-  //     console.error('Error writing document: ', error);
-  //   }
-  // };
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
@@ -103,27 +53,14 @@ export const Tasks = React.memo(() => {
   //   taskForTodolist = tasks.filter((t) => t.isDone === false);
   // }
 
-  // const onAllClickHandler = () => {
-  //   changeFilter('all');
-  // };
-  // const onCompletedClickHandler = () => {
-  //   changeFilter('completed');
-  // };
-
-  // const onActiveClickHandler = () => {
-  //   changeFilter('active');
-  // };
-
-  // const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setNewTaskTitle(e.currentTarget.value);
-  // };
-
-  // const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === 'Enter') {
-  //     addTask(newTaskTitle);
-  //     setNewTaskTitle('');
-  //   }
-  // };
+  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (todoDescription.trim() !== '') {
+        dispatch(addTask(todoDescription.trim()));
+        setTodoDescription('');
+      }
+    }
+  };
 
   return (
     <div className={styles.todo}>
@@ -135,7 +72,7 @@ export const Tasks = React.memo(() => {
             type="text"
             placeholder="Добавить задачу"
             value={todoDescription}
-            // onKeyUp={onKeyUpHandler}
+            onKeyUp={onKeyUpHandler}
             onChange={(e) => setTodoDescription(e.target.value)}
           />
         </div>
@@ -216,14 +153,14 @@ export const Tasks = React.memo(() => {
           <ul>
             {todoList.map((todo) => {
               // const onRemoveHandler = () => removeTask(todo.id);
-              console.log(todoList);
+              // console.log(todoList);
               return (
                 <li className={styles.taskItem} key={todo.id}>
                   <div className={styles.titleWrapper}>
                     <button
                       className={styles.circle}
                       onClick={() => {
-                        dispatch(removeTodo(todo.id));
+                        dispatch(deleteTask(todo));
                       }}></button>
                     {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
                     <span>{todo.title}</span>

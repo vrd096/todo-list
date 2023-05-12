@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
-import { v4 as uuidv4 } from 'uuid';
-import { fetchTodo, addTask } from './asyncActions';
+import { fetchTodo } from './asyncActions';
 
 const initialState = [] as Todo[];
 
@@ -10,12 +9,12 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
-      console.log(action.payload);
       state.unshift(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
       const index = state.findIndex((todo) => todo.id === action.payload);
       state.splice(index, 1);
+      // console.log(action.payload);
     },
     setTodoStatus(state, action: PayloadAction<{ completed: boolean; id: string }>) {
       const index = state.findIndex((todo) => todo.id === action.payload.id);

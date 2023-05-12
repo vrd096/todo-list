@@ -8,11 +8,15 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  deleteDoc,
+  doc,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 import { RootState } from '../store';
-import { addTodo } from './slice';
+import { addTodo, removeTodo } from './slice';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
@@ -37,7 +41,7 @@ export const fetchTodo = createAsyncThunk<Todo[]>('todo/fetchTodoStatus', async 
   return task;
 });
 
-export const addTask = createAsyncThunk<Todo>('todos/addTodo', async (title, thunkAPI) => {
+export const addTask = createAsyncThunk<Todo>('todos/addTodo', async (title: string, thunkAPI) => {
   const todoTask = {
     id: uuidv4(),
     title,
@@ -49,6 +53,20 @@ export const addTask = createAsyncThunk<Todo>('todos/addTodo', async (title, thu
       todo: todoTask,
       myTimestamp: serverTimestamp(),
     });
+  } catch (error) {
+    return thunkAPI.rejectWithValue('какая то ошибка');
+  }
+});
+
+export const deleteTask = createAsyncThunk('todos/deleteTodo', async (todo: Todo, thunkAPI) => {
+  try {
+    thunkAPI.dispatch(removeTodo(todo.id));
+
+    const querySnapshot = await getDocs(query(collection(db, 'todos'), where('todo', '==', todo)));
+
+    const docRef = doc(db, 'todos', querySnapshot.docs[0].id);
+
+    await updateDoc(docRef, { 'todo.completed': true });
   } catch (error) {
     return thunkAPI.rejectWithValue('какая то ошибка');
   }
