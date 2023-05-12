@@ -14,21 +14,21 @@ import {
   AccordionItemPanel,
 } from 'react-accessible-accordion';
 
-export type FilterValuesType = 'all' | 'completed' | 'active';
+// export type FilterValuesType = 'all' | 'completed' | 'active';
 
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
+// export type TaskType = {
+//   id: string;
+//   title: string;
+//   isDone: boolean;
+// };
 
-export type PropsType = {
-  title: string;
-  tasks: TaskType[];
-  removeTask: (id: string) => void;
-  changeFilter: (value: FilterValuesType) => void;
-  addTask: () => void;
-};
+// export type PropsType = {
+//   title: string;
+//   tasks: TaskType[];
+//   removeTask: (id: string) => void;
+//   changeFilter: (value: FilterValuesType) => void;
+//   addTask: () => void;
+// };
 
 export const Tasks = React.memo(() => {
   const [todoDescription, setTodoDescription] = useState<string>('');
@@ -36,6 +36,7 @@ export const Tasks = React.memo(() => {
   const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
 
+  const completedTasks = todoList.filter((todo) => todo.completed == true).length;
   // const [filter, setFilter] = useState<FilterValuesType>('all');
 
   useEffect(() => {
@@ -201,11 +202,11 @@ export const Tasks = React.memo(() => {
           <AccordionItem className={styles.accordionItem}>
             <AccordionItemHeading>
               <AccordionItemButton className={styles.accordionButton}>
-                Завершенные
+                Завершенные <span>{completedTasks}</span>
               </AccordionItemButton>
             </AccordionItemHeading>
             <AccordionItemPanel className={styles.accordionPanel}>
-              <ul>
+              <ul className={styles.tasksList}>
                 {todoList
                   .filter((todo) => todo.completed == true)
                   .map((todo) => {

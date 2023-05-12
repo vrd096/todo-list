@@ -93,14 +93,22 @@
 
 .circle {
   display: inline;
-  min-height: 15px;
-  min-width: 15px;
+  height: 15px;
+  width: 15px;
   margin: 20px;
   background-color: transparent;
   border: 1px solid #78bafd;
   border-radius: 50%;
   display: inline-block;
   cursor: pointer;
+  &:hover::before {
+    content: '\2713';
+    display: block;
+    text-align: center;
+    color: #78bafd;
+    font-size: 8px;
+    line-height: 8px;
+  }
 }
 
 .input {
@@ -152,6 +160,12 @@
   width: 100%;
   text-align: left;
   border: none;
+  font-size: 14px;
+  font-weight: bold;
+  span {
+    margin-left: 8px;
+    color: #a19f9d;
+  }
 }
 
 .accordionButton:before {
