@@ -1,8 +1,14 @@
 import React from 'react';
 import styles from './Sidebar.module.scss';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 export const Sidebar = () => {
+  const todoList = useSelector((state: RootState) => state);
+
+  const activeTasks = todoList.filter((todo) => todo.completed == false).length;
+
   return (
     <div className={styles.sideBar}>
       <svg
@@ -37,7 +43,7 @@ export const Sidebar = () => {
               </svg>
               <span> Мой день </span>
             </div>
-            <span>24</span>
+            <span>{activeTasks}</span>
           </li>
         </Link>
         <Link to={'/important'}>
