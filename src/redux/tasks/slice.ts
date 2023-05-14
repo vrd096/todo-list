@@ -16,9 +16,12 @@ const todoSlice = createSlice({
       state.splice(index, 1);
       // console.log(action.payload);
     },
-    setTodoStatus(state, action: PayloadAction<{ completed: boolean; id: string }>) {
-      const index = state.findIndex((todo) => todo.id === action.payload.id);
-      state[index].completed = action.payload.completed;
+    setTodoStatus(state, action: PayloadAction<{ id: string; completed: boolean }>) {
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.completed = !action.payload.completed;
+        });
     },
   },
   extraReducers: (builder) => {

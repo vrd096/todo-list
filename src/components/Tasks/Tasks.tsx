@@ -4,7 +4,12 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { removeTodo, setTodoStatus } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
 import React from 'react';
-import { addTask, deleteTask, fetchTodo } from '../../redux/tasks/asyncActions';
+import {
+  addTask,
+  changeToActiveTask,
+  changeToCompletedTask,
+  fetchTodo,
+} from '../../redux/tasks/asyncActions';
 // import { AccordionTasks } from '../Accordion';
 import {
   Accordion,
@@ -31,7 +36,7 @@ import {
 // };
 
 export const Tasks = React.memo(() => {
-  const [todoDescription, setTodoDescription] = useState<string>('');
+  const [todoDescription, setTodoDescription] = useState('');
 
   const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
@@ -64,6 +69,7 @@ export const Tasks = React.memo(() => {
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      console.log(todoDescription);
       if (todoDescription.trim() !== '') {
         dispatch(addTask(todoDescription.trim()));
         setTodoDescription('');
@@ -169,7 +175,7 @@ export const Tasks = React.memo(() => {
                       <button
                         className={styles.circle}
                         onClick={() => {
-                          dispatch(deleteTask(todo));
+                          dispatch(changeToCompletedTask(todo));
                         }}></button>
                       {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
                       <span>{todo.title}</span>
@@ -214,11 +220,11 @@ export const Tasks = React.memo(() => {
                       <li className={styles.taskItem} key={todo.id}>
                         <div className={styles.titleWrapper}>
                           <button
-                            className={styles.circle}
+                            className={styles.circleCompleted}
                             onClick={() => {
-                              dispatch(deleteTask(todo));
+                              dispatch(changeToActiveTask(todo));
                             }}></button>
-                          {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
+
                           <span>{todo.title}</span>
                         </div>
                         <span className={styles.star}></span>
