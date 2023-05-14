@@ -21,6 +21,7 @@
     "@types/uuid": "^9.0.1",
     "axios": "^1.2.1",
     "classnames": "^2.3.2",
+    "date-fns": "^2.30.0",
     "firebase": "^9.21.0",
     "firebase-tools": "^11.30.0",
     "lodash.debounce": "^4.0.8",
