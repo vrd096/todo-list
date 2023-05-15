@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { toggleSidebar } from '../../redux/sidebar/slice';
+import classNames from 'classnames';
 
 export const Sidebar = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const todoList = useSelector((state: RootState) => state);
+  const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
-  const activeTasks = todoList.filter((todo) => todo.completed == false).length;
+  const activeTasks = todoList.todos.filter((todo) => todo.completed == false).length;
 
   return (
-    <div className={styles.sideBar}>
+    <div
+      className={classNames(
+        styles.sideBar,
+        { [styles.sideBarOpen]: isSidebarOpen },
+        { [styles.sideBarClosed]: !isSidebarOpen },
+      )}>
       <svg
+        onClick={() => dispatch(toggleSidebar())}
         className={styles.sideBarBurger}
         viewBox="0 0 32 32"
         fill="transparent"

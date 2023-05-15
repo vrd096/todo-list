@@ -28,6 +28,17 @@ span {
   grid-template-areas:
     'header header'
     'sidebar content';
+
+  &-open {
+    grid-template-areas:
+      'header header'
+      'sidebar content';
+  }
+  &-closed {
+    grid-template-areas:
+      'header header'
+      'content content';
+  }
 }
 
 .container {
@@ -63,6 +74,10 @@ span {
 }
 .sidebar {
   grid-area: sidebar;
+
+  &-closed {
+    display: none;
+  }
 }
 .content {
   grid-area: content;

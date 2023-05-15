@@ -14,7 +14,7 @@
     }
   }
   .sideBarBurger {
-    margin: 15px 25px;
+    margin: 5px 25px;
     cursor: pointer;
   }
   .listItem {
@@ -65,4 +65,11 @@
       }
     }
   }
+}
+
+.sideBarOpen {
+  display: block;
+}
+.sideBarClosed {
+  display: none;
 }

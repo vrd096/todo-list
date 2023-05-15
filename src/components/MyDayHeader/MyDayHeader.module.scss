@@ -4,6 +4,12 @@
   padding: 25px;
 }
 
+.buttonSidebarOpen {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
 h2 {
   // align-self: center;
   svg {
@@ -20,4 +26,10 @@ h2 {
 .data {
   font-size: 12px;
   color: #a19f9d;
+}
+.sidebarIsOpen {
+  display: inline-block;
+}
+.sidebarIsClose {
+  display: inline-block;
 }

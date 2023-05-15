@@ -10,7 +10,6 @@ import {
   changeToCompletedTask,
   fetchTodo,
 } from '../../redux/tasks/asyncActions';
-// import { AccordionTasks } from '../Accordion';
 import {
   Accordion,
   AccordionItem,
@@ -19,30 +18,13 @@ import {
   AccordionItemPanel,
 } from 'react-accessible-accordion';
 
-// export type FilterValuesType = 'all' | 'completed' | 'active';
-
-// export type TaskType = {
-//   id: string;
-//   title: string;
-//   isDone: boolean;
-// };
-
-// export type PropsType = {
-//   title: string;
-//   tasks: TaskType[];
-//   removeTask: (id: string) => void;
-//   changeFilter: (value: FilterValuesType) => void;
-//   addTask: () => void;
-// };
-
 export const Tasks = React.memo(() => {
   const [todoDescription, setTodoDescription] = useState('');
 
   const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
 
-  const completedTasks = todoList.filter((todo) => todo.completed == true).length;
-  // const [filter, setFilter] = useState<FilterValuesType>('all');
+  const completedTasks = todoList.todos.filter((todo) => todo.completed == true).length;
 
   useEffect(() => {
     dispatch(fetchTodo());
@@ -54,18 +36,6 @@ export const Tasks = React.memo(() => {
       setTodoDescription('');
     }
   };
-
-  // function changeFilter(value: FilterValuesType) {
-  //   setFilter(value);
-  // }
-
-  // let taskForTodolist = tasks;
-  // if (filter === 'completed') {
-  //   taskForTodolist = tasks.filter((t) => t.isDone === true);
-  // }
-  // if (filter === 'active') {
-  //   taskForTodolist = tasks.filter((t) => t.isDone === false);
-  // }
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -166,7 +136,7 @@ export const Tasks = React.memo(() => {
       <div className={styles.tasks}>
         <div>
           <ul>
-            {todoList
+            {todoList.todos
               .filter((todo) => todo.completed == false)
               .map((todo) => {
                 return (
@@ -177,7 +147,7 @@ export const Tasks = React.memo(() => {
                         onClick={() => {
                           dispatch(changeToCompletedTask(todo));
                         }}></button>
-                      {/* <input type="checkbox" checked={t.isDone} onChange={() => {}} /> */}
+
                       <span>{todo.title}</span>
                     </div>
                     <span className={styles.star}></span>
@@ -213,7 +183,7 @@ export const Tasks = React.memo(() => {
             </AccordionItemHeading>
             <AccordionItemPanel className={styles.accordionPanel}>
               <ul className={styles.tasksList}>
-                {todoList
+                {todoList.todos
                   .filter((todo) => todo.completed == true)
                   .map((todo) => {
                     return (
