@@ -1,40 +1,51 @@
-.root {
-    position: relative;
-    left: -150px;
-    vertical-align: middle;
+.searchWrapper {
+  margin-left: -150px;
+  vertical-align: middle;
+}
+.input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px 15px;
+  padding-left: 42px;
+  width: 400px;
+  height: 32px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #323130;
+  &:focus {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}
+.icon {
+  width: 18px;
+  height: 18px;
+  // opacity: 0.3;
+  position: relative;
+  left: 22px;
+  top: 2px;
+}
+.clearIcon {
+  width: 18px;
+  height: 17px;
+  opacity: 0.3;
+  position: absolute;
+  right: 15px;
+  top: 7px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+@media (min-width: 620px) and (max-width: 1024px) {
+  .searchWrapper {
+    margin-left: 0;
   }
   .input {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 8px 15px;
-    padding-left: 42px;
-    width: 400px;
-    height: 32px;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #323130;
-    &:focus {
-      border: 1px solid rgba(0, 0, 0, 0.2);
-    }
+    width: 200px;
   }
-  .icon {
-    width: 18px;
-    height: 18px;
-    // opacity: 0.3;
-    position: absolute;
-    left: 14px;
-    top: 8px;
+}
+@media (max-width: 619px) {
+  .input {
+    width: 50px;
   }
-  .clearIcon {
-    width: 18px;
-    height: 17px;
-    opacity: 0.3;
-    position: absolute;
-    right: 15px;
-    top: 7px;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-  
+}

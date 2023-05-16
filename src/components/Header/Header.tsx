@@ -7,7 +7,7 @@ import { LoginForm } from '../Login/LoginForm';
 
 export const Header: React.FC = () => {
   return (
-    <div className={styles.header}>
+    <div className={styles.headerWrapper}>
       <Link to="/today">
         <div className={styles.headerLogo}>
           <svg id="sw-js-blob-svg" viewBox="0 0 100 100" width="30" height="30">
@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
           <p className={styles.title}>TimeKeeper</p>
         </div>
       </Link>
-      <Search />
+      {/* <Search /> */}
       <div className={styles.toolbarWrapper}>
         <Settings />
         <LoginForm />

@@ -27,7 +27,7 @@ export const Search: React.FC = () => {
   };
 
   return (
-    <div className={styles.root}>
+    <div className={styles.searchWrapper}>
       <svg
         className={styles.icon}
         fill="none"

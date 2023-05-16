@@ -73,3 +73,9 @@
 .sideBarClosed {
   display: none;
 }
+@media (min-width: 320px) and (max-width: 1024px) {
+  .sideBar {
+    position: fixed;
+    z-index: 1;
+  }
+}

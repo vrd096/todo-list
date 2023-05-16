@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
