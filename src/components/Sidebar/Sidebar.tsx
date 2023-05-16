@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
+import { useEffect } from 'react';
 
 export const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -11,6 +12,19 @@ export const Sidebar = () => {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
   const activeTasks = todoList.todos.filter((todo) => todo.completed == false).length;
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 920) {
+        dispatch(toggleSidebar());
+        console.log('экран меньше 920px');
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [dispatch]);
 
   return (
     <div
