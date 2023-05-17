@@ -50,10 +50,14 @@
 
 .tasks {
   // overflow-y: scroll;
-  overflow: auto;
-  max-height: 100vh;
-  ul {
-    padding: 0 17px 0 25px;
+}
+@media (min-width: 1025px) {
+  .tasks {
+    overflow: scroll;
+    max-height: 100vh;
+    ul {
+      padding: 0 17px 0 25px;
+    }
   }
 }
 
@@ -67,9 +71,9 @@
   background-color: #252423;
   // word-wrap: break-word;
   // word-break: break-word;
-  &:last-child {
-    margin-bottom: 300px;
-  }
+  // &:last-child {
+  //   margin-bottom: 300px;
+  // }
   span {
     padding: 10px 0;
     font-size: 12px;
@@ -143,7 +147,8 @@
 }
 .accordionMain {
   // padding: 25px;
-  margin-top: -300px;
+  // margin-top: -300px;
+  margin-bottom: 300px;
   overflow: hidden;
 }
 .accordionItem {
@@ -223,5 +228,16 @@
     color: #000;
     font-size: 12px;
     line-height: 12px;
+  }
+}
+@media (min-width: 320px) and (max-width: 1024px) {
+  .addToTop {
+    padding: 0 15px;
+  }
+  .task {
+    overflow: visible;
+    ul {
+      padding: 0 17px 0 15px;
+    }
   }
 }

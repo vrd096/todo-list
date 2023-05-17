@@ -17,7 +17,6 @@ export const Sidebar = () => {
     function handleResize() {
       if (window.innerWidth < 920) {
         dispatch(toggleSidebar());
-        console.log('экран меньше 920px');
       }
     }
     handleResize();
