@@ -1,10 +1,4 @@
 .todo {
-  // position: relative;
-  // width: 100%;
-  // top: 60px;
-  // left: 21%;
-  // height: 100vh;
-  // margin-top: 20px;
   padding: 0;
   background-color: #11100f;
   h3 {
@@ -12,7 +6,6 @@
   }
 
   input {
-    // width: 100%;
     height: 52px;
     border: 0;
     border-radius: 3px;
@@ -47,17 +40,17 @@
     cursor: pointer;
   }
 }
-
-.tasks {
-  // overflow-y: scroll;
+.tasksList {
+  padding: 0 15px;
 }
+
 @media (min-width: 1025px) {
   .tasks {
     overflow: scroll;
     max-height: 100vh;
-    ul {
-      padding: 0 17px 0 25px;
-    }
+  }
+  .tasksList {
+    padding: 0 17px 0 25px;
   }
 }
 
@@ -151,10 +144,10 @@
   margin-bottom: 300px;
   overflow: hidden;
 }
-.accordionItem {
-  // padding: 0 25px;
-  border-bottom: 1px solid #7a7676;
-}
+// .accordionItem {
+//   // padding: 0 25px;
+//   border-bottom: 1px solid #7a7676;
+// }
 
 .accordionButton {
   padding: 0;
@@ -236,8 +229,8 @@
   }
   .task {
     overflow: visible;
-    ul {
-      padding: 0 17px 0 15px;
-    }
+  }
+  .accordionMain {
+    margin-bottom: 20px;
   }
 }

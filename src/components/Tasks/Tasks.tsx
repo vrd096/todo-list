@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { removeTodo, setTodoStatus } from '../../redux/tasks/slice';
+import { removeTodo, setTodoStatus, resetState } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
 import React from 'react';
 import {
@@ -27,8 +27,12 @@ export const Tasks = React.memo(() => {
   const completedTasks = todoList.todos.filter((todo) => todo.completed == true).length;
 
   useEffect(() => {
+    // console.log(todoList);
     dispatch(fetchTodo());
-  }, [dispatch]);
+    return () => {
+      dispatch(resetState());
+    };
+  }, []);
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
@@ -135,7 +139,7 @@ export const Tasks = React.memo(() => {
       </div>
       <div className={styles.tasks}>
         <div>
-          <ul>
+          <ul className={styles.tasksList}>
             {todoList.todos
               .filter((todo) => todo.completed == false)
               .map((todo) => {
