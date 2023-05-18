@@ -28,14 +28,14 @@ const firebaseApp = initializeApp({
 });
 const db = getFirestore(firebaseApp);
 
-export const fetchTodo = createAsyncThunk<Todo[]>('todo/fetchTodoStatus', async () => {
+export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', async () => {
   const querySnapshot = await getDocs(
     query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
   );
 
   const data = querySnapshot.docs.map((doc) => doc.data());
 
-  const task = data.map((item) => item.todo);
+  const task: Todo[] = data.map((item) => item.todo);
 
   return task;
 });

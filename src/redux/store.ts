@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import todosReducer from './tasks/slice';
 import sidebarSlice from './sidebar/slice';
+import { todoReducer } from './tasks/slice';
 
 export const store = configureStore({
   reducer: {
-    todos: todosReducer,
+    todos: todoReducer,
     sidebar: sidebarSlice,
   },
 });

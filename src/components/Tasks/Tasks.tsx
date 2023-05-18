@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { removeTodo, setTodoStatus, resetState } from '../../redux/tasks/slice';
+import { removeTodo, setTodoStatus } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
 import React from 'react';
 import {
@@ -21,18 +21,15 @@ import {
 export const Tasks = React.memo(() => {
   const [todoDescription, setTodoDescription] = useState('');
 
-  const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
 
-  const completedTasks = todoList.todos.filter((todo) => todo.completed == true).length;
-
   useEffect(() => {
-    // console.log(todoList);
     dispatch(fetchTodo());
-    return () => {
-      dispatch(resetState());
-    };
-  }, []);
+  }, [dispatch]);
+
+  const tasks = useSelector((state: RootState) => state.todos);
+  console.log(tasks);
+  const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
@@ -140,19 +137,19 @@ export const Tasks = React.memo(() => {
       <div className={styles.tasks}>
         <div>
           <ul className={styles.tasksList}>
-            {todoList.todos
-              .filter((todo) => todo.completed == false)
-              .map((todo) => {
+            {tasks
+              .filter((task) => task.completed == false)
+              .map((task) => {
                 return (
-                  <li className={styles.taskItem} key={todo.id}>
+                  <li className={styles.taskItem} key={task.id}>
                     <div className={styles.titleWrapper}>
                       <button
                         className={styles.circle}
                         onClick={() => {
-                          dispatch(changeToCompletedTask(todo));
+                          dispatch(changeToCompletedTask(task));
                         }}></button>
 
-                      <span>{todo.title}</span>
+                      <span>{task.title}</span>
                     </div>
                     <span className={styles.star}></span>
                     <svg
@@ -187,19 +184,19 @@ export const Tasks = React.memo(() => {
             </AccordionItemHeading>
             <AccordionItemPanel className={styles.accordionPanel}>
               <ul className={styles.tasksList}>
-                {todoList.todos
-                  .filter((todo) => todo.completed == true)
-                  .map((todo) => {
+                {tasks
+                  .filter((task) => task.completed == true)
+                  .map((task) => {
                     return (
-                      <li className={styles.taskItem} key={todo.id}>
+                      <li className={styles.taskItem} key={task.id}>
                         <div className={styles.titleWrapper}>
                           <button
                             className={styles.circleCompleted}
                             onClick={() => {
-                              dispatch(changeToActiveTask(todo));
+                              dispatch(changeToActiveTask(task));
                             }}></button>
 
-                          <span>{todo.title}</span>
+                          <span>{task.title}</span>
                         </div>
                         <span className={styles.star}></span>
                         <svg

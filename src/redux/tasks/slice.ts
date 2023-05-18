@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
 import { fetchTodo } from './asyncActions';
 
-const initialState = [] as Todo[];
+const initialState: Todo[] = [];
 
 const todoSlice = createSlice({
   name: 'todos',
@@ -28,12 +28,12 @@ const todoSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodo.pending, (state, action) => {});
-    builder.addCase(fetchTodo.fulfilled, (state, action) => {
-      state.push(...action.payload);
+    builder.addCase(fetchTodo.fulfilled, (state, action: PayloadAction<Todo[]>) => {
+      return action.payload.map((item) => item);
     });
     builder.addCase(fetchTodo.rejected, (state, action) => {});
   },
 });
 
 export const { addTodo, removeTodo, setTodoStatus, resetState } = todoSlice.actions;
-export default todoSlice.reducer;
+export const todoReducer = todoSlice.reducer;
