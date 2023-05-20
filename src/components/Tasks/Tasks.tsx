@@ -28,7 +28,6 @@ export const Tasks = React.memo(() => {
   }, [dispatch]);
 
   const tasks = useSelector((state: RootState) => state.todos);
-  console.log(tasks);
   const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
   const addButtonHandler = () => {

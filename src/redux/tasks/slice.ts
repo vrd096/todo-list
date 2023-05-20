@@ -22,9 +22,6 @@ const todoSlice = createSlice({
           todo.completed = !action.payload.completed;
         });
     },
-    resetState: (state) => {
-      return initialState;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodo.pending, (state, action) => {});
@@ -35,5 +32,5 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, removeTodo, setTodoStatus, resetState } = todoSlice.actions;
+export const { addTodo, removeTodo, setTodoStatus } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;
