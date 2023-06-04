@@ -16,6 +16,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 import { addTodo, setTodoStatus } from './slice';
+import { getAuth } from 'firebase/auth';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
@@ -27,10 +28,11 @@ const firebaseApp = initializeApp({
   measurementId: 'G-M99G9VDTKJ',
 });
 const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', async () => {
   const querySnapshot = await getDocs(
-    query(collection(db, 'todos'), orderBy('myTimestamp', 'desc')),
+    query(collection(db, `users/${auth.currentUser?.uid}/todos`), orderBy('myTimestamp', 'desc')),
   );
 
   const data = querySnapshot.docs.map((doc) => doc.data());
@@ -50,7 +52,7 @@ export const addTask = createAsyncThunk<Todo, string>(
     };
     try {
       thunkAPI.dispatch(addTodo(todoTask));
-      await addDoc(collection(db, 'todos'), {
+      await addDoc(collection(db, `users/${auth.currentUser?.uid}/todos`), {
         todo: todoTask,
         myTimestamp: serverTimestamp(),
       });
@@ -68,10 +70,10 @@ export const changeToCompletedTask = createAsyncThunk(
       thunkAPI.dispatch(setTodoStatus(todo));
 
       const querySnapshot = await getDocs(
-        query(collection(db, 'todos'), where('todo', '==', todo)),
+        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
       );
 
-      const docRef = doc(db, 'todos', querySnapshot.docs[0].id);
+      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
 
       await updateDoc(docRef, { 'todo.completed': true });
     } catch (error) {
@@ -86,10 +88,10 @@ export const changeToActiveTask = createAsyncThunk(
       thunkAPI.dispatch(setTodoStatus(todo));
 
       const querySnapshot = await getDocs(
-        query(collection(db, 'todos'), where('todo', '==', todo)),
+        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
       );
 
-      const docRef = doc(db, 'todos', querySnapshot.docs[0].id);
+      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
 
       await updateDoc(docRef, { 'todo.completed': false });
     } catch (error) {

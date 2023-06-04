@@ -1,7 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { removeTodo, setTodoStatus } from '../../redux/tasks/slice';
 import styles from './Tasks.module.scss';
 import React from 'react';
 import {
@@ -17,17 +16,29 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from 'react-accessible-accordion';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export const Tasks = React.memo(() => {
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+
   const [todoDescription, setTodoDescription] = useState('');
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchTodo());
+    onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setUser(user);
+        dispatch(fetchTodo());
+      } else {
+        setUser(null);
+      }
+    });
   }, [dispatch]);
 
   const tasks = useSelector((state: RootState) => state.todos);
+
   const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
   const addButtonHandler = () => {
@@ -39,7 +50,6 @@ export const Tasks = React.memo(() => {
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      console.log(todoDescription);
       if (todoDescription.trim() !== '') {
         dispatch(addTask(todoDescription.trim()));
         setTodoDescription('');
