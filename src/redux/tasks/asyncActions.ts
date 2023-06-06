@@ -16,7 +16,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 import { addTodo, setTodoStatus } from './slice';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
@@ -52,10 +52,14 @@ export const addTask = createAsyncThunk<Todo, string>(
     };
     try {
       thunkAPI.dispatch(addTodo(todoTask));
-      await addDoc(collection(db, `users/${auth.currentUser?.uid}/todos`), {
-        todo: todoTask,
-        myTimestamp: serverTimestamp(),
-      });
+      const user = getAuth().currentUser;
+      if (user) {
+        await addDoc(collection(db, `users/${user.uid}/todos`), {
+          todo: todoTask,
+          myTimestamp: serverTimestamp(),
+        });
+        return todoTask;
+      }
       return todoTask;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
