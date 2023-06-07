@@ -1,7 +1,11 @@
-import React from 'react';
-import { Sidebar } from '../components/Sidebar/Sidebar';
-import { Todolist } from '../components/Todolist/Todolist';
+import { InboxHeader } from '../components/InboxHeader';
+import { Tasks } from '../components/Tasks';
 
 export const Inbox = () => {
-  return <div className="wrapper">Inbox</div>;
+  return (
+    <div>
+      <InboxHeader />
+      <Tasks />
+    </div>
+  );
 };

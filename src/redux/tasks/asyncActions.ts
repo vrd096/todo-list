@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
-import { addTodo, setTodoStatus } from './slice';
+import { addTodo, setTodoStatus, setImportStatus } from './slice';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const firebaseApp = initializeApp({
@@ -49,6 +49,7 @@ export const addTask = createAsyncThunk<Todo, string>(
       id: uuidv4(),
       title,
       completed: false,
+      important: false,
     };
     try {
       thunkAPI.dispatch(addTodo(todoTask));
@@ -90,6 +91,49 @@ export const changeToActiveTask = createAsyncThunk(
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
+      console.log(todo);
+      const querySnapshot = await getDocs(
+        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
+      );
+
+      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+
+      await updateDoc(docRef, { 'todo.completed': false });
+    } catch (error) {
+      return thunkAPI.rejectWithValue('какая то ошибка');
+    }
+  },
+);
+
+export const addImportant = createAsyncThunk(
+  'todos/addImportantTodo',
+  async (todo: Todo, thunkAPI) => {
+    try {
+      console.log(todo);
+      thunkAPI.dispatch(setImportStatus(todo));
+
+      const querySnapshot = await getDocs(
+        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
+      );
+
+      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+
+      if (todo.important == false) {
+        await updateDoc(docRef, { 'todo.important': true });
+      } else if (todo.important == true) {
+        await updateDoc(docRef, { 'todo.completed': false });
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue('какая то ошибка');
+    }
+  },
+);
+
+export const removeImportant = createAsyncThunk(
+  'todos/deleteTodo',
+  async (todo: Todo, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(setImportStatus(todo));
 
       const querySnapshot = await getDocs(
         query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),

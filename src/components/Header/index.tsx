@@ -3,7 +3,7 @@ import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 import { Search } from '../Search';
 import { Settings } from '../Settings';
-import { LoginForm } from '../Login/LoginForm';
+import { LoginForm } from '../Login';
 
 export const Header: React.FC = () => {
   return (

@@ -1,4 +1,4 @@
-import { Sort } from '../Sort/Sort';
+import { Sort } from '../Sort';
 import { format } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import styles from './MyDayHeader.module.scss';
@@ -15,7 +15,7 @@ export const MyDayHeader = () => {
   const dayOfMonth = format(date, 'd', { locale: ruLocale });
   return (
     <div className={styles.header}>
-      <h2>
+      <h2 className={styles.MyDayTitle}>
         <button className={styles.buttonSidebarOpen}>
           {isSidebarOpen ? (
             <svg

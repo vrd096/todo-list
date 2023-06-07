@@ -10,7 +10,7 @@
   cursor: pointer;
 }
 
-.MyDayTitle {
+.ImportantTitle {
   // align-self: center;
   svg {
     margin-right: 10px;
@@ -20,6 +20,7 @@
     font-size: 20px;
     font-weight: bold;
     vertical-align: middle;
+    color: #78bafd;
   }
 }
 
@@ -28,8 +29,4 @@
 }
 .sidebarIsClose {
   display: inline-block;
-}
-.data {
-  font-size: 12px;
-  color: #a19f9d;
 }

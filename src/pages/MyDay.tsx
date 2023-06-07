@@ -1,5 +1,5 @@
-import { Tasks } from '../components/Tasks/Tasks';
-import { MyDayHeader } from '../components/MyDayHeader/MyDayHeader';
+import { Tasks } from '../components/Tasks';
+import { MyDayHeader } from '../components/MyDayHeader';
 
 export const MyDay = () => {
   return (

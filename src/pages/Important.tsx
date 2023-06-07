@@ -1,7 +1,11 @@
-import React from 'react';
-import { Sidebar } from '../components/Sidebar/Sidebar';
-import { Todolist } from '../components/Todolist/Todolist';
+import { Tasks } from '../components/Tasks';
+import { ImportantHeader } from '../components/ImportantHeader';
 
 export const Important = () => {
-  return <div className="wrapper">Important</div>;
+  return (
+    <div>
+      <ImportantHeader />
+      <Tasks />
+    </div>
+  );
 };

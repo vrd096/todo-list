@@ -22,6 +22,13 @@ const todoSlice = createSlice({
           todo.completed = !action.payload.completed;
         });
     },
+    setImportStatus(state, action: PayloadAction<{ id: string; important: boolean }>) {
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.important = !action.payload.important;
+        });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodo.pending, (state, action) => {});
@@ -32,5 +39,5 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, removeTodo, setTodoStatus } = todoSlice.actions;
+export const { addTodo, removeTodo, setTodoStatus, setImportStatus } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

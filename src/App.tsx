@@ -1,6 +1,6 @@
 import './scss/app.scss';
-import { Header } from './components/Header/Header';
-import { Sidebar } from './components/Sidebar/Sidebar';
+import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
 import { Todolist } from './components/Todolist/Todolist';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
