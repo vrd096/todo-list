@@ -91,7 +91,7 @@ export const changeToActiveTask = createAsyncThunk(
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
-      console.log(todo);
+
       const querySnapshot = await getDocs(
         query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
       );
@@ -109,7 +109,6 @@ export const addImportant = createAsyncThunk(
   'todos/addImportantTodo',
   async (todo: Todo, thunkAPI) => {
     try {
-      console.log(todo);
       thunkAPI.dispatch(setImportStatus(todo));
 
       const querySnapshot = await getDocs(
@@ -129,7 +128,6 @@ export const removeImportant = createAsyncThunk(
   'todos/removeImportantTodo',
   async (todo: Todo, thunkAPI) => {
     try {
-      console.log(todo);
       thunkAPI.dispatch(setImportStatus(todo));
 
       const querySnapshot = await getDocs(

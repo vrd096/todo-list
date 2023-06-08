@@ -11,7 +11,9 @@ export const Sidebar = () => {
   const todoList = useSelector((state: RootState) => state);
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
-  const activeTasks = todoList.todos.filter((todo) => todo.completed == false).length;
+  const maDayTasks = todoList.todos.filter((todo) => todo.completed == false).length;
+  const importantTasks = todoList.todos.filter((todo) => todo.important == true).length;
+  const allTasks = todoList.todos.filter((todo) => todo.completed == false).length;
 
   useEffect(() => {
     function handleResize() {
@@ -65,7 +67,7 @@ export const Sidebar = () => {
               </svg>
               <span> Мой день </span>
             </div>
-            <span>{activeTasks}</span>
+            <span>{maDayTasks}</span>
           </li>
         </Link>
         <Link to={'/important'}>
@@ -83,7 +85,7 @@ export const Sidebar = () => {
               </svg>
               <span>Важно</span>
             </div>
-            <span>1</span>
+            <span>{importantTasks}</span>
           </li>
         </Link>
         <Link to={'/inbox'}>
@@ -101,7 +103,7 @@ export const Sidebar = () => {
               </svg>
               <span>Задачи</span>
             </div>
-            <span>25</span>
+            <span>{allTasks}</span>
           </li>
         </Link>
         <div className={styles.lastStaticList}></div>
