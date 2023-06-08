@@ -8,6 +8,7 @@ import {
   changeToActiveTask,
   changeToCompletedTask,
   fetchTodo,
+  removeImportant,
 } from '../../redux/tasks/asyncActions';
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -45,6 +46,9 @@ export const Tasks = React.memo(() => {
   const callbackAddImportant = (task: Todo) => {
     dispatch(addImportant(task));
   };
+  const callbackRemoveImportant = (task: Todo) => {
+    dispatch(removeImportant(task));
+  };
 
   return (
     <div className={styles.todo}>
@@ -55,6 +59,7 @@ export const Tasks = React.memo(() => {
         callbackChangeToActiveTask={callbackChangeToActiveTask}
         callbackChangeToCompletedTask={callbackChangeToCompletedTask}
         callbackAddImportant={callbackAddImportant}
+        callbackRemoveImportant={callbackRemoveImportant}
       />
     </div>
   );

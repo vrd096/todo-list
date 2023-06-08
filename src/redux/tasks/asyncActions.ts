@@ -118,11 +118,7 @@ export const addImportant = createAsyncThunk(
 
       const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
 
-      if (todo.important == false) {
-        await updateDoc(docRef, { 'todo.important': true });
-      } else if (todo.important == true) {
-        await updateDoc(docRef, { 'todo.completed': false });
-      }
+      await updateDoc(docRef, { 'todo.important': true });
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
@@ -130,9 +126,10 @@ export const addImportant = createAsyncThunk(
 );
 
 export const removeImportant = createAsyncThunk(
-  'todos/deleteTodo',
+  'todos/removeImportantTodo',
   async (todo: Todo, thunkAPI) => {
     try {
+      console.log(todo);
       thunkAPI.dispatch(setImportStatus(todo));
 
       const querySnapshot = await getDocs(
@@ -141,7 +138,7 @@ export const removeImportant = createAsyncThunk(
 
       const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
 
-      await updateDoc(docRef, { 'todo.completed': false });
+      await updateDoc(docRef, { 'todo.important': false });
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }

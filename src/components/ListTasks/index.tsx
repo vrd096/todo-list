@@ -13,6 +13,7 @@ interface Props {
   callbackChangeToCompletedTask: (task: Todo) => void;
   callbackChangeToActiveTask: (task: Todo) => void;
   callbackAddImportant: (task: Todo) => void;
+  callbackRemoveImportant: (task: Todo) => void;
   completedTasks: number;
 }
 export const ListTasks = ({
@@ -20,6 +21,7 @@ export const ListTasks = ({
   callbackChangeToCompletedTask,
   callbackChangeToActiveTask,
   callbackAddImportant,
+  callbackRemoveImportant,
   completedTasks,
 }: Props) => {
   return (
@@ -69,7 +71,7 @@ export const ListTasks = ({
                     <button
                       className={styles.importantButton}
                       onClick={() => {
-                        callbackAddImportant(task);
+                        callbackRemoveImportant(task);
                       }}>
                       <svg
                         className={styles.star}
