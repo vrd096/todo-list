@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
 import styles from './Tasks.module.scss';
-import React from 'react';
+
 import {
   addImportant,
   changeToActiveTask,
@@ -14,9 +14,9 @@ import {
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AddTasks } from '../AddTasks';
 import { ListTasks } from '../ListTasks';
-import { Todo } from '../../redux/tasks/types';
+import { PropsTasks, Todo } from '../../redux/tasks/types';
 
-export const Tasks = React.memo(() => {
+export const Tasks = ({ tasks }: PropsTasks) => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
 
@@ -33,7 +33,7 @@ export const Tasks = React.memo(() => {
     });
   }, [dispatch]);
 
-  const tasks: Todo[] = useSelector((state: RootState) => state.todos);
+  // const tasks: Todo[] = useSelector((state: RootState) => state.todos);
 
   const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
@@ -63,4 +63,4 @@ export const Tasks = React.memo(() => {
       />
     </div>
   );
-});
+};

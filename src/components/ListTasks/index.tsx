@@ -6,16 +6,8 @@ import {
   AccordionItemPanel,
 } from 'react-accessible-accordion';
 import styles from './ListTasks.module.scss';
-import { Todo } from '../../redux/tasks/types';
+import { PropsListTasks } from '../../redux/tasks/types';
 
-interface Props {
-  tasks: Todo[];
-  callbackChangeToCompletedTask: (task: Todo) => void;
-  callbackChangeToActiveTask: (task: Todo) => void;
-  callbackAddImportant: (task: Todo) => void;
-  callbackRemoveImportant: (task: Todo) => void;
-  completedTasks: number;
-}
 export const ListTasks = ({
   tasks,
   callbackChangeToCompletedTask,
@@ -23,7 +15,7 @@ export const ListTasks = ({
   callbackAddImportant,
   callbackRemoveImportant,
   completedTasks,
-}: Props) => {
+}: PropsListTasks) => {
   return (
     <div className={styles.tasks}>
       <div>
