@@ -31,6 +31,7 @@ export const AddTasks = () => {
           className={styles.addToTopInput}
           type="text"
           placeholder="Добавить задачу"
+          maxLength={740}
           value={todoDescription}
           onKeyUp={onKeyUpHandler}
           onChange={(e) => setTodoDescription(e.target.value)}

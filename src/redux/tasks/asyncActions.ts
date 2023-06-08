@@ -69,7 +69,7 @@ export const addTask = createAsyncThunk<Todo, string>(
 );
 
 export const changeToCompletedTask = createAsyncThunk(
-  'todos/deleteTodo',
+  'todos/completedTodo',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
@@ -87,7 +87,7 @@ export const changeToCompletedTask = createAsyncThunk(
   },
 );
 export const changeToActiveTask = createAsyncThunk(
-  'todos/deleteTodo',
+  'todos/activeTodo',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
