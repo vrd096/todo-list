@@ -11,7 +11,7 @@ export const Sidebar = () => {
   const todoList = useSelector((state: RootState) => state);
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
-  const maDayTasks = todoList.todos.filter((todo) => todo.completed == false).length;
+  const maDayTasks = todoList.todos.filter((todo) => todo.deadline != undefined).length;
   const importantTasks = todoList.todos.filter((todo) => todo.important == true).length;
   const allTasks = todoList.todos.filter((todo) => todo.completed == false).length;
 

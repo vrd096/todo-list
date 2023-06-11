@@ -42,7 +42,7 @@ export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', 
 
   tasks.forEach((task) => {
     if (task.deadline != undefined) {
-      let todo = task.deadline.toDate();
+      let todo = new Date(task.deadline);
       task.deadline = String(todo);
 
       return task;

@@ -8,19 +8,22 @@ export const MyDay = () => {
   const tasksData: Todo[] = useSelector((state: RootState) => state.todos);
   const today = new Date();
 
-  const tasks = tasksData.filter((task) => {
+  const tasksToday = tasksData.filter((task) => {
     if (task.deadline != undefined) {
-      const objDate = new Date(task.deadline);
-      return objDate.getDate() == today.getDate();
+      const taskDeadline = new Date(task.deadline);
+      const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
+      const todayDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
+
+      return taskDeadlineDate == todayDate;
     }
 
-    // return objDate.getDate() >= today.getDate();
+    // return taskDeadline.getDate() >= today.getDate();
   });
 
   return (
     <div>
       <MyDayHeader />
-      <Tasks tasks={tasks} />
+      <Tasks tasks={tasksToday} />
     </div>
   );
 };
