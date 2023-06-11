@@ -10,7 +10,8 @@ export const AddTasks = () => {
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
-      dispatch(addTask(todoDescription.trim()));
+      const deadline = new Date();
+      dispatch(addTask({ title: todoDescription.trim(), deadline }));
       setTodoDescription('');
     }
   };
@@ -18,7 +19,8 @@ export const AddTasks = () => {
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (todoDescription.trim() !== '') {
-        dispatch(addTask(todoDescription.trim()));
+        const deadline = new Date();
+        dispatch(addTask({ title: todoDescription.trim(), deadline }));
         setTodoDescription('');
       }
     }

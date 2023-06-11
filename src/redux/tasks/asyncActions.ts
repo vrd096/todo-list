@@ -16,7 +16,8 @@ import {
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 import { addTodo, setTodoStatus, setImportStatus } from './slice';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
+import { isUndefined } from 'util';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
@@ -37,19 +38,29 @@ export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', 
 
   const data = querySnapshot.docs.map((doc) => doc.data());
 
-  const task: Todo[] = data.map((item) => item.todo);
+  const tasks: Todo[] = data.map((item) => item.todo);
 
-  return task;
+  tasks.forEach((task) => {
+    if (task.deadline != undefined) {
+      let todo = task.deadline.toDate();
+      task.deadline = String(todo);
+
+      return task;
+    }
+  });
+
+  return tasks;
 });
 
-export const addTask = createAsyncThunk<Todo, string>(
+export const addTask = createAsyncThunk<Todo, { title: string; deadline: Date }>(
   'todos/addTask',
-  async (title: string, thunkAPI) => {
+  async ({ title, deadline }, thunkAPI) => {
     const todoTask = {
       id: uuidv4(),
       title,
       completed: false,
       important: false,
+      deadline,
     };
     try {
       thunkAPI.dispatch(addTodo(todoTask));

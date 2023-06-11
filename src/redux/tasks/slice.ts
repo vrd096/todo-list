@@ -9,6 +9,7 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
+      console.log(action.payload);
       state.unshift(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
