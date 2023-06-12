@@ -29,6 +29,7 @@
     "nodemon": "^2.0.22",
     "react": "^18.2.0",
     "react-accessible-accordion": "^5.0.0",
+    "react-calendar": "^4.2.1",
     "react-content-loader": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",

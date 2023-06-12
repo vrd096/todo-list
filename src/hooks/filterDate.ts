@@ -1,8 +1,6 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 import { Todo } from '../redux/tasks/types';
 
-export function filterDate(tasksData) {
+export function filterDate(tasksData: Todo[]) {
   const today = new Date();
   //   const tasksData: Todo[] = useSelector((state: RootState) => state.todos);
 

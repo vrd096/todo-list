@@ -124,7 +124,7 @@ export const LoginForm = () => {
                       strokeWidth="3"
                       stroke="url(#sw-gradient)"></path>{' '}
                   </svg>
-                  <p>Todolist</p>
+                  <p>TimeKeeper</p>
                 </div>
                 <button onClick={signOut}>Выйти</button>
               </div>

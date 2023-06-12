@@ -17,7 +17,6 @@ import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 import { addTodo, setTodoStatus, setImportStatus } from './slice';
 import { getAuth } from 'firebase/auth';
-import { isUndefined } from 'util';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
@@ -42,8 +41,9 @@ export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', 
 
   tasks.forEach((task) => {
     if (task.deadline != undefined) {
-      let todo = task.deadline.toDate();
-      task.deadline = String(todo);
+      let todo = task.deadline.toDate().toString();
+
+      task.deadline = todo;
 
       return task;
     }
