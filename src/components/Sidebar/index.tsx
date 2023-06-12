@@ -5,15 +5,17 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
 import { useEffect } from 'react';
+import { filterDate } from '../../hooks/filterDate';
+import { Todo } from '../../redux/tasks/types';
 
 export const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const todoList = useSelector((state: RootState) => state);
+  const tasksData: Todo[] = useSelector((state: RootState) => state.todos);
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
-  const maDayTasks = todoList.todos.filter((todo) => todo.deadline != undefined).length;
-  const importantTasks = todoList.todos.filter((todo) => todo.important == true).length;
-  const allTasks = todoList.todos.filter((todo) => todo.completed == false).length;
+  const maDayTasks = filterDate(tasksData).length;
+  const importantTasks = tasksData.filter((todo) => todo.important == true).length;
+  const allTasks = tasksData.filter((todo) => todo.completed == false).length;
 
   useEffect(() => {
     function handleResize() {

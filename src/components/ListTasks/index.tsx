@@ -42,8 +42,8 @@ export const ListTasks = ({
                       }}>
                       <svg
                         className={styles.star}
-                        width="18px"
-                        height="18px"
+                        width="16px"
+                        height="16px"
                         fill="#252423"
                         strokeWidth="3px"
                         viewBox="0 0 64.00 64.00"
@@ -67,8 +67,8 @@ export const ListTasks = ({
                       }}>
                       <svg
                         className={styles.star}
-                        width="18px"
-                        height="18px"
+                        width="16px"
+                        height="16px"
                         fill="#78bafd"
                         strokeWidth="3px"
                         viewBox="0 0 64.00 64.00"
