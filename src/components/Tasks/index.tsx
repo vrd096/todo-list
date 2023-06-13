@@ -51,7 +51,7 @@ export const Tasks = ({ tasks }: PropsTasks) => {
   };
 
   return (
-    <div className={styles.todo}>
+    <div className={styles.tasksWrapper}>
       <AddTasks />
       <ListTasks
         tasks={tasks}

@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { KeyboardEvent, SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './AddTasks.module.scss';
@@ -12,7 +12,7 @@ export const AddTasks = () => {
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
 
-  function handleDateChange(date) {
+  function handleDateChange(date: Date) {
     setDate(date);
     setShowCalendar(false);
     console.log(date.toLocaleDateString());
@@ -77,7 +77,6 @@ export const AddTasks = () => {
             </div>
           )}
 
-          {/* <p>Выбранная дата: {date.toLocaleDateString()}</p> */}
           <svg
             width="18px"
             height="18px"

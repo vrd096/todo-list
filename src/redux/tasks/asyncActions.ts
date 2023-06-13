@@ -121,7 +121,6 @@ export const addImportant = createAsyncThunk(
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setImportStatus(todo));
-
       const querySnapshot = await getDocs(
         query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
       );

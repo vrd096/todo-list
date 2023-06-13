@@ -5,6 +5,7 @@
 @media (min-width: 1025px) {
   .tasks {
     overflow: scroll;
+    overflow-x: hidden;
     max-height: 100vh;
   }
   .tasksList {
