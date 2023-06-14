@@ -12,6 +12,9 @@ import {
   doc,
   updateDoc,
   where,
+  QuerySnapshot,
+  Firestore,
+  DocumentData,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,10 +30,10 @@ const firebaseApp = initializeApp({
   appId: '1:1076102409898:web:142757f96e24e9311faad3',
   measurementId: 'G-M99G9VDTKJ',
 });
-const db = getFirestore(firebaseApp);
+const db: Firestore = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTodoStatus', async () => {
+export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
   const querySnapshot = await getDocs(
     query(collection(db, `users/${auth.currentUser?.uid}/todos`), orderBy('myTimestamp', 'desc')),
   );
@@ -80,36 +83,48 @@ export const addTask = createAsyncThunk<Todo, { title: string; deadline: Date }>
 );
 
 export const changeToCompletedTask = createAsyncThunk(
-  'todos/completedTodo',
+  'todos/completedTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
 
-      const querySnapshot = await getDocs(
-        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
-      );
+      const user = getAuth().currentUser;
 
-      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
 
-      await updateDoc(docRef, { 'todo.completed': true });
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+
+          await updateDoc(docRef, { 'todo.completed': true });
+        }
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
   },
 );
 export const changeToActiveTask = createAsyncThunk(
-  'todos/activeTodo',
+  'todos/activeTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
 
-      const querySnapshot = await getDocs(
-        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
-      );
+      const user = getAuth().currentUser;
 
-      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
 
-      await updateDoc(docRef, { 'todo.completed': false });
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+
+          await updateDoc(docRef, { 'todo.completed': false });
+        }
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
@@ -117,17 +132,23 @@ export const changeToActiveTask = createAsyncThunk(
 );
 
 export const addImportant = createAsyncThunk(
-  'todos/addImportantTodo',
+  'todos/addImportantTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setImportStatus(todo));
-      const querySnapshot = await getDocs(
-        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
-      );
+      const user = getAuth().currentUser;
 
-      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
 
-      await updateDoc(docRef, { 'todo.important': true });
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+
+          await updateDoc(docRef, { 'todo.important': true });
+        }
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
@@ -135,18 +156,24 @@ export const addImportant = createAsyncThunk(
 );
 
 export const removeImportant = createAsyncThunk(
-  'todos/removeImportantTodo',
+  'todos/removeImportantTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setImportStatus(todo));
 
-      const querySnapshot = await getDocs(
-        query(collection(db, `users/${auth.currentUser?.uid}/todos`), where('todo', '==', todo)),
-      );
+      const user = getAuth().currentUser;
 
-      const docRef = doc(db, `users/${auth.currentUser?.uid}/todos`, querySnapshot.docs[0].id);
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
 
-      await updateDoc(docRef, { 'todo.important': false });
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+
+          await updateDoc(docRef, { 'todo.important': false });
+        }
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
