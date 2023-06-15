@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'firebase/auth';
 import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import styles from './Login.module.scss';

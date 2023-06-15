@@ -1,4 +1,4 @@
-import { KeyboardEvent, SetStateAction, useState } from 'react';
+import { KeyboardEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './AddTasks.module.scss';
@@ -9,18 +9,32 @@ import './Calendar.scss';
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const [date, setDate] = useState(new Date());
+  const [deadline, setDeadline] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   function handleDateChange(date: Date) {
-    setDate(date);
+    setDeadline(date);
     setShowCalendar(false);
     console.log(date.toLocaleDateString());
   }
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
+        setShowCalendar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [modalRef]);
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
-      const deadline = new Date();
+      // const deadline = new Date();
       dispatch(addTask({ title: todoDescription.trim(), deadline }));
       setTodoDescription('');
     }
@@ -29,7 +43,7 @@ export const AddTasks = () => {
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (todoDescription.trim() !== '') {
-        const deadline = new Date();
+        // const deadline = new Date();
         dispatch(addTask({ title: todoDescription.trim(), deadline }));
         setTodoDescription('');
       }
@@ -72,8 +86,8 @@ export const AddTasks = () => {
             </svg>
           </button>
           {showCalendar && (
-            <div>
-              <Calendar onChange={handleDateChange} value={date} />
+            <div ref={modalRef}>
+              <Calendar onChange={handleDateChange} value={deadline} />
             </div>
           )}
 
