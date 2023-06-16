@@ -5,18 +5,26 @@ import styles from './AddTasks.module.scss';
 import { addTask } from '../../redux/tasks/asyncActions';
 import Calendar from 'react-calendar';
 import './Calendar.scss';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { setDefaultLocale } from 'react-datepicker';
+import ru from 'date-fns/locale/ru';
+
+setDefaultLocale(ru);
 
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const [deadline, setDeadline] = useState(new Date());
+  // const [deadline, setDeadline] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [startDate, setStartDate] = useState(new Date());
 
   function handleDateChange(date: Date) {
-    setDeadline(date);
-    setShowCalendar(false);
-    console.log(date.toLocaleDateString());
+    setStartDate(date);
+    // setShowCalendar(false);
+    // console.log(date.toLocaleDateString());
+    // console.log(date);
   }
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -35,6 +43,7 @@ export const AddTasks = () => {
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
       // const deadline = new Date();
+      const deadline = String(startDate);
       dispatch(addTask({ title: todoDescription.trim(), deadline }));
       setTodoDescription('');
     }
@@ -44,6 +53,7 @@ export const AddTasks = () => {
     if (e.key === 'Enter') {
       if (todoDescription.trim() !== '') {
         // const deadline = new Date();
+        const deadline = String(startDate);
         dispatch(addTask({ title: todoDescription.trim(), deadline }));
         setTodoDescription('');
       }
@@ -66,6 +76,7 @@ export const AddTasks = () => {
 
       <div className={styles.addToSet}>
         <span>
+          {/* <AddDeadlineButton/> */}
           <button className={styles.addDeadlineButton} onClick={() => setShowCalendar(true)}>
             <svg
               width="18px"
@@ -85,11 +96,6 @@ export const AddTasks = () => {
               </g>
             </svg>
           </button>
-          {showCalendar && (
-            <div ref={modalRef}>
-              <Calendar onChange={handleDateChange} value={deadline} />
-            </div>
-          )}
 
           <svg
             width="18px"
@@ -139,6 +145,22 @@ export const AddTasks = () => {
             </g>
           </svg>
         </span>
+        {showCalendar && (
+          <div ref={modalRef}>
+            {/* <Calendar onChange={handleDateChange} value={deadline} /> */}
+            <DatePicker
+              selected={startDate}
+              onChange={handleDateChange}
+              value={startDate}
+              // showTimeSelect
+              timeInputLabel="Время:"
+              showTimeInput
+              dateFormat="MM/dd/yyyy HH:mm"
+              timeFormat="HH:mm"
+              locale={ru}
+            />
+          </div>
+        )}
         <button className={styles.addToSetButton} onClick={addButtonHandler}>
           Добавить
         </button>

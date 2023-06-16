@@ -55,7 +55,7 @@ export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', 
   return tasks;
 });
 
-export const addTask = createAsyncThunk<Todo, { title: string; deadline: Date }>(
+export const addTask = createAsyncThunk<Todo, { title: string; deadline: string }>(
   'todos/addTask',
   async ({ title, deadline }, thunkAPI) => {
     const todoTask = {
