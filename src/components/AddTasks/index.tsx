@@ -10,7 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
 
-setDefaultLocale(ru);
+setDefaultLocale('ru');
 
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
@@ -22,9 +22,6 @@ export const AddTasks = () => {
 
   function handleDateChange(date: Date) {
     setStartDate(date);
-    // setShowCalendar(false);
-    // console.log(date.toLocaleDateString());
-    // console.log(date);
   }
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,20 +39,20 @@ export const AddTasks = () => {
 
   const addButtonHandler = () => {
     if (todoDescription.trim() !== '') {
-      // const deadline = new Date();
       const deadline = String(startDate);
       dispatch(addTask({ title: todoDescription.trim(), deadline }));
       setTodoDescription('');
+      setStartDate(new Date());
     }
   };
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (todoDescription.trim() !== '') {
-        // const deadline = new Date();
         const deadline = String(startDate);
         dispatch(addTask({ title: todoDescription.trim(), deadline }));
         setTodoDescription('');
+        setStartDate(new Date());
       }
     }
   };
@@ -151,7 +148,6 @@ export const AddTasks = () => {
             <DatePicker
               selected={startDate}
               onChange={handleDateChange}
-              value={startDate}
               // showTimeSelect
               timeInputLabel="Время:"
               showTimeInput
