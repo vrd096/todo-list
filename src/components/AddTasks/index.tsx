@@ -3,10 +3,8 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './AddTasks.module.scss';
 import { addTask } from '../../redux/tasks/asyncActions';
-import Calendar from 'react-calendar';
-import './Calendar.scss';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import './DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
 
@@ -15,14 +13,15 @@ setDefaultLocale('ru');
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  // const [deadline, setDeadline] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [startDate, setStartDate] = useState(new Date());
 
   function handleDateChange(date: Date) {
     setStartDate(date);
+    console.log(date);
   }
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
@@ -38,8 +37,8 @@ export const AddTasks = () => {
   }, [modalRef]);
 
   const addButtonHandler = () => {
-    if (todoDescription.trim() !== '') {
-      const deadline = String(startDate);
+    if (todoDescription.trim()) {
+      const deadline = startDate.toISOString();
       dispatch(addTask({ title: todoDescription.trim(), deadline }));
       setTodoDescription('');
       setStartDate(new Date());
@@ -47,15 +46,22 @@ export const AddTasks = () => {
   };
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      if (todoDescription.trim() !== '') {
-        const deadline = String(startDate);
-        dispatch(addTask({ title: todoDescription.trim(), deadline }));
-        setTodoDescription('');
-        setStartDate(new Date());
-      }
+    const isEnterKey = e.key === 'Enter';
+    const isTodoDescriptionValid = todoDescription.trim() !== '';
+
+    if (isEnterKey && isTodoDescriptionValid) {
+      const deadline = String(startDate);
+
+      dispatch(addTask({ title: todoDescription.trim(), deadline }));
+      setTodoDescription('');
+      setStartDate(new Date());
     }
   };
+
+  const handleCloseCalendar = () => {
+    setShowCalendar(false);
+  };
+
   return (
     <div className={styles.addToTop}>
       <div className={styles.inputWrapper}>
@@ -73,7 +79,6 @@ export const AddTasks = () => {
 
       <div className={styles.addToSet}>
         <span>
-          {/* <AddDeadlineButton/> */}
           <button className={styles.addDeadlineButton} onClick={() => setShowCalendar(true)}>
             <svg
               width="18px"
@@ -93,21 +98,22 @@ export const AddTasks = () => {
               </g>
             </svg>
           </button>
-
-          <svg
-            width="18px"
-            height="18px"
-            fill="#fff"
-            viewBox="0 0 32 32"
-            xmlns="http://www.w3.org/2000/svg">
-            <defs></defs>
-            <title />
-            <g data-name="Layer 2" id="Layer_2">
-              <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
-              <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
-              <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
-            </g>
-          </svg>
+          <button className={styles.addDeadlineButton} onClick={() => setShowCalendar(true)}>
+            <svg
+              width="18px"
+              height="18px"
+              fill="#fff"
+              viewBox="0 0 32 32"
+              xmlns="http://www.w3.org/2000/svg">
+              <defs></defs>
+              <title />
+              <g data-name="Layer 2" id="Layer_2">
+                <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
+                <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
+                <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
+              </g>
+            </svg>
+          </button>
 
           <svg
             width="18px"
@@ -144,16 +150,16 @@ export const AddTasks = () => {
         </span>
         {showCalendar && (
           <div ref={modalRef}>
-            {/* <Calendar onChange={handleDateChange} value={deadline} /> */}
             <DatePicker
               selected={startDate}
               onChange={handleDateChange}
-              // showTimeSelect
+              onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
               showTimeInput
               dateFormat="MM/dd/yyyy HH:mm"
               timeFormat="HH:mm"
               locale={ru}
+              open={true}
             />
           </div>
         )}
