@@ -13,8 +13,10 @@ export const Sidebar = () => {
   const tasksData: Todo[] = useSelector((state: RootState) => state.todos);
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
 
-  const maDayTasks = filterDate(tasksData).length;
-  const importantTasks = tasksData.filter((todo) => todo.important == true).length;
+  const maDayTasks = filterDate(tasksData).filter((todo) => todo.completed == false).length;
+  const importantTasks = tasksData
+    .filter((todo) => todo.important == true)
+    .filter((todo) => todo.completed == false).length;
   const allTasks = tasksData.filter((todo) => todo.completed == false).length;
 
   useEffect(() => {

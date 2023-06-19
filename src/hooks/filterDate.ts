@@ -1,8 +1,7 @@
 import { Todo } from '../redux/tasks/types';
 
-export function filterDate(tasksData: Todo[]) {
+export const filterDate = (tasksData: Todo[]) => {
   const today = new Date();
-  //   const tasksData: Todo[] = useSelector((state: RootState) => state.todos);
 
   const tasksToday = tasksData.filter((task) => {
     if (task.deadline != undefined) {
@@ -10,8 +9,14 @@ export function filterDate(tasksData: Todo[]) {
       const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
       const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
 
-      return taskDeadlineDate == todayDate;
+      return taskDeadlineDate === todayDate;
     }
+
+    return false;
   });
+
+  if (tasksToday.length === 0) {
+    return [];
+  }
   return tasksToday;
-}
+};
