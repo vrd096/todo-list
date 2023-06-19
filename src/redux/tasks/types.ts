@@ -17,3 +17,9 @@ export interface PropsListTasks {
 export interface PropsTasks {
   tasks: Todo[];
 }
+export interface PropsSidebar {
+  maDayTasks: number;
+  importantTasks: number;
+  allTasks: number;
+  isSidebarOpen: boolean;
+}
