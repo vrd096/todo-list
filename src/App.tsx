@@ -1,12 +1,17 @@
 import './scss/app.scss';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
-import { Todolist } from './components/Todolist/Todolist';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
+import { Todolist } from './components/Todolist';
+import { useEffect } from 'react';
 
 function App() {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
+
+  useEffect(() => {
+    window.process = { ...window.process };
+  }, []);
 
   return (
     <div className={`app ${isSidebarOpen ? 'app-open' : 'app-closed'}`}>

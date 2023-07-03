@@ -9,7 +9,6 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
-      console.log(action.payload);
       state.unshift(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
@@ -23,7 +22,7 @@ const todoSlice = createSlice({
           todo.completed = !action.payload.completed;
         });
     },
-    setImportStatus(state, action: PayloadAction<{ id: string; important: boolean }>) {
+    setImportantStatus(state, action: PayloadAction<{ id: string; important: boolean }>) {
       state
         .filter((todo) => todo.id === action.payload.id)
         .forEach((todo) => {
@@ -40,5 +39,5 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, removeTodo, setTodoStatus, setImportStatus } = todoSlice.actions;
+export const { addTodo, removeTodo, setTodoStatus, setImportantStatus } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

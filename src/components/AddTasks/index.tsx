@@ -39,7 +39,8 @@ export const AddTasks = () => {
   const addButtonHandler = () => {
     if (todoDescription.trim()) {
       const deadline = startDate.toISOString();
-      dispatch(addTask({ title: todoDescription.trim(), deadline }));
+      const reminder = startDate.toISOString();
+      dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
       setTodoDescription('');
       setStartDate(new Date());
     }
@@ -51,8 +52,9 @@ export const AddTasks = () => {
 
     if (isEnterKey && isTodoDescriptionValid) {
       const deadline = String(startDate);
+      const reminder = String(startDate);
 
-      dispatch(addTask({ title: todoDescription.trim(), deadline }));
+      dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
       setTodoDescription('');
       setStartDate(new Date());
     }

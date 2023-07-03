@@ -12,7 +12,8 @@ import {
 } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
-import { addTodo, setTodoStatus, setImportStatus } from './slice';
+import { addTodo, setTodoStatus, setImportantStatus } from './slice';
+import { addEventGoogleCalendar } from '../../utils/googleCalendar';
 
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
   try {
@@ -35,40 +36,41 @@ export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', 
   }
 });
 
-export const addTask = createAsyncThunk<Todo, { title: string; deadline: string }>(
-  'todos/addTask',
-  async ({ title, deadline }, thunkAPI) => {
-    try {
-      const todoTask = {
-        id: uuidv4(),
-        title,
-        completed: false,
-        important: false,
-        deadline,
-      };
-      thunkAPI.dispatch(addTodo(todoTask));
-      const user = auth.currentUser;
-      if (user) {
-        await addDoc(collection(db, `users/${user?.uid}/todos`), {
-          todo: todoTask,
-          myTimestamp: serverTimestamp(),
-        });
-        return todoTask;
-      }
+export const addTask = createAsyncThunk<
+  Todo,
+  { title: string; deadline: string; reminder: string }
+>('todos/addTask', async ({ title, deadline, reminder }, thunkAPI) => {
+  try {
+    const todoTask = {
+      id: uuidv4(),
+      title,
+      completed: false,
+      important: false,
+      deadline,
+      reminder,
+    };
+    thunkAPI.dispatch(addTodo(todoTask));
+    const user = auth.currentUser;
+    if (user) {
+      await addDoc(collection(db, `users/${user?.uid}/todos`), {
+        todo: todoTask,
+        myTimestamp: serverTimestamp(),
+      });
       return todoTask;
-    } catch (error) {
-      console.error(error);
-      throw error;
     }
-  },
-);
+    return todoTask;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
 
 export const changeToCompletedTask = createAsyncThunk(
   'todos/completedTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setTodoStatus(todo));
-
+      addEventGoogleCalendar();
       const user = auth.currentUser;
 
       if (user) {
@@ -117,7 +119,7 @@ export const addImportant = createAsyncThunk(
   'todos/addImportantTask',
   async (todo: Todo, thunkAPI) => {
     try {
-      thunkAPI.dispatch(setImportStatus(todo));
+      thunkAPI.dispatch(setImportantStatus(todo));
       const user = auth.currentUser;
 
       if (user) {
@@ -141,7 +143,7 @@ export const removeImportant = createAsyncThunk(
   'todos/removeImportantTask',
   async (todo: Todo, thunkAPI) => {
     try {
-      thunkAPI.dispatch(setImportStatus(todo));
+      thunkAPI.dispatch(setImportantStatus(todo));
 
       const user = auth.currentUser;
 

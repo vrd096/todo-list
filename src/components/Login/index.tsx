@@ -5,26 +5,44 @@ import styles from './Login.module.scss';
 
 export const LoginForm = () => {
   const [showForm, setShowForm] = useState(false);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState({
+    photoURL: '',
+    email: '',
+    displayName: '',
+  });
+  const modalRef = useRef<HTMLDivElement>(null);
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
-  const [user, setUser] = useState(null);
-  const [photoURL, setPhotoURL] = useState('');
-  const [email, setEmail] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user: any) => {
       if (user) {
         setUser(user);
-        setPhotoURL(String(user.photoURL));
-        setEmail(String(user.email));
-        setDisplayName(String(user.displayName));
+        setUserData({
+          photoURL: String(user.photoURL),
+          email: String(user.email),
+          displayName: String(user.displayName),
+        });
       } else {
         setUser(null);
       }
     });
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
+        setShowForm(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [modalRef]);
 
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
@@ -43,20 +61,6 @@ export const LoginForm = () => {
     setShowForm(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
-        setShowForm(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [modalRef]);
-
   return (
     <div>
       {user ? (
@@ -65,7 +69,7 @@ export const LoginForm = () => {
           onClick={() => {
             setShowForm(true);
           }}>
-          <img src={photoURL} />
+          <img src={userData.photoURL} />
         </button>
       ) : (
         <div className={styles.openLoginWrapper}>
@@ -129,10 +133,10 @@ export const LoginForm = () => {
                 <button onClick={signOut}>Выйти</button>
               </div>
               <div className={styles.aboutAccount}>
-                <img src={photoURL} />
+                <img src={userData.photoURL} />
                 <div className={styles.aboutDataAccount}>
-                  <p>{displayName}</p>
-                  <p>{email}</p>
+                  <p>{userData.displayName}</p>
+                  <p>{userData.email}</p>
                 </div>
               </div>
             </div>

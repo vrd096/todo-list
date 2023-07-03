@@ -11,22 +11,26 @@ import {
   removeImportant,
 } from '../../redux/tasks/asyncActions';
 
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AddTasks } from '../AddTasks';
 import { ListTasks } from '../ListTasks';
 import { PropsTasks, Todo } from '../../redux/tasks/types';
+import { auth, onAuthStateChanged } from '../../firebase';
+import { User } from 'firebase/auth';
 
 export const Tasks = ({ tasks }: PropsTasks) => {
-  const auth = getAuth();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user: any) => {
+    onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
         setUser(user);
-        dispatch(fetchTodo());
+        try {
+          await dispatch(fetchTodo());
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         setUser(null);
       }
