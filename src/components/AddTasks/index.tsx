@@ -16,9 +16,10 @@ export const AddTasks = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [startDate, setStartDate] = useState(new Date());
+  const [reminderDate, setReminderDate] = useState(new Date());
 
   function handleDateChange(date: Date) {
-    setStartDate(date);
+    setReminderDate(date);
     console.log(date);
   }
 
@@ -39,7 +40,7 @@ export const AddTasks = () => {
   const addButtonHandler = () => {
     if (todoDescription.trim()) {
       const deadline = startDate.toISOString();
-      const reminder = startDate.toISOString();
+      const reminder = reminderDate.toISOString();
       dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
       setTodoDescription('');
       setStartDate(new Date());
@@ -52,7 +53,7 @@ export const AddTasks = () => {
 
     if (isEnterKey && isTodoDescriptionValid) {
       const deadline = String(startDate);
-      const reminder = String(startDate);
+      const reminder = String(reminderDate);
 
       dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
       setTodoDescription('');
@@ -153,7 +154,7 @@ export const AddTasks = () => {
         {showCalendar && (
           <div ref={modalRef}>
             <DatePicker
-              selected={startDate}
+              selected={reminderDate}
               onChange={handleDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
