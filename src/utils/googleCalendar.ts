@@ -14,11 +14,12 @@ const calendarID = '1076102409898-2t7ucgvn5c14n27p269cg8jujd004tnl.apps.googleus
 const apiKey = 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ';
 
 export const addEventGoogleCalendar = (todoTask: Todo) => {
-  if (todoTask.reminder != undefined) {
+  console.log(todoTask.reminder);
+  if (todoTask.reminder != '') {
     const event = {
       summary: todoTask.title,
       start: {
-        dateTime: todoTask.reminder,
+        dateTime: new Date(todoTask.reminder),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       end: {
@@ -43,7 +44,6 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
           discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
           scope: 'https://www.googleapis.com/auth/calendar.events',
         });
-
         gapi.auth2
           .getAuthInstance()
           .signIn()
@@ -52,7 +52,6 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
               .getAuthInstance()
               .currentUser.get()
               .getAuthResponse().access_token;
-
             addPostGoggleCalendar(accessToken);
             getEvents();
           });
@@ -83,20 +82,17 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
       gapi.load('client', initiate);
     };
     getAccessToken();
-
     const getEvents = () => {
       function initiate() {
         gapi.client
           .init({
             apiKey: apiKey,
           })
-
           .then(function () {
             return gapi.client.request({
               path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
             });
           })
-
           .then(
             (response: any) => {
               let events = response.result.items;
@@ -109,7 +105,6 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
             },
           );
       }
-
       gapi.load('client', initiate);
     };
   }

@@ -50,7 +50,8 @@ export const addTask = createAsyncThunk<
       reminder,
     };
     thunkAPI.dispatch(addTodo(todoTask));
-    addEventGoogleCalendar(todoTask);
+    // console.log(todoTask);
+
     const user = auth.currentUser;
     if (user) {
       await addDoc(collection(db, `users/${user?.uid}/todos`), {

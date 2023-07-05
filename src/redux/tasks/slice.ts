@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
 import { fetchTodo } from './asyncActions';
+import { addEventGoogleCalendar } from '../../utils/googleCalendar';
 
 const initialState: Todo[] = [];
 
@@ -10,6 +11,7 @@ const todoSlice = createSlice({
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.unshift(action.payload);
+      addEventGoogleCalendar(action.payload);
     },
     removeTodo(state, action: PayloadAction<string>) {
       const index = state.findIndex((todo) => todo.id === action.payload);

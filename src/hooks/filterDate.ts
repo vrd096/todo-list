@@ -18,5 +18,6 @@ export const filterDate = (tasksData: Todo[]) => {
   if (tasksToday.length === 0) {
     return [];
   }
+
   return tasksToday;
 };

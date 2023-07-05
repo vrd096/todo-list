@@ -16,7 +16,7 @@ export const MyDay = () => {
   //   dispatch(fetchTodo());
   // }, 15000);
 
-  console.log(filterReminder(tasksData));
+  // console.log(filterReminder(tasksData));
   const tasksToday = filterDate(tasksData);
   return (
     <div>
