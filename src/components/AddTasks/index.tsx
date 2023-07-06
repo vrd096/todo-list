@@ -7,27 +7,32 @@ import DatePicker from 'react-datepicker';
 import './DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
+import { DeadlineButton } from '../DeadlineButton';
+import { ReminderButton } from '../ReminderButton';
 
 setDefaultLocale('ru');
 
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(false);
+  const [showReminderCalendar, setShowReminderCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [startDate, setStartDate] = useState(new Date());
+  const [deadlineDate, setDeadlineDate] = useState(new Date());
   const [reminderDate, setReminderDate] = useState('');
 
-  function handleDateChange(date: any) {
+  function handleDeadlineDateChange(date: any) {
+    setDeadlineDate(date);
+  }
+  function handleReminderDateChange(date: any) {
     setReminderDate(date);
-    setStartDate(date);
-    console.log(date);
   }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
-        setShowCalendar(false);
+        setShowDeadlineCalendar(false);
+        setShowReminderCalendar(false);
       }
     };
 
@@ -38,13 +43,18 @@ export const AddTasks = () => {
     };
   }, [modalRef]);
 
+  function addDispatchData() {
+    const deadline = String(deadlineDate);
+    const reminder = String(reminderDate);
+    dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
+    setTodoDescription('');
+    setDeadlineDate(new Date());
+    setReminderDate('');
+  }
+
   const addButtonHandler = () => {
     if (todoDescription.trim()) {
-      const deadline = String(startDate);
-      const reminder = String(reminderDate);
-      dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
-      setTodoDescription('');
-      setStartDate(new Date());
+      addDispatchData();
     }
   };
 
@@ -53,17 +63,13 @@ export const AddTasks = () => {
     const isTodoDescriptionValid = todoDescription.trim() !== '';
 
     if (isEnterKey && isTodoDescriptionValid) {
-      const deadline = String(startDate);
-      const reminder = String(reminderDate);
-
-      dispatch(addTask({ title: todoDescription.trim(), deadline, reminder }));
-      setTodoDescription('');
-      setStartDate(new Date());
+      addDispatchData();
     }
   };
 
   const handleCloseCalendar = () => {
-    setShowCalendar(false);
+    setShowDeadlineCalendar(false);
+    setShowReminderCalendar(false);
   };
 
   return (
@@ -83,41 +89,14 @@ export const AddTasks = () => {
 
       <div className={styles.addToSet}>
         <span>
-          <button className={styles.addDeadlineButton} onClick={() => setShowCalendar(true)}>
-            <svg
-              width="18px"
-              height="18px"
-              fill="#fff"
-              version="1.1"
-              viewBox="0 0 100.353 100.353"
-              xmlns="http://www.w3.org/2000/svg">
-              <g>
-                <path d="M32.286,42.441h-9.762c-0.829,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.829,0,1.5-0.672,1.5-1.5   v-9.762C33.786,43.113,33.115,42.441,32.286,42.441z M30.786,52.203h-6.762v-6.762h6.762V52.203z" />
-                <path d="M55.054,42.441h-9.762c-0.829,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5   v-9.762C56.554,43.113,55.882,42.441,55.054,42.441z M53.554,52.203h-6.762v-6.762h6.762V52.203z" />
-                <path d="M77.12,42.441h-9.762c-0.828,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.672,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5v-9.762   C78.62,43.113,77.948,42.441,77.12,42.441z M75.62,52.203h-6.762v-6.762h6.762V52.203z" />
-                <path d="M32.286,64.677h-9.762c-0.829,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.829,0,1.5-0.672,1.5-1.5   v-9.762C33.786,65.349,33.115,64.677,32.286,64.677z M30.786,74.439h-6.762v-6.762h6.762V74.439z" />
-                <path d="M55.054,64.677h-9.762c-0.829,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5   v-9.762C56.554,65.349,55.882,64.677,55.054,64.677z M53.554,74.439h-6.762v-6.762h6.762V74.439z" />
-                <path d="M77.12,64.677h-9.762c-0.828,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.672,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5v-9.762   C78.62,65.349,77.948,64.677,77.12,64.677z M75.62,74.439h-6.762v-6.762h6.762V74.439z" />
-                <path d="M89,13.394h-9.907c-0.013,0-0.024,0.003-0.037,0.004V11.4c0-3.268-2.658-5.926-5.926-5.926s-5.926,2.659-5.926,5.926v1.994   H56.041V11.4c0-3.268-2.658-5.926-5.926-5.926s-5.926,2.659-5.926,5.926v1.994H33.025V11.4c0-3.268-2.658-5.926-5.926-5.926   s-5.926,2.659-5.926,5.926v1.995c-0.005,0-0.01-0.001-0.015-0.001h-9.905c-0.829,0-1.5,0.671-1.5,1.5V92.64   c0,0.828,0.671,1.5,1.5,1.5H89c0.828,0,1.5-0.672,1.5-1.5V14.894C90.5,14.065,89.828,13.394,89,13.394z M70.204,11.4   c0-1.614,1.312-2.926,2.926-2.926s2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926s-2.926-1.312-2.926-2.926V11.4z    M50.115,8.474c1.613,0,2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926c-1.614,0-2.926-1.312-2.926-2.926v-4.643   c0.004-0.047,0.014-0.092,0.014-0.141s-0.01-0.094-0.014-0.141V11.4C47.189,9.786,48.501,8.474,50.115,8.474z M24.173,11.4   c0-1.614,1.312-2.926,2.926-2.926c1.613,0,2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926   c-1.614,0-2.926-1.312-2.926-2.926V11.4z M87.5,91.14H12.753V16.394h8.405c0.005,0,0.01-0.001,0.015-0.001v3.285   c0,3.268,2.659,5.926,5.926,5.926s5.926-2.658,5.926-5.926v-3.283h11.164v3.283c0,3.268,2.659,5.926,5.926,5.926   s5.926-2.658,5.926-5.926v-3.283h11.163v3.283c0,3.268,2.658,5.926,5.926,5.926s5.926-2.658,5.926-5.926V16.39   c0.013,0,0.024,0.004,0.037,0.004H87.5V91.14z" />
-              </g>
-            </svg>
-          </button>
-          <button className={styles.addDeadlineButton} onClick={() => setShowCalendar(true)}>
-            <svg
-              width="18px"
-              height="18px"
-              fill="#fff"
-              viewBox="0 0 32 32"
-              xmlns="http://www.w3.org/2000/svg">
-              <defs></defs>
-              <title />
-              <g data-name="Layer 2" id="Layer_2">
-                <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
-                <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
-                <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
-              </g>
-            </svg>
-          </button>
+          <DeadlineButton
+            stylesAddDeadlineButton={styles.addDeadlineButton}
+            setShowDeadlineCalendar={setShowDeadlineCalendar}
+          />
+          <ReminderButton
+            stylesAddDeadlineButton={styles.addDeadlineButton}
+            setShowReminderCalendar={setShowReminderCalendar}
+          />
 
           <svg
             width="18px"
@@ -152,11 +131,26 @@ export const AddTasks = () => {
             </g>
           </svg>
         </span>
-        {showCalendar && (
+        {showDeadlineCalendar && (
           <div ref={modalRef}>
             <DatePicker
               selected={new Date()}
-              onChange={handleDateChange}
+              onChange={handleDeadlineDateChange}
+              onSelect={handleCloseCalendar}
+              timeInputLabel="Время:"
+              showTimeInput
+              dateFormat="MM/dd/yyyy HH:mm"
+              timeFormat="HH:mm"
+              locale={ru}
+              open={true}
+            />
+          </div>
+        )}
+        {showReminderCalendar && (
+          <div ref={modalRef}>
+            <DatePicker
+              selected={new Date()}
+              onChange={handleReminderDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
               showTimeInput

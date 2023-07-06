@@ -14,7 +14,6 @@ const calendarID = '1076102409898-2t7ucgvn5c14n27p269cg8jujd004tnl.apps.googleus
 const apiKey = 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ';
 
 export const addEventGoogleCalendar = (todoTask: Todo) => {
-  console.log(todoTask.reminder);
   if (todoTask.reminder != '') {
     const event = {
       summary: todoTask.title,
@@ -53,7 +52,7 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
               .currentUser.get()
               .getAuthResponse().access_token;
             addPostGoggleCalendar(accessToken);
-            getEvents();
+            // getEvents();
           });
       });
     }
@@ -82,30 +81,29 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
       gapi.load('client', initiate);
     };
     getAccessToken();
-    const getEvents = () => {
-      function initiate() {
-        gapi.client
-          .init({
-            apiKey: apiKey,
-          })
-          .then(function () {
-            return gapi.client.request({
-              path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
-            });
-          })
-          .then(
-            (response: any) => {
-              let events = response.result.items;
-              console.log(response);
-              return events;
-            },
-            function (err: string) {
-              console.log(err);
-              return [false, err];
-            },
-          );
-      }
-      gapi.load('client', initiate);
-    };
+    // const getEvents = () => {
+    //   function initiate() {
+    //     gapi.client
+    //       .init({
+    //         apiKey: apiKey,
+    //       })
+    //       .then(function () {
+    //         return gapi.client.request({
+    //           path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
+    //         });
+    //       })
+    //       .then(
+    //         (response: any) => {
+    //           let events = response.result.items;
+    //           return events;
+    //         },
+    //         function (err: string) {
+    //           console.log(err);
+    //           return [false, err];
+    //         },
+    //       );
+    //   }
+    //   gapi.load('client', initiate);
+    // };
   }
 };
