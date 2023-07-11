@@ -1,0 +1,22 @@
+.circle {
+  display: block;
+  height: 15px;
+  width: 15px;
+  margin-right: 20px;
+  padding: 7px;
+  background-color: transparent;
+  border: 1px solid #78bafd;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover::before {
+    content: '\2713';
+    position: relative;
+    bottom: 5px;
+    right: 3px;
+    display: block;
+    text-align: center;
+    color: #78bafd;
+    font-size: 10px;
+    line-height: 8px;
+  }
+}

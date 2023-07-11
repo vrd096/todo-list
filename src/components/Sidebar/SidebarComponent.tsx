@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
-import { PropsSidebar } from '../../redux/tasks/types';
+import { PropsSidebar } from '../../redux/sidebar/types';
 
 export const SidebarComponent = ({
   maDayTasks,

@@ -47,6 +47,7 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-scrollbars-custom": "^4.1.1",
+    "react-textarea-autosize": "^8.5.2",
     "redux-firestore": "^2.0.1",
     "sass": "^1.56.2",
     "typescript": "^5.0.4",

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import { Todolist } from './components/Todolist';
 import { useEffect } from 'react';
+import { TaskDetails } from './components/TaskDetails';
 
 function App() {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
@@ -23,6 +24,9 @@ function App() {
       </div>
       <div className="content">
         <Todolist />
+      </div>
+      <div className="details">
+        <TaskDetails />
       </div>
     </div>
   );

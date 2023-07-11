@@ -1,4 +1,5 @@
 .sideBar {
+  max-width: 290px;
   height: 100%;
   padding: 25px 0;
   background-color: #252423;
@@ -76,8 +77,11 @@
 @media (min-width: 320px) and (max-width: 1024px) {
   .sideBar {
     position: fixed;
+    width: 100%;
     z-index: 1;
-    width: 220px;
+    li {
+      padding: 0 15px;
+    }
   }
   .addListInput {
     width: 150px;

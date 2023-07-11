@@ -7,6 +7,7 @@ import {
 } from 'react-accessible-accordion';
 import styles from './ListTasks.module.scss';
 import { PropsListTasks } from '../../redux/tasks/types';
+import { TaskCompletionButton } from '../TaskCompletionButton';
 
 export const ListTasks = ({
   tasks,
@@ -14,6 +15,7 @@ export const ListTasks = ({
   callbackChangeToActiveTask,
   callbackAddImportant,
   callbackRemoveImportant,
+  openTaskDetails,
   completedTasks,
 }: PropsListTasks) => {
   return (
@@ -26,13 +28,17 @@ export const ListTasks = ({
               return (
                 <li className={styles.taskItem} key={task.id}>
                   <div className={styles.titleWrapper}>
+                    <TaskCompletionButton
+                      callbackChangeToCompletedTask={callbackChangeToCompletedTask}
+                      task={task}
+                    />
                     <button
-                      className={styles.circle}
+                      className={styles.taskTitleButton}
                       onClick={() => {
-                        callbackChangeToCompletedTask(task);
-                      }}></button>
-
-                    <span>{task.title}</span>
+                        openTaskDetails(task);
+                      }}>
+                      <span>{task.title}</span>
+                    </button>
                   </div>
                   {!task.important ? (
                     <button

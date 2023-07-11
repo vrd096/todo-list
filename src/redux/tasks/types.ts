@@ -12,15 +12,10 @@ export interface PropsListTasks {
   callbackChangeToActiveTask: (task: Todo) => void;
   callbackAddImportant: (task: Todo) => void;
   callbackRemoveImportant: (task: Todo) => void;
+  openTaskDetails: (task: Todo) => void;
   completedTasks: number;
 }
 
 export interface PropsTasks {
   tasks: Todo[];
-}
-export interface PropsSidebar {
-  maDayTasks: number;
-  importantTasks: number;
-  allTasks: number;
-  isSidebarOpen: boolean;
 }

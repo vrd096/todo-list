@@ -16,6 +16,7 @@ import { ListTasks } from '../ListTasks';
 import { PropsTasks, Todo } from '../../redux/tasks/types';
 import { auth, onAuthStateChanged } from '../../firebase';
 import { User } from 'firebase/auth';
+import { dataTaskDetails, toggleTaskDetails } from '../../redux/taskDetails/slice';
 
 export const Tasks = ({ tasks }: PropsTasks) => {
   const [user, setUser] = useState<User | null>(null);
@@ -53,6 +54,10 @@ export const Tasks = ({ tasks }: PropsTasks) => {
   const callbackRemoveImportant = (task: Todo) => {
     dispatch(removeImportant(task));
   };
+  const openTaskDetails = (task: any) => {
+    dispatch(dataTaskDetails(task));
+    dispatch(toggleTaskDetails());
+  };
 
   return (
     <div className={styles.tasksWrapper}>
@@ -64,6 +69,7 @@ export const Tasks = ({ tasks }: PropsTasks) => {
         callbackChangeToCompletedTask={callbackChangeToCompletedTask}
         callbackAddImportant={callbackAddImportant}
         callbackRemoveImportant={callbackRemoveImportant}
+        openTaskDetails={openTaskDetails}
       />
     </div>
   );

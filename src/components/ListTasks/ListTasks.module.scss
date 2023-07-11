@@ -21,6 +21,7 @@
   margin-top: 15px;
   padding: 0 25px;
   background-color: #252423;
+
   // word-wrap: break-word;
   // word-break: break-word;
   // &:last-child {
@@ -38,7 +39,21 @@
 .titleWrapper {
   display: flex;
   align-items: center;
+  width: 100%;
+  p {
+    width: 100%;
+  }
 }
+.taskTitleButton {
+  width: 100%;
+  min-height: 50px;
+  text-align: left;
+  vertical-align: text-top;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+}
+
 .importantButton {
   margin-left: 20px;
   background-color: transparent;
@@ -130,10 +145,13 @@
   cursor: pointer;
   &:hover::before {
     content: '\2713';
+    position: relative;
+    bottom: 5px;
+    right: 3px;
     display: block;
     text-align: center;
     color: #78bafd;
-    font-size: 8px;
+    font-size: 10px;
     line-height: 8px;
   }
 }
