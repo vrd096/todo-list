@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  min-width: 360px;
   height: 100%;
   padding: 25px;
   background-color: #201f1e;
@@ -13,21 +13,50 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-
+}
+.titleWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #252423;
+  // button {
+  //   margin: 15px;
+  // }
+}
+.managingStatusTasks {
   button {
+    width: 100%;
     margin-top: 10px;
     padding: 15px;
     background-color: #252423;
     border: 0;
     color: #a19f9d;
   }
-  input {
-    padding: 15px;
+  textarea {
   }
 }
+.importantButton {
+  margin-left: 20px;
+  background-color: transparent;
+  border: 0;
+}
+
+.star {
+  min-height: 16px;
+  min-width: 16px;
+
+  // fill: #252423;
+  stroke: #78bafd;
+  cursor: pointer;
+  // &:hover {
+  //   fill: #78bafd;
+  // }
+}
+
 .detailsBodyInput {
   width: 100%;
-  min-height: 50px;
   background-color: #252423;
   border: 0;
   color: #fff;
