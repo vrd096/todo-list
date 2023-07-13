@@ -8,6 +8,7 @@ import {
 import styles from './ListTasks.module.scss';
 import { PropsListTasks } from '../../redux/tasks/types';
 import { TaskCompletionButton } from '../TaskCompletionButton';
+import { TaskActiveButton } from '../TaskActiveButton';
 
 export const ListTasks = ({
   tasks,
@@ -111,13 +112,17 @@ export const ListTasks = ({
                   return (
                     <li className={styles.taskItem} key={task.id}>
                       <div className={styles.titleWrapper}>
+                        <TaskActiveButton
+                          callbackChangeToActiveTask={callbackChangeToActiveTask}
+                          task={task}
+                        />
                         <button
-                          className={styles.circleCompleted}
+                          className={styles.taskTitleButton}
                           onClick={() => {
-                            callbackChangeToActiveTask(task);
-                          }}></button>
-
-                        <span>{task.title}</span>
+                            openTaskDetails(task);
+                          }}>
+                          <span>{task.title}</span>
+                        </button>
                       </div>
                       {!task.important ? (
                         <button

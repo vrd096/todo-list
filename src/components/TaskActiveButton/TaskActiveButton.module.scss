@@ -1,0 +1,23 @@
+.circleCompleted {
+  display: inline;
+  height: 15px;
+  width: 15px;
+  margin-right: 20px;
+  padding: 7px;
+  background-color: #78bafd;
+  border: 1px solid #78bafd;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  &::before {
+    content: '\2713';
+    position: relative;
+    right: 4px;
+    bottom: 6px;
+    display: block;
+    text-align: center;
+    color: #000;
+    font-size: 12px;
+    line-height: 12px;
+  }
+}

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './TaskDetails.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { Todo } from '../../redux/tasks/types';
 import classNames from 'classnames';
 import { toggleTaskDetails } from '../../redux/taskDetails/slice';
 import { TaskCompletionButton } from '../TaskCompletionButton';
 import TextareaAutosize from 'react-textarea-autosize';
 import { format } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
+import { TaskActiveButton } from '../TaskActiveButton';
+import { changeToActiveTask, changeToCompletedTask } from '../../redux/tasks/asyncActions';
+import { Todo } from '../../redux/tasks/types';
 
 export const TaskDetails = () => {
   const task: any = useSelector((state: RootState) => state.taskDetails.data);
@@ -18,10 +20,6 @@ export const TaskDetails = () => {
   const [dayOfWeek, setDayOfWeek] = useState('');
   const [month, setMonth] = useState('');
   const [dayOfMonth, setDayOfMonth] = useState('');
-  // const date = task.dateСreated;
-  // const dayOfWeek = format(date, 'EEEE', { locale: ruLocale });
-  // const month = format(date, 'LLLL', { locale: ruLocale });
-  // const dayOfMonth = format(date, 'd', { locale: ruLocale });
 
   useEffect(() => {
     setInputValue(task.title);
@@ -33,9 +31,15 @@ export const TaskDetails = () => {
       setDayOfWeek(format(date, 'EEEEEE', { locale: ruLocale }));
       setMonth(format(date, 'MMMM', { locale: ruLocale }));
       setDayOfMonth(format(date, 'dd', { locale: ruLocale }));
-      console.log(month);
     }
   }, [task]);
+
+  const callbackChangeToCompletedTask = (task: Todo) => {
+    dispatch(changeToCompletedTask(task));
+  };
+  const callbackChangeToActiveTask = (task: Todo) => {
+    dispatch(changeToActiveTask(task));
+  };
 
   return (
     <div
@@ -46,10 +50,15 @@ export const TaskDetails = () => {
       )}>
       <div className={styles.detailsBody}>
         <div className={styles.titleWrapper}>
-          <TaskCompletionButton
-          // callbackChangeToCompletedTask={callbackChangeToCompletedTask}
-          // task={task}
-          />
+          {!task.completed ? (
+            <TaskCompletionButton
+              callbackChangeToCompletedTask={callbackChangeToCompletedTask}
+              task={task}
+            />
+          ) : (
+            <TaskActiveButton callbackChangeToActiveTask={callbackChangeToActiveTask} task={task} />
+          )}
+
           <TextareaAutosize
             className={styles.detailsBodyInput}
             draggable="false"
@@ -168,7 +177,7 @@ export const TaskDetails = () => {
           </svg>
         </button>
         <p>
-          Cоздано {`${dayOfWeek}`}, {` ${month}  ${dayOfMonth}`}
+          Cоздано {`${dayOfWeek}`}, {` ${dayOfMonth} ${month}`}
         </p>
         <button>
           <svg
