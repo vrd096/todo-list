@@ -7,18 +7,36 @@ import classNames from 'classnames';
 import { toggleTaskDetails } from '../../redux/taskDetails/slice';
 import { TaskCompletionButton } from '../TaskCompletionButton';
 import TextareaAutosize from 'react-textarea-autosize';
+import { format } from 'date-fns';
+import ruLocale from 'date-fns/locale/ru';
 
 export const TaskDetails = () => {
   const task: any = useSelector((state: RootState) => state.taskDetails.data);
   const dispatch = useDispatch<AppDispatch>();
   const isDetailsOpen: boolean = useSelector((state: RootState) => state.taskDetails.isDetailsOpen);
   const [inputValue, setInputValue] = useState(task.title);
-  console.log(task);
+  const [dayOfWeek, setDayOfWeek] = useState('');
+  const [month, setMonth] = useState('');
+  const [dayOfMonth, setDayOfMonth] = useState('');
+  // const date = task.dateСreated;
+  // const dayOfWeek = format(date, 'EEEE', { locale: ruLocale });
+  // const month = format(date, 'LLLL', { locale: ruLocale });
+  // const dayOfMonth = format(date, 'd', { locale: ruLocale });
+
   useEffect(() => {
     setInputValue(task.title);
   }, [task]);
 
-  console.log(task.title);
+  useEffect(() => {
+    if (task.dateСreated != undefined) {
+      const date = new Date(task.dateСreated);
+      setDayOfWeek(format(date, 'EEEEEE', { locale: ruLocale }));
+      setMonth(format(date, 'MMMM', { locale: ruLocale }));
+      setDayOfMonth(format(date, 'dd', { locale: ruLocale }));
+      console.log(month);
+    }
+  }, [task]);
+
   return (
     <div
       className={classNames(
@@ -149,7 +167,9 @@ export const TaskDetails = () => {
             />
           </svg>
         </button>
-        <p>создано вт, 13 июля</p>
+        <p>
+          Cоздано {`${dayOfWeek}`}, {` ${month}  ${dayOfMonth}`}
+        </p>
         <button>
           <svg
             width="22px"

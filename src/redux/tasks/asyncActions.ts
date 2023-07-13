@@ -48,6 +48,7 @@ export const addTask = createAsyncThunk<
       important: false,
       deadline,
       reminder,
+      dateСreated: String(new Date()),
     };
     thunkAPI.dispatch(addTodo(todoTask));
     // console.log(todoTask);
