@@ -3,8 +3,8 @@
   flex-direction: column;
   justify-content: space-between;
   min-width: 360px;
-  height: 100%;
-  padding: 25px;
+  height: 100vh;
+  padding: 25px 25px 75px 25px;
   background-color: #201f1e;
   border-right: 1px solid #252423;
 }
@@ -33,6 +33,12 @@
     background-color: #252423;
     border: 0;
     color: #a19f9d;
+    text-align: left;
+    svg {
+      margin-right: 15px;
+      fill: #a19f9d;
+      vertical-align: middle;
+    }
   }
   textarea {
   }
@@ -67,6 +73,10 @@
 .detailsFooter {
   display: flex;
   justify-content: space-between;
+  button {
+    border: 0;
+    background-color: transparent;
+  }
 }
 
 .detailsOpen {
