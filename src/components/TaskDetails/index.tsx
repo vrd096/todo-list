@@ -9,10 +9,16 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { format } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import { TaskActiveButton } from '../TaskActiveButton';
-import { changeToActiveTask, changeToCompletedTask } from '../../redux/tasks/asyncActions';
+import {
+  addImportant,
+  changeToActiveTask,
+  changeToCompletedTask,
+  removeImportant,
+} from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
 
 export const TaskDetails = () => {
+  const tasks: Todo[] = useSelector((state: RootState) => state.todos);
   const task: any = useSelector((state: RootState) => state.taskDetails.data);
   const dispatch = useDispatch<AppDispatch>();
   const isDetailsOpen: boolean = useSelector((state: RootState) => state.taskDetails.isDetailsOpen);
@@ -20,10 +26,17 @@ export const TaskDetails = () => {
   const [dayOfWeek, setDayOfWeek] = useState('');
   const [month, setMonth] = useState('');
   const [dayOfMonth, setDayOfMonth] = useState('');
+  const [todo, setTodo] = useState<Todo>();
 
   useEffect(() => {
+    const tasksData = tasks.filter((item) => {
+      return item.id === task.id;
+    });
+
+    setTodo({ ...tasksData[0] });
+
     setInputValue(task.title);
-  }, [task]);
+  }, [task, tasks]);
 
   useEffect(() => {
     if (task.dateСreated != undefined) {
@@ -40,6 +53,12 @@ export const TaskDetails = () => {
   const callbackChangeToActiveTask = (task: Todo) => {
     dispatch(changeToActiveTask(task));
   };
+  const callbackAddImportant = (task: Todo) => {
+    dispatch(addImportant(task));
+  };
+  const callbackRemoveImportant = (task: Todo) => {
+    dispatch(removeImportant(task));
+  };
 
   return (
     <div
@@ -50,13 +69,13 @@ export const TaskDetails = () => {
       )}>
       <div className={styles.detailsBody}>
         <div className={styles.titleWrapper}>
-          {!task.completed ? (
+          {!todo?.completed ? (
             <TaskCompletionButton
               callbackChangeToCompletedTask={callbackChangeToCompletedTask}
-              task={task}
+              task={todo}
             />
           ) : (
-            <TaskActiveButton callbackChangeToActiveTask={callbackChangeToActiveTask} task={task} />
+            <TaskActiveButton callbackChangeToActiveTask={callbackChangeToActiveTask} task={todo} />
           )}
 
           <TextareaAutosize
