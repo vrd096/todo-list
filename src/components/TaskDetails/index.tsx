@@ -16,6 +16,7 @@ import {
   removeImportant,
 } from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
+import { filterDate } from '../../hooks/filterDate';
 
 export const TaskDetails = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
@@ -27,6 +28,8 @@ export const TaskDetails = () => {
   const [month, setMonth] = useState('');
   const [dayOfMonth, setDayOfMonth] = useState('');
   const [todo, setTodo] = useState<Todo>();
+  const [hourReminder, setHourReminder] = useState('');
+  const [minuteReminder, setMinuteReminder] = useState('');
 
   useEffect(() => {
     const tasksData = tasks.filter((item) => {
@@ -59,6 +62,22 @@ export const TaskDetails = () => {
   const callbackRemoveImportant = (task: Todo) => {
     dispatch(removeImportant(task));
   };
+  const today = new Date();
+  const taskDeadline = new Date(task.deadline);
+  const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
+  const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
+
+  useEffect(() => {
+    if (task.reminder !== '' && task.reminder !== undefined) {
+      const date = new Date(task.reminder);
+
+      const reminderHour = format(date, 'H', { locale: ruLocale });
+      const reminderMinute = format(date, 'mm', { locale: ruLocale });
+
+      setHourReminder(reminderHour);
+      setMinuteReminder(reminderMinute);
+    }
+  }, [task]);
 
   return (
     <div
@@ -86,11 +105,11 @@ export const TaskDetails = () => {
             // onKeyUp={onKeyUpHandler}
             onChange={(e) => setInputValue(e.target.value)}
           />
-          {!task.important ? (
+          {!todo?.important ? (
             <button
               className={styles.importantButton}
               onClick={() => {
-                // callbackAddImportant(task);
+                callbackAddImportant(todo);
               }}>
               <svg
                 className={styles.star}
@@ -112,7 +131,7 @@ export const TaskDetails = () => {
             <button
               className={styles.importantButton}
               onClick={() => {
-                // callbackRemoveImportant(task);
+                callbackRemoveImportant(todo);
               }}>
               <svg
                 className={styles.star}
@@ -133,17 +152,55 @@ export const TaskDetails = () => {
           )}
         </div>
         <div className={styles.managingStatusTasks}>
-          <button>
-            <svg
-              aria-hidden="true"
-              width="18px"
-              height="18px"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm0 15a5 5 0 100-10 5 5 0 000 10zm0-1.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7zm9.25-2.75a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM12 19c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm-7.75-6.25a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zm-.03-8.53c.3-.3.77-.3 1.06 0l1.5 1.5a.75.75 0 01-1.06 1.06l-1.5-1.5a.75.75 0 010-1.06zm1.06 15.56a.75.75 0 11-1.06-1.06l1.5-1.5a.75.75 0 111.06 1.06l-1.5 1.5zm14.5-15.56a.75.75 0 00-1.06 0l-1.5 1.5a.75.75 0 001.06 1.06l1.5-1.5c.3-.3.3-.77 0-1.06zm-1.06 15.56a.75.75 0 101.06-1.06l-1.5-1.5a.75.75 0 10-1.06 1.06l1.5 1.5z"></path>
-            </svg>
-            Добавление в "Мой день"
-          </button>
+          {taskDeadlineDate === todayDate ? (
+            <div className={styles.myDayWrapper}>
+              <button className={styles.myDayButton}>
+                <svg
+                  aria-hidden="true"
+                  stroke="#78bafd"
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 24 24">
+                  <path d="M12 2c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm0 15a5 5 0 100-10 5 5 0 000 10zm0-1.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7zm9.25-2.75a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM12 19c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm-7.75-6.25a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zm-.03-8.53c.3-.3.77-.3 1.06 0l1.5 1.5a.75.75 0 01-1.06 1.06l-1.5-1.5a.75.75 0 010-1.06zm1.06 15.56a.75.75 0 11-1.06-1.06l1.5-1.5a.75.75 0 111.06 1.06l-1.5 1.5zm14.5-15.56a.75.75 0 00-1.06 0l-1.5 1.5a.75.75 0 001.06 1.06l1.5-1.5c.3-.3.3-.77 0-1.06zm-1.06 15.56a.75.75 0 101.06-1.06l-1.5-1.5a.75.75 0 10-1.06 1.06l1.5 1.5z"></path>
+                </svg>
+                <span>Добавлен в "Мой день"</span>
+              </button>
+              <button className={styles.myDayButtonClose}>
+                <svg
+                  width="14px"
+                  height="14px"
+                  stroke="#a19f9d"
+                  viewBox="-0.5 0 25 25"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 21.32L21 3.32001"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M3 3.32001L21 21.32"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <button>
+              <svg
+                aria-hidden="true"
+                width="18px"
+                height="18px"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm0 15a5 5 0 100-10 5 5 0 000 10zm0-1.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7zm9.25-2.75a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM12 19c.41 0 .75.34.75.75v1.5a.75.75 0 01-1.5 0v-1.5c0-.41.34-.75.75-.75zm-7.75-6.25a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zm-.03-8.53c.3-.3.77-.3 1.06 0l1.5 1.5a.75.75 0 01-1.06 1.06l-1.5-1.5a.75.75 0 010-1.06zm1.06 15.56a.75.75 0 11-1.06-1.06l1.5-1.5a.75.75 0 111.06 1.06l-1.5 1.5zm14.5-15.56a.75.75 0 00-1.06 0l-1.5 1.5a.75.75 0 001.06 1.06l1.5-1.5c.3-.3.3-.77 0-1.06zm-1.06 15.56a.75.75 0 101.06-1.06l-1.5-1.5a.75.75 0 10-1.06 1.06l1.5 1.5z"></path>
+              </svg>
+              Добавление в "Мой день"
+            </button>
+          )}
+
           <button>
             <svg
               width="18px"
@@ -164,18 +221,67 @@ export const TaskDetails = () => {
             </svg>
             Добавить дату выполнения{' '}
           </button>
-          <button>
-            <svg width="18px" height="18px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-              <defs></defs>
-              <title />
-              <g data-name="Layer 2" id="Layer_2">
-                <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
-                <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
-                <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
-              </g>
-            </svg>
-            Напомнить
-          </button>
+          {todo?.reminder !== '' ? (
+            <div className={styles.remiderWrapper}>
+              <div className={styles.reminderTime}>
+                <button className={styles.reminderButton}>
+                  <svg
+                    width="18px"
+                    height="18px"
+                    viewBox="0 0 32 32"
+                    stroke="#78bafd"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs></defs>
+                    <title />
+                    <g data-name="Layer 2" id="Layer_2">
+                      <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
+                      <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
+                      <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
+                    </g>
+                  </svg>
+                  <span>Напомнить мне в {`${hourReminder}:${minuteReminder} `}</span>
+                </button>
+                <button className={styles.myDayButtonClose}>
+                  <svg
+                    width="14px"
+                    height="14px"
+                    stroke="#a19f9d"
+                    viewBox="-0.5 0 25 25"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 21.32L21 3.32001"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 3.32001L21 21.32"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button>
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs></defs>
+                <title />
+                <g data-name="Layer 2" id="Layer_2">
+                  <path d="M16,29a4,4,0,0,1-4-4,1,1,0,0,1,1-1h6a1,1,0,0,1,1,1A4,4,0,0,1,16,29Zm-1.73-3a2,2,0,0,0,3.46,0Z" />
+                  <path d="M18,7H14a1,1,0,0,1-1-1,3,3,0,0,1,6,0A1,1,0,0,1,18,7ZM16,5h0Z" />
+                  <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
+                </g>
+              </svg>
+              Напомнить
+            </button>
+          )}
         </div>
       </div>
       <div className={styles.detailsFooter}>

@@ -72,6 +72,14 @@ export const AddTasks = () => {
     setShowReminderCalendar(false);
   };
 
+  const checkReminderDate = (date: string | Date) => {
+    if (date === '') {
+      return new Date();
+    } else {
+      return new Date(reminderDate);
+    }
+  };
+
   return (
     <div className={styles.addToTop}>
       <div className={styles.inputWrapper}>
@@ -134,7 +142,7 @@ export const AddTasks = () => {
         {showDeadlineCalendar && (
           <div ref={modalRef}>
             <DatePicker
-              selected={new Date()}
+              selected={deadlineDate}
               onChange={handleDeadlineDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
@@ -149,7 +157,7 @@ export const AddTasks = () => {
         {showReminderCalendar && (
           <div ref={modalRef}>
             <DatePicker
-              selected={new Date()}
+              selected={checkReminderDate(reminderDate)}
               onChange={handleReminderDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"

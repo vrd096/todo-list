@@ -35,12 +35,46 @@
     color: #a19f9d;
     text-align: left;
     svg {
-      margin-right: 15px;
       fill: #a19f9d;
       vertical-align: middle;
     }
+    &:hover {
+      background-color: #3b3a39;
+    }
   }
   textarea {
+  }
+}
+.myDayWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.myDayButton {
+  span {
+    color: #78bafd;
+  }
+  svg {
+    margin-right: 15px;
+  }
+}
+.myDayButtonClose {
+  flex-basis: 40px;
+}
+.reminderTime {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reminderButton {
+  display: flex;
+
+  svg {
+    margin-right: 15px;
+    vertical-align: middle;
+  }
+  span {
+    color: #78bafd;
   }
 }
 .importantButton {
