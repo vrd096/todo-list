@@ -54,14 +54,14 @@ export const TaskDetails = () => {
   }, [task]);
 
   function addDispatchData() {
-    todo.title = inputValue;
-    dispatch(updateTaskTitle(todo));
+    if (todo && todo.title !== inputValue) {
+      todo.title = inputValue;
+      dispatch(updateTaskTitle(todo));
+    }
   }
-  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    const isEnterKey = e.key === 'Enter';
-    const isTodoDescriptionValid = inputValue.trim() !== '';
-
-    if (isEnterKey && isTodoDescriptionValid) {
+  const onKeyDownHandler = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
       addDispatchData();
     }
   };
@@ -119,14 +119,16 @@ export const TaskDetails = () => {
             maxLength={740}
             value={inputValue}
             onBlur={() => addDispatchData()}
-            // onKeyUp={onKeyUpHandler}
+            onKeyDown={(e) => onKeyDownHandler(e)}
             onChange={(e) => setInputValue(e.target.value)}
           />
           {!todo?.important ? (
             <button
               className={styles.importantButton}
               onClick={() => {
-                callbackAddImportant(todo);
+                if (todo) {
+                  callbackAddImportant(todo);
+                }
               }}>
               <svg
                 className={styles.star}
