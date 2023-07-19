@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, KeyboardEvent } from 'react';
 import styles from './TaskDetails.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
@@ -14,6 +14,7 @@ import {
   changeToActiveTask,
   changeToCompletedTask,
   removeImportant,
+  updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
 import { filterDate } from '../../hooks/filterDate';
@@ -23,11 +24,11 @@ export const TaskDetails = () => {
   const task: any = useSelector((state: RootState) => state.taskDetails.data);
   const dispatch = useDispatch<AppDispatch>();
   const isDetailsOpen: boolean = useSelector((state: RootState) => state.taskDetails.isDetailsOpen);
-  const [inputValue, setInputValue] = useState(task.title);
   const [dayOfWeek, setDayOfWeek] = useState('');
   const [month, setMonth] = useState('');
   const [dayOfMonth, setDayOfMonth] = useState('');
   const [todo, setTodo] = useState<Todo>();
+  const [inputValue, setInputValue] = useState(task.title);
   const [hourReminder, setHourReminder] = useState('');
   const [minuteReminder, setMinuteReminder] = useState('');
 
@@ -37,9 +38,11 @@ export const TaskDetails = () => {
     });
 
     setTodo({ ...tasksData[0] });
-
-    setInputValue(task.title);
   }, [task, tasks]);
+
+  useEffect(() => {
+    setInputValue(todo?.title);
+  }, [todo]);
 
   useEffect(() => {
     if (task.dateСreated != undefined) {
@@ -49,6 +52,19 @@ export const TaskDetails = () => {
       setDayOfMonth(format(date, 'dd', { locale: ruLocale }));
     }
   }, [task]);
+
+  function addDispatchData() {
+    todo.title = inputValue;
+    dispatch(updateTaskTitle(todo));
+  }
+  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    const isEnterKey = e.key === 'Enter';
+    const isTodoDescriptionValid = inputValue.trim() !== '';
+
+    if (isEnterKey && isTodoDescriptionValid) {
+      addDispatchData();
+    }
+  };
 
   const callbackChangeToCompletedTask = (task: Todo) => {
     dispatch(changeToCompletedTask(task));
@@ -102,6 +118,7 @@ export const TaskDetails = () => {
             draggable="false"
             maxLength={740}
             value={inputValue}
+            onBlur={() => addDispatchData()}
             // onKeyUp={onKeyUpHandler}
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -156,6 +173,7 @@ export const TaskDetails = () => {
             <div className={styles.myDayWrapper}>
               <button className={styles.myDayButton}>
                 <svg
+                  className={styles.detailsIcon}
                   aria-hidden="true"
                   stroke="#78bafd"
                   width="18px"
@@ -169,7 +187,6 @@ export const TaskDetails = () => {
                 <svg
                   width="14px"
                   height="14px"
-                  stroke="#a19f9d"
                   viewBox="-0.5 0 25 25"
                   xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -190,6 +207,7 @@ export const TaskDetails = () => {
           ) : (
             <button>
               <svg
+                className={styles.detailsIcon}
                 aria-hidden="true"
                 width="18px"
                 height="18px"
@@ -203,6 +221,7 @@ export const TaskDetails = () => {
 
           <button>
             <svg
+              className={styles.detailsIcon}
               width="18px"
               height="18px"
               fill="#fff"
@@ -226,6 +245,7 @@ export const TaskDetails = () => {
               <div className={styles.reminderTime}>
                 <button className={styles.reminderButton}>
                   <svg
+                    className={styles.detailsIcon}
                     width="18px"
                     height="18px"
                     viewBox="0 0 32 32"
@@ -245,7 +265,6 @@ export const TaskDetails = () => {
                   <svg
                     width="14px"
                     height="14px"
-                    stroke="#a19f9d"
                     viewBox="-0.5 0 25 25"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -267,6 +286,7 @@ export const TaskDetails = () => {
           ) : (
             <button>
               <svg
+                className={styles.detailsIcon}
                 width="18px"
                 height="18px"
                 viewBox="0 0 32 32"

@@ -25,9 +25,11 @@
   //   margin: 15px;
   // }
 }
+
 .managingStatusTasks {
   button {
     width: 100%;
+    height: 52px;
     margin-top: 10px;
     padding: 15px;
     background-color: #252423;
@@ -38,19 +40,21 @@
       fill: #a19f9d;
       vertical-align: middle;
     }
-    &:hover {
-      background-color: #3b3a39;
-    }
-  }
-  textarea {
   }
 }
 .myDayWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &:hover button {
+    background-color: #3b3a39;
+  }
+  &:hover .myDayButtonClose {
+    stroke: #a19f9d;
+  }
 }
 .myDayButton {
+  cursor: auto;
   span {
     color: #78bafd;
   }
@@ -58,17 +62,28 @@
     margin-right: 15px;
   }
 }
+.detailsIcon {
+  margin-right: 15px;
+}
 .myDayButtonClose {
+  stroke: transparent;
   flex-basis: 40px;
+  cursor: pointer;
+  vertical-align: middle;
 }
 .reminderTime {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &:hover button {
+    background-color: #3b3a39;
+  }
+  &:hover .myDayButtonClose {
+    stroke: #a19f9d;
+  }
 }
 .reminderButton {
-  display: flex;
-
+  cursor: auto;
   svg {
     margin-right: 15px;
     vertical-align: middle;

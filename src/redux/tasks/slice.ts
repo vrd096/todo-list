@@ -17,6 +17,13 @@ const todoSlice = createSlice({
       const index = state.findIndex((todo) => todo.id === action.payload);
       state.splice(index, 1);
     },
+    setTaskTitle(state, action: PayloadAction<{ id: string; title: string }>) {
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.title = action.payload.title;
+        });
+    },
     setTodoStatus(state, action: PayloadAction<{ id: string; completed: boolean }>) {
       state
         .filter((todo) => todo.id === action.payload.id)
@@ -41,5 +48,6 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, removeTodo, setTodoStatus, setImportantStatus } = todoSlice.actions;
+export const { addTodo, removeTodo, setTodoStatus, setImportantStatus, setTaskTitle } =
+  todoSlice.actions;
 export const todoReducer = todoSlice.reducer;
