@@ -13,6 +13,7 @@ import {
   addImportant,
   changeToActiveTask,
   changeToCompletedTask,
+  deleteTask,
   removeImportant,
   updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
@@ -78,6 +79,11 @@ export const TaskDetails = () => {
   const callbackRemoveImportant = (task: Todo) => {
     dispatch(removeImportant(task));
   };
+  const callbackDeleteTask = (task: Todo) => {
+    dispatch(deleteTask(task));
+    dispatch(toggleTaskDetails());
+  };
+
   const today = new Date();
   const taskDeadline = new Date(task.deadline);
   const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
@@ -326,7 +332,12 @@ export const TaskDetails = () => {
         <p>
           Cоздано {`${dayOfWeek}`}, {` ${dayOfMonth} ${month}`}
         </p>
-        <button>
+        <button
+          onClick={() => {
+            if (todo) {
+              callbackDeleteTask(todo);
+            }
+          }}>
           <svg
             width="22px"
             height="22px"

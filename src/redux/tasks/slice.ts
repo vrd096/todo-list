@@ -13,9 +13,9 @@ const todoSlice = createSlice({
       state.unshift(action.payload);
       addEventGoogleCalendar(action.payload);
     },
-    removeTodo(state, action: PayloadAction<string>) {
-      const index = state.findIndex((todo) => todo.id === action.payload);
-      state.splice(index, 1);
+    removeTodo(state, action: PayloadAction<Todo>) {
+      const filteredState = state.filter((todo: Todo) => todo.id !== action.payload.id);
+      return filteredState;
     },
     setTaskTitle(state, action: PayloadAction<{ id: string; title: string }>) {
       state
