@@ -28,7 +28,6 @@
 
 .managingStatusTasks {
   button {
-    width: 100%;
     height: 52px;
     margin-top: 10px;
     padding: 15px;
@@ -42,6 +41,9 @@
     }
   }
 }
+.statusTasksButton {
+  width: 100%;
+}
 .myDayWrapper {
   display: flex;
   justify-content: space-between;
@@ -54,6 +56,7 @@
   }
 }
 .myDayButton {
+  width: 100%;
   cursor: auto;
   span {
     color: #78bafd;
@@ -83,6 +86,7 @@
   }
 }
 .reminderButton {
+  width: 100%;
   cursor: auto;
   svg {
     margin-right: 15px;
@@ -119,6 +123,12 @@
   resize: none;
   overflow: hidden;
 }
+.detailsDatePicker {
+  position: relative;
+  top: 0;
+  right: -10px;
+}
+
 .detailsFooter {
   display: flex;
   justify-content: space-between;
@@ -143,6 +153,9 @@
     padding: 15px;
     padding-bottom: 60px;
     z-index: 1;
+  }
+  .detailsDatePicker {
+    position: static;
   }
 }
 @media (min-width: 1025px) {

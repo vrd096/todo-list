@@ -15,7 +15,11 @@
   align-items: center;
   background-color: #252423;
 }
-
+.addToTopDatePicker {
+  position: relative;
+  top: 10px;
+  right: 600px;
+}
 // .addToTopInput {
 //   height: 52px;
 //   border: 0;
@@ -89,5 +93,8 @@
 @media (min-width: 320px) and (max-width: 1024px) {
   .addToTop {
     padding: 0 15px;
+  }
+  .addToTopDatePicker {
+    position: static;
   }
 }

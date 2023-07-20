@@ -140,7 +140,7 @@ export const AddTasks = () => {
           </svg>
         </span>
         {showDeadlineCalendar && (
-          <div ref={modalRef}>
+          <div className={styles.addToTopDatePicker} ref={modalRef}>
             <DatePicker
               selected={deadlineDate}
               onChange={handleDeadlineDateChange}
@@ -155,7 +155,7 @@ export const AddTasks = () => {
           </div>
         )}
         {showReminderCalendar && (
-          <div ref={modalRef}>
+          <div className={styles.addToTopDatePicker} ref={modalRef}>
             <DatePicker
               selected={checkReminderDate(reminderDate)}
               onChange={handleReminderDateChange}

@@ -1,4 +1,4 @@
-import { useEffect, useState, KeyboardEvent } from 'react';
+import { useEffect, useState, KeyboardEvent, useRef } from 'react';
 import styles from './TaskDetails.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
@@ -18,6 +18,12 @@ import {
   updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
+import DatePicker from 'react-datepicker';
+import './../AddTasks/DatePicker.scss';
+import { setDefaultLocale } from 'react-datepicker';
+import ru from 'date-fns/locale/ru';
+
+setDefaultLocale('ru');
 
 export const TaskDetails = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
@@ -31,6 +37,13 @@ export const TaskDetails = () => {
   const [inputValue, setInputValue] = useState(task.title);
   const [hourReminder, setHourReminder] = useState('');
   const [minuteReminder, setMinuteReminder] = useState('');
+  const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [deadlineDate, setDeadlineDate] = useState(new Date());
+  const today = new Date();
+  const taskDeadline = new Date(task.deadline);
+  const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
+  const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
 
   useEffect(() => {
     const tasksData = tasks.filter((item) => {
@@ -52,6 +65,29 @@ export const TaskDetails = () => {
       setDayOfMonth(format(date, 'dd', { locale: ruLocale }));
     }
   }, [task]);
+
+  function handleDeadlineDateChange(date: any) {
+    setDeadlineDate(date);
+  }
+  const handleCloseCalendar = () => {
+    setShowDeadlineCalendar(false);
+    // setShowReminderCalendar(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
+        setShowDeadlineCalendar(false);
+        // setShowReminderCalendar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [modalRef]);
 
   function addDispatchData() {
     if (todo && todo.title !== inputValue) {
@@ -82,11 +118,6 @@ export const TaskDetails = () => {
     dispatch(deleteTask(task));
     dispatch(closeTaskDetails());
   };
-
-  const today = new Date();
-  const taskDeadline = new Date(task.deadline);
-  const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
-  const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
 
   useEffect(() => {
     if (task.reminder !== '' && task.reminder !== undefined) {
@@ -212,7 +243,7 @@ export const TaskDetails = () => {
               </button>
             </div>
           ) : (
-            <button>
+            <button className={styles.statusTasksButton}>
               <svg
                 className={styles.detailsIcon}
                 aria-hidden="true"
@@ -226,7 +257,11 @@ export const TaskDetails = () => {
             </button>
           )}
 
-          <button>
+          <button
+            className={styles.statusTasksButton}
+            onClick={() => {
+              setShowDeadlineCalendar(true);
+            }}>
             <svg
               className={styles.detailsIcon}
               width="18px"
@@ -247,6 +282,21 @@ export const TaskDetails = () => {
             </svg>
             Добавить дату выполнения{' '}
           </button>
+          {showDeadlineCalendar && (
+            <div className={styles.detailsDatePicker} ref={modalRef}>
+              <DatePicker
+                selected={deadlineDate}
+                onChange={handleDeadlineDateChange}
+                onSelect={handleCloseCalendar}
+                timeInputLabel="Время:"
+                showTimeInput
+                dateFormat="MM/dd/yyyy HH:mm"
+                timeFormat="HH:mm"
+                locale={ru}
+                open={true}
+              />
+            </div>
+          )}
           {todo?.reminder !== '' ? (
             <div className={styles.remiderWrapper}>
               <div className={styles.reminderTime}>
@@ -291,7 +341,7 @@ export const TaskDetails = () => {
               </div>
             </div>
           ) : (
-            <button>
+            <button className={styles.statusTasksButton}>
               <svg
                 className={styles.detailsIcon}
                 width="18px"
