@@ -14,15 +14,25 @@ const taskDetailsSlice = createSlice({
   name: 'taskDetails',
   initialState,
   reducers: {
-    toggleTaskDetails(state) {
-      state.isDetailsOpen = !state.isDetailsOpen;
+    openDetails(state) {
+      if (!state.isDetailsOpen) {
+        state.isDetailsOpen = true;
+      }
     },
+    closeTaskDetails(state) {
+      if (state.isDetailsOpen) {
+        state.isDetailsOpen = false;
+      }
+    },
+    // toggleTaskDetails(state) {
+    //   state.isDetailsOpen = !state.isDetailsOpen;
+    // },
     dataTaskDetails(state, action) {
       state.data = action.payload;
     },
   },
 });
 
-export const { toggleTaskDetails, dataTaskDetails } = taskDetailsSlice.actions;
+export const { dataTaskDetails, openDetails, closeTaskDetails } = taskDetailsSlice.actions;
 
 export default taskDetailsSlice.reducer;

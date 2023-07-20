@@ -3,7 +3,7 @@ import styles from './TaskDetails.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import classNames from 'classnames';
-import { toggleTaskDetails } from '../../redux/taskDetails/slice';
+import { closeTaskDetails } from '../../redux/taskDetails/slice';
 import { TaskCompletionButton } from '../TaskCompletionButton';
 import TextareaAutosize from 'react-textarea-autosize';
 import { format } from 'date-fns';
@@ -18,7 +18,6 @@ import {
   updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
-import { filterDate } from '../../hooks/filterDate';
 
 export const TaskDetails = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
@@ -81,7 +80,7 @@ export const TaskDetails = () => {
   };
   const callbackDeleteTask = (task: Todo) => {
     dispatch(deleteTask(task));
-    dispatch(toggleTaskDetails());
+    dispatch(closeTaskDetails());
   };
 
   const today = new Date();
@@ -313,7 +312,7 @@ export const TaskDetails = () => {
         </div>
       </div>
       <div className={styles.detailsFooter}>
-        <button onClick={() => dispatch(toggleTaskDetails())}>
+        <button onClick={() => dispatch(closeTaskDetails())}>
           <svg
             width="22px"
             height="22px"

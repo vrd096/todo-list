@@ -16,7 +16,7 @@ import { ListTasks } from '../ListTasks';
 import { PropsTasks, Todo } from '../../redux/tasks/types';
 import { auth, onAuthStateChanged } from '../../firebase';
 import { User } from 'firebase/auth';
-import { dataTaskDetails, toggleTaskDetails } from '../../redux/taskDetails/slice';
+import { dataTaskDetails, openDetails } from '../../redux/taskDetails/slice';
 
 export const Tasks = ({ tasks }: PropsTasks) => {
   const [user, setUser] = useState<User | null>(null);
@@ -56,7 +56,7 @@ export const Tasks = ({ tasks }: PropsTasks) => {
   };
   const openTaskDetails = (task: any) => {
     dispatch(dataTaskDetails(task));
-    dispatch(toggleTaskDetails());
+    dispatch(openDetails());
   };
 
   return (
