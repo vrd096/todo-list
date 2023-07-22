@@ -10,6 +10,11 @@ import { Todo } from '../redux/tasks/types';
 //   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
 // };
 
+interface Event {
+  summary: string;
+  id: string;
+}
+
 const calendarID = '1076102409898-2t7ucgvn5c14n27p269cg8jujd004tnl.apps.googleusercontent.com';
 const apiKey = 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ';
 
@@ -35,6 +40,7 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
         ],
       },
     };
+
     function getAccessToken() {
       gapi.load('client:auth2', () => {
         gapi.client.init({
@@ -52,10 +58,12 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
               .currentUser.get()
               .getAuthResponse().access_token;
             addPostGoggleCalendar(accessToken);
-            // getEvents();
+
+            return accessToken;
           });
       });
     }
+
     const addPostGoggleCalendar = (accessToken: string) => {
       function initiate() {
         gapi.client
@@ -107,3 +115,128 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
     // };
   }
 };
+
+// useEffect(() => {
+//   const getEvents = async () => {
+//     const request = await gapi.load('client:auth2', () =>
+//       gapi.client.request({ path: '/calendar/v3/calendars/' + calendarID + '/events' }),
+//     );
+//     setEvents(request.result.result);
+//   };
+//   getEvents();
+// }, []);
+
+export const deleteEventGoogleCalendar = (task: any) => {
+  function getAccessToken() {
+    gapi.load('client:auth2', () => {
+      gapi.client.init({
+        apiKey: apiKey,
+        clientId: calendarID,
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+        scope: 'https://www.googleapis.com/auth/calendar.events',
+      });
+      gapi.auth2
+        .getAuthInstance()
+        .signIn()
+        .then(() => {
+          const accessToken = gapi.auth2
+            .getAuthInstance()
+            .currentUser.get()
+            .getAuthResponse().access_token;
+
+          getEvents(accessToken);
+        });
+    });
+  }
+  // const removeEvent = async (events: any) => {
+  //   try {
+  //     console.log(events);
+  //     const eventId: any = events.filter(
+  //       (event: any) => event.summary === task.title && event.id !== undefined,
+  //     )[0]?.id;
+
+  //     console.log(typeof eventId);
+  //     if (eventId) {
+  //       await gapi.client?.calendar?.deleteEvent({ calendarId: calendarID, eventId: eventId });
+  //       console.log(`Event ${events} successfully deleted`);
+  //     } else {
+  //       console.error(`Event with name ${events} not found`);
+  //     }
+  //   } catch (err) {
+  //     console.error('Error while deleting event:', err);
+  //   }
+  // };
+  const removeEvent = async (events, accessToken: any) => {
+    console.log(events);
+    const eventId: any = events.filter(
+      (event: any) => event.summary === task.title && event.id !== undefined,
+    )[0]?.id;
+
+    function initiate() {
+      gapi.client
+        .request({
+          path: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then(
+          (response: any) => {
+            return [true, response];
+          },
+          function (err: string) {
+            console.log(err);
+            return [false, err];
+          },
+        );
+    }
+    gapi.load('client', initiate);
+  };
+
+  const getEvents = (accessToken: any) => {
+    function initiate() {
+      gapi.client
+        .init({
+          apiKey: apiKey,
+        })
+        .then(function () {
+          return gapi.client.request({
+            path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
+            headers: {
+              'Content-type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+        })
+        .then(
+          (response: any) => {
+            let events = response.result.items;
+            removeEvent(events, accessToken);
+          },
+          function (err: string) {
+            console.log(err);
+            return [false, err];
+          },
+        );
+    }
+    gapi.load('client', initiate);
+  };
+  getAccessToken();
+};
+
+// const removeEvent = async (eventName: Event) => {
+//   try {
+//     const events = await getEvents();
+//     const event = events?.filter((e) => e.summary === eventName)[0];
+//     if (event) {
+//       await gapi.client?.calendar?.deleteEvent({ calendarId: calendarID, eventId: event?.id });
+//       console.log(`Event ${eventName} successfully deleted`);
+//     } else {
+//       console.error(`Event with name ${eventName} not found`);
+//     }
+//   } catch (err) {
+//     console.error('Error while deleting event:', err);
+//   }
+// };

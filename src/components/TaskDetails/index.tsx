@@ -15,6 +15,7 @@ import {
   changeToCompletedTask,
   deleteTask,
   removeImportant,
+  updateTaskReminder,
   updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
 import { Todo } from '../../redux/tasks/types';
@@ -22,6 +23,7 @@ import DatePicker from 'react-datepicker';
 import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
+import { deleteEventGoogleCalendar } from '../../utils/googleCalendar';
 
 setDefaultLocale('ru');
 
@@ -38,8 +40,10 @@ export const TaskDetails = () => {
   const [hourReminder, setHourReminder] = useState('');
   const [minuteReminder, setMinuteReminder] = useState('');
   const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(false);
+  const [showReminderCalendar, setShowReminderCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [deadlineDate, setDeadlineDate] = useState(new Date());
+  const [reminderDate, setReminderDate] = useState('');
   const today = new Date();
   const taskDeadline = new Date(task.deadline);
   const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
@@ -69,16 +73,19 @@ export const TaskDetails = () => {
   function handleDeadlineDateChange(date: any) {
     setDeadlineDate(date);
   }
+  function handleReminderDateChange(date: any) {
+    setReminderDate(date);
+  }
   const handleCloseCalendar = () => {
     setShowDeadlineCalendar(false);
-    // setShowReminderCalendar(false);
+    setShowReminderCalendar(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
         setShowDeadlineCalendar(false);
-        // setShowReminderCalendar(false);
+        setShowReminderCalendar(false);
       }
     };
 
@@ -119,6 +126,10 @@ export const TaskDetails = () => {
     dispatch(closeTaskDetails());
   };
 
+  const resetReminder = (task: Todo) => {
+    dispatch(updateTaskReminder(task));
+  };
+
   useEffect(() => {
     if (task.reminder !== '' && task.reminder !== undefined) {
       const date = new Date(task.reminder);
@@ -130,6 +141,14 @@ export const TaskDetails = () => {
       setMinuteReminder(reminderMinute);
     }
   }, [task]);
+
+  const checkReminderDate = (date: string | Date) => {
+    if (date === '') {
+      return new Date();
+    } else {
+      return new Date(reminderDate);
+    }
+  };
 
   return (
     <div
@@ -318,7 +337,14 @@ export const TaskDetails = () => {
                   </svg>
                   <span>Напомнить мне в {`${hourReminder}:${minuteReminder} `}</span>
                 </button>
-                <button className={styles.myDayButtonClose}>
+                <button
+                  className={styles.myDayButtonClose}
+                  onClick={() => {
+                    if (todo) {
+                      resetReminder(todo);
+                      deleteEventGoogleCalendar(todo);
+                    }
+                  }}>
                   <svg
                     width="14px"
                     height="14px"
@@ -341,7 +367,11 @@ export const TaskDetails = () => {
               </div>
             </div>
           ) : (
-            <button className={styles.statusTasksButton}>
+            <button
+              onClick={() => {
+                setShowReminderCalendar(true);
+              }}
+              className={styles.statusTasksButton}>
               <svg
                 className={styles.detailsIcon}
                 width="18px"
@@ -358,6 +388,21 @@ export const TaskDetails = () => {
               </svg>
               Напомнить
             </button>
+          )}
+          {showReminderCalendar && (
+            <div className={styles.detailsDatePicker} ref={modalRef}>
+              <DatePicker
+                selected={checkReminderDate(reminderDate)}
+                onChange={handleReminderDateChange}
+                onSelect={handleCloseCalendar}
+                timeInputLabel="Время:"
+                showTimeInput
+                dateFormat="MM/dd/yyyy HH:mm"
+                timeFormat="HH:mm"
+                locale={ru}
+                open={true}
+              />
+            </div>
           )}
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
 import { fetchTodo } from './asyncActions';
-import { addEventGoogleCalendar } from '../../utils/googleCalendar';
+import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
 
 const initialState: Todo[] = [];
 
@@ -23,6 +23,14 @@ const todoSlice = createSlice({
         .forEach((todo) => {
           todo.title = action.payload.title;
         });
+    },
+    resetTaskReminder(state, action: PayloadAction<{ id: string; title: string }>) {
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.reminder = '';
+        });
+      deleteEventGoogleCalendar();
     },
     setTodoStatus(state, action: PayloadAction<{ id: string; completed: boolean }>) {
       state
@@ -48,6 +56,12 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, removeTodo, setTodoStatus, setImportantStatus, setTaskTitle } =
-  todoSlice.actions;
+export const {
+  addTodo,
+  removeTodo,
+  setTodoStatus,
+  setImportantStatus,
+  resetTaskReminder,
+  setTaskTitle,
+} = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;
