@@ -1,3 +1,4 @@
+import { MyDay } from './../../pages/MyDay';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
 import { fetchTodo } from './asyncActions';
@@ -30,7 +31,14 @@ const todoSlice = createSlice({
         .forEach((todo) => {
           todo.reminder = '';
         });
-      deleteEventGoogleCalendar();
+    },
+    toggleMyDaySlice(state, action: PayloadAction<{ id: string; myDay: boolean }>) {
+      console.log('toggleMyDaySlice');
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.myDay = !todo.myDay;
+        });
     },
     setTodoStatus(state, action: PayloadAction<{ id: string; completed: boolean }>) {
       state
@@ -63,5 +71,6 @@ export const {
   setImportantStatus,
   resetTaskReminder,
   setTaskTitle,
+  toggleMyDaySlice,
 } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

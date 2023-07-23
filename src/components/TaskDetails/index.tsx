@@ -11,6 +11,7 @@ import ruLocale from 'date-fns/locale/ru';
 import { TaskActiveButton } from '../TaskActiveButton';
 import {
   addImportant,
+  changeMyDay,
   changeToActiveTask,
   changeToCompletedTask,
   deleteTask,
@@ -149,6 +150,13 @@ export const TaskDetails = () => {
       return new Date(reminderDate);
     }
   };
+  const addToMyDay = (task: Todo) => {
+    console.log('addToMyDay');
+    dispatch(changeMyDay(task));
+  };
+  const removeFromMyDay = (task: Todo) => {
+    dispatch(changeMyDay(task));
+  };
 
   return (
     <div
@@ -226,7 +234,7 @@ export const TaskDetails = () => {
           )}
         </div>
         <div className={styles.managingStatusTasks}>
-          {taskDeadlineDate === todayDate ? (
+          {taskDeadlineDate === todayDate || todo?.myDay === true ? (
             <div className={styles.myDayWrapper}>
               <button className={styles.myDayButton}>
                 <svg
@@ -240,7 +248,13 @@ export const TaskDetails = () => {
                 </svg>
                 <span>Добавлен в "Мой день"</span>
               </button>
-              <button className={styles.myDayButtonClose}>
+              <button
+                className={styles.myDayButtonClose}
+                onClick={() => {
+                  if (todo) {
+                    addToMyDay(todo);
+                  }
+                }}>
                 <svg
                   width="14px"
                   height="14px"
@@ -262,7 +276,13 @@ export const TaskDetails = () => {
               </button>
             </div>
           ) : (
-            <button className={styles.statusTasksButton}>
+            <button
+              className={styles.statusTasksButton}
+              onClick={() => {
+                if (todo) {
+                  addToMyDay(todo);
+                }
+              }}>
               <svg
                 className={styles.detailsIcon}
                 aria-hidden="true"

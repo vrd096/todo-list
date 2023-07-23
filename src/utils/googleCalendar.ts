@@ -89,7 +89,7 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
       gapi.load('client', initiate);
     };
     getAccessToken();
-    // const getEvents = () => {
+
     //   function initiate() {
     //     gapi.client
     //       .init({
@@ -116,16 +116,6 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
   }
 };
 
-// useEffect(() => {
-//   const getEvents = async () => {
-//     const request = await gapi.load('client:auth2', () =>
-//       gapi.client.request({ path: '/calendar/v3/calendars/' + calendarID + '/events' }),
-//     );
-//     setEvents(request.result.result);
-//   };
-//   getEvents();
-// }, []);
-
 export const deleteEventGoogleCalendar = (task: any) => {
   function getAccessToken() {
     gapi.load('client:auth2', () => {
@@ -148,27 +138,10 @@ export const deleteEventGoogleCalendar = (task: any) => {
         });
     });
   }
-  // const removeEvent = async (events: any) => {
-  //   try {
-  //     console.log(events);
-  //     const eventId: any = events.filter(
-  //       (event: any) => event.summary === task.title && event.id !== undefined,
-  //     )[0]?.id;
 
-  //     console.log(typeof eventId);
-  //     if (eventId) {
-  //       await gapi.client?.calendar?.deleteEvent({ calendarId: calendarID, eventId: eventId });
-  //       console.log(`Event ${events} successfully deleted`);
-  //     } else {
-  //       console.error(`Event with name ${events} not found`);
-  //     }
-  //   } catch (err) {
-  //     console.error('Error while deleting event:', err);
-  //   }
-  // };
-  const removeEvent = async (events, accessToken: any) => {
+  const removeEvent = async (events: any, accessToken: string) => {
     console.log(events);
-    const eventId: any = events.filter(
+    const eventId: string = events.filter(
       (event: any) => event.summary === task.title && event.id !== undefined,
     )[0]?.id;
 
@@ -195,7 +168,7 @@ export const deleteEventGoogleCalendar = (task: any) => {
     gapi.load('client', initiate);
   };
 
-  const getEvents = (accessToken: any) => {
+  const getEvents = (accessToken: string) => {
     function initiate() {
       gapi.client
         .init({
@@ -225,18 +198,3 @@ export const deleteEventGoogleCalendar = (task: any) => {
   };
   getAccessToken();
 };
-
-// const removeEvent = async (eventName: Event) => {
-//   try {
-//     const events = await getEvents();
-//     const event = events?.filter((e) => e.summary === eventName)[0];
-//     if (event) {
-//       await gapi.client?.calendar?.deleteEvent({ calendarId: calendarID, eventId: event?.id });
-//       console.log(`Event ${eventName} successfully deleted`);
-//     } else {
-//       console.error(`Event with name ${eventName} not found`);
-//     }
-//   } catch (err) {
-//     console.error('Error while deleting event:', err);
-//   }
-// };

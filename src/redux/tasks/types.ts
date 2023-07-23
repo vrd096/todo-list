@@ -4,6 +4,7 @@ export interface Todo {
   deadline: string | Date | undefined;
   reminder: string | Date;
   completed: boolean;
+  myDay: boolean;
   important: boolean;
 }
 export interface PropsListTasks {

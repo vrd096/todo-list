@@ -9,7 +9,7 @@ export const filterDate = (tasksData: Todo[]) => {
       const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
       const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
 
-      return taskDeadlineDate === todayDate;
+      return taskDeadlineDate === todayDate || task.myDay === true;
     }
 
     return false;

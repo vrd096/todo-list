@@ -20,8 +20,8 @@ import {
   setTaskTitle,
   removeTodo,
   resetTaskReminder,
+  toggleMyDaySlice,
 } from './slice';
-import { addEventGoogleCalendar } from '../../utils/googleCalendar';
 
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
   try {
@@ -54,6 +54,7 @@ export const addTask = createAsyncThunk<
       title,
       completed: false,
       important: false,
+      myDay: false,
       deadline,
       reminder,
       dateСreated: String(new Date()),
@@ -124,25 +125,45 @@ export const changeToActiveTask = createAsyncThunk(
     }
   },
 );
+export const changeMyDay = createAsyncThunk('todos/taskReminder', async (todo: Todo, thunkAPI) => {
+  try {
+    thunkAPI.dispatch(toggleMyDaySlice(todo));
+
+    const user = auth.currentUser;
+
+    if (user) {
+      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
+
+      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+      if (docId) {
+        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+        await updateDoc(docRef, { 'todo.myDay': !todo.myDay });
+      }
+    }
+  } catch (error) {
+    return thunkAPI.rejectWithValue('какая то ошибка');
+  }
+});
 export const updateTaskReminder = createAsyncThunk(
   'todos/taskReminder',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(resetTaskReminder(todo));
 
-      // const user = auth.currentUser;
+      const user = auth.currentUser;
 
-      // if (user) {
-      //   const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
 
-      //   const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
 
-      //   if (docId) {
-      //     const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
 
-      //     await updateDoc(docRef, { 'todo.reminder': '' });
-      //   }
-      // }
+          await updateDoc(docRef, { 'todo.reminder': '' });
+        }
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
