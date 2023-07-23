@@ -212,8 +212,8 @@ export const deleteTask = createAsyncThunk('todos/deleteTask', async (todo: Todo
   }
 });
 
-export const addImportant = createAsyncThunk(
-  'todos/addImportantTask',
+export const toggleImportant = createAsyncThunk(
+  'todos/toggleImportantTask',
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(setImportantStatus(todo));
@@ -227,32 +227,7 @@ export const addImportant = createAsyncThunk(
         if (docId) {
           const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
 
-          await updateDoc(docRef, { 'todo.important': true });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
-);
-
-export const removeImportant = createAsyncThunk(
-  'todos/removeImportantTask',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setImportantStatus(todo));
-
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.important': false });
+          await updateDoc(docRef, { 'todo.important': !todo.important });
         }
       }
     } catch (error) {

@@ -4,11 +4,10 @@ import { AppDispatch } from '../../redux/store';
 import styles from './Tasks.module.scss';
 
 import {
-  addImportant,
   changeToActiveTask,
   changeToCompletedTask,
   fetchTodo,
-  removeImportant,
+  toggleImportant,
 } from '../../redux/tasks/asyncActions';
 
 import { AddTasks } from '../AddTasks';
@@ -49,10 +48,10 @@ export const Tasks = ({ tasks }: PropsTasks) => {
     dispatch(changeToActiveTask(task));
   };
   const callbackAddImportant = (task: Todo) => {
-    dispatch(addImportant(task));
+    dispatch(toggleImportant(task));
   };
   const callbackRemoveImportant = (task: Todo) => {
-    dispatch(removeImportant(task));
+    dispatch(toggleImportant(task));
   };
   const openTaskDetails = (task: any) => {
     dispatch(dataTaskDetails(task));

@@ -10,12 +10,11 @@ import { format } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import { TaskActiveButton } from '../TaskActiveButton';
 import {
-  addImportant,
   changeMyDay,
   changeToActiveTask,
   changeToCompletedTask,
   deleteTask,
-  removeImportant,
+  toggleImportant,
   updateTaskReminder,
   updateTaskTitle,
 } from '../../redux/tasks/asyncActions';
@@ -117,10 +116,10 @@ export const TaskDetails = () => {
     dispatch(changeToActiveTask(task));
   };
   const callbackAddImportant = (task: Todo) => {
-    dispatch(addImportant(task));
+    dispatch(toggleImportant(task));
   };
   const callbackRemoveImportant = (task: Todo) => {
-    dispatch(removeImportant(task));
+    dispatch(toggleImportant(task));
   };
   const callbackDeleteTask = (task: Todo) => {
     dispatch(deleteTask(task));
