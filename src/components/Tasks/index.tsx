@@ -3,12 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './Tasks.module.scss';
 
-import {
-  changeToActiveTask,
-  changeToCompletedTask,
-  fetchTodo,
-  toggleImportant,
-} from '../../redux/tasks/asyncActions';
+import { fetchTodo, toggleCompletedTask, toggleImportant } from '../../redux/tasks/asyncActions';
 
 import { AddTasks } from '../AddTasks';
 import { ListTasks } from '../ListTasks';
@@ -42,10 +37,10 @@ export const Tasks = ({ tasks }: PropsTasks) => {
   const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
   const callbackChangeToCompletedTask = (task: Todo) => {
-    dispatch(changeToCompletedTask(task));
+    dispatch(toggleCompletedTask(task));
   };
   const callbackChangeToActiveTask = (task: Todo) => {
-    dispatch(changeToActiveTask(task));
+    dispatch(toggleCompletedTask(task));
   };
   const callbackAddImportant = (task: Todo) => {
     dispatch(toggleImportant(task));

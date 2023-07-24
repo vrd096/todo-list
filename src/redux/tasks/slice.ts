@@ -25,15 +25,14 @@ const todoSlice = createSlice({
           todo.title = action.payload.title;
         });
     },
-    resetTaskReminder(state, action: PayloadAction<{ id: string; title: string }>) {
+    resetTaskReminder(state, action: PayloadAction<Todo>) {
       state
         .filter((todo) => todo.id === action.payload.id)
         .forEach((todo) => {
-          todo.reminder = '';
+          todo.reminder = action.payload.reminder;
         });
     },
     toggleMyDaySlice(state, action: PayloadAction<{ id: string; myDay: boolean }>) {
-      console.log('toggleMyDaySlice');
       state
         .filter((todo) => todo.id === action.payload.id)
         .forEach((todo) => {

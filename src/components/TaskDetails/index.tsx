@@ -11,9 +11,8 @@ import ruLocale from 'date-fns/locale/ru';
 import { TaskActiveButton } from '../TaskActiveButton';
 import {
   changeMyDay,
-  changeToActiveTask,
-  changeToCompletedTask,
   deleteTask,
+  toggleCompletedTask,
   toggleImportant,
   updateTaskReminder,
   updateTaskTitle,
@@ -23,7 +22,7 @@ import DatePicker from 'react-datepicker';
 import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
-import { deleteEventGoogleCalendar } from '../../utils/googleCalendar';
+import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
 
 setDefaultLocale('ru');
 
@@ -74,11 +73,18 @@ export const TaskDetails = () => {
     setDeadlineDate(date);
   }
   function handleReminderDateChange(date: any) {
-    setReminderDate(date);
+    if (todo) {
+      setReminderDate(date);
+      todo.reminder = String(date);
+    }
   }
-  const handleCloseCalendar = () => {
-    setShowDeadlineCalendar(false);
+  const handleCloseReminderCalendar = () => {
+    // setShowDeadlineCalendar(false);
     setShowReminderCalendar(false);
+    if (todo) {
+      dispatch(updateTaskReminder(todo));
+      addEventGoogleCalendar(todo);
+    }
   };
 
   useEffect(() => {
@@ -110,10 +116,10 @@ export const TaskDetails = () => {
   };
 
   const callbackChangeToCompletedTask = (task: Todo) => {
-    dispatch(changeToCompletedTask(task));
+    dispatch(toggleCompletedTask(task));
   };
   const callbackChangeToActiveTask = (task: Todo) => {
-    dispatch(changeToActiveTask(task));
+    dispatch(toggleCompletedTask(task));
   };
   const callbackAddImportant = (task: Todo) => {
     dispatch(toggleImportant(task));
@@ -127,12 +133,13 @@ export const TaskDetails = () => {
   };
 
   const resetReminder = (task: Todo) => {
+    task.reminder = '';
     dispatch(updateTaskReminder(task));
   };
 
   useEffect(() => {
-    if (task.reminder !== '' && task.reminder !== undefined) {
-      const date = new Date(task.reminder);
+    if (todo?.reminder !== '' && todo?.reminder !== undefined) {
+      const date = new Date(todo.reminder);
 
       const reminderHour = format(date, 'H', { locale: ruLocale });
       const reminderMinute = format(date, 'mm', { locale: ruLocale });
@@ -140,7 +147,7 @@ export const TaskDetails = () => {
       setHourReminder(reminderHour);
       setMinuteReminder(reminderMinute);
     }
-  }, [task]);
+  }, [todo]);
 
   const checkReminderDate = (date: string | Date) => {
     if (date === '') {
@@ -149,11 +156,7 @@ export const TaskDetails = () => {
       return new Date(reminderDate);
     }
   };
-  const addToMyDay = (task: Todo) => {
-    console.log('addToMyDay');
-    dispatch(changeMyDay(task));
-  };
-  const removeFromMyDay = (task: Todo) => {
+  const toggleToMyDay = (task: Todo) => {
     dispatch(changeMyDay(task));
   };
 
@@ -251,7 +254,7 @@ export const TaskDetails = () => {
                 className={styles.myDayButtonClose}
                 onClick={() => {
                   if (todo) {
-                    addToMyDay(todo);
+                    toggleToMyDay(todo);
                   }
                 }}>
                 <svg
@@ -279,7 +282,7 @@ export const TaskDetails = () => {
               className={styles.statusTasksButton}
               onClick={() => {
                 if (todo) {
-                  addToMyDay(todo);
+                  toggleToMyDay(todo);
                 }
               }}>
               <svg
@@ -325,7 +328,7 @@ export const TaskDetails = () => {
               <DatePicker
                 selected={deadlineDate}
                 onChange={handleDeadlineDateChange}
-                onSelect={handleCloseCalendar}
+                // onSelect={handleCloseCalendar}
                 timeInputLabel="Время:"
                 showTimeInput
                 dateFormat="MM/dd/yyyy HH:mm"
@@ -413,7 +416,7 @@ export const TaskDetails = () => {
               <DatePicker
                 selected={checkReminderDate(reminderDate)}
                 onChange={handleReminderDateChange}
-                onSelect={handleCloseCalendar}
+                onSelect={handleCloseReminderCalendar}
                 timeInputLabel="Время:"
                 showTimeInput
                 dateFormat="MM/dd/yyyy HH:mm"

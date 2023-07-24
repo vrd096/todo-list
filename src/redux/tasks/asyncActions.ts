@@ -60,7 +60,6 @@ export const addTask = createAsyncThunk<
       dateСreated: String(new Date()),
     };
     thunkAPI.dispatch(addTodo(todoTask));
-    // console.log(todoTask);
 
     const user = auth.currentUser;
     if (user) {
@@ -77,7 +76,7 @@ export const addTask = createAsyncThunk<
   }
 });
 
-export const changeToCompletedTask = createAsyncThunk(
+export const toggleCompletedTask = createAsyncThunk(
   'todos/completedTask',
   async (todo: Todo, thunkAPI) => {
     try {
@@ -92,7 +91,7 @@ export const changeToCompletedTask = createAsyncThunk(
         if (docId) {
           const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
 
-          await updateDoc(docRef, { 'todo.completed': true });
+          await updateDoc(docRef, { 'todo.completed': !todo.completed });
         }
       }
     } catch (error) {
@@ -101,30 +100,6 @@ export const changeToCompletedTask = createAsyncThunk(
   },
 );
 
-export const changeToActiveTask = createAsyncThunk(
-  'todos/activeTask',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setTodoStatus(todo));
-
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.completed': false });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
-);
 export const changeMyDay = createAsyncThunk('todos/taskReminder', async (todo: Todo, thunkAPI) => {
   try {
     thunkAPI.dispatch(toggleMyDaySlice(todo));
@@ -150,7 +125,6 @@ export const updateTaskReminder = createAsyncThunk(
   async (todo: Todo, thunkAPI) => {
     try {
       thunkAPI.dispatch(resetTaskReminder(todo));
-
       const user = auth.currentUser;
 
       if (user) {
@@ -161,7 +135,7 @@ export const updateTaskReminder = createAsyncThunk(
         if (docId) {
           const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
 
-          await updateDoc(docRef, { 'todo.reminder': '' });
+          await updateDoc(docRef, { 'todo.reminder': todo.reminder });
         }
       }
     } catch (error) {
