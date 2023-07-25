@@ -24,6 +24,7 @@ import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
 import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
+import { Tooltip } from '@chakra-ui/react';
 
 setDefaultLocale('ru');
 
@@ -238,21 +239,31 @@ export const TaskDetails = () => {
                   callbackAddImportant(todo);
                 }
               }}>
-              <svg
-                className={styles.star}
-                width="16px"
-                height="16px"
-                fill="#252423"
-                strokeWidth="3px"
-                viewBox="0 0 64.00 64.00"
-                enableBackground="new 0 0 64 64">
-                <g id="SVGRepo_bgCarrier"></g>
-                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  {' '}
-                  <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
-                </g>
-              </svg>
+              <Tooltip
+                hasArrow
+                fontSize="12"
+                bg="#fff"
+                color="#000"
+                padding="5"
+                transitionDuration="0.1s"
+                label="Пометить как важную"
+                aria-label="A tooltip">
+                <svg
+                  className={styles.star}
+                  width="16px"
+                  height="16px"
+                  fill="#252423"
+                  strokeWidth="3px"
+                  viewBox="0 0 64.00 64.00"
+                  enableBackground="new 0 0 64 64">
+                  <g id="SVGRepo_bgCarrier"></g>
+                  <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                  <g id="SVGRepo_iconCarrier">
+                    {' '}
+                    <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
+                  </g>
+                </svg>
+              </Tooltip>
             </button>
           ) : (
             <button
@@ -260,21 +271,31 @@ export const TaskDetails = () => {
               onClick={() => {
                 callbackRemoveImportant(todo);
               }}>
-              <svg
-                className={styles.star}
-                width="16px"
-                height="16px"
-                fill="#78bafd"
-                strokeWidth="3px"
-                viewBox="0 0 64.00 64.00"
-                enableBackground="new 0 0 64 64">
-                <g id="SVGRepo_bgCarrier"></g>
-                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  {' '}
-                  <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
-                </g>
-              </svg>
+              <Tooltip
+                hasArrow
+                fontSize="12"
+                bg="#fff"
+                color="#000"
+                padding="5"
+                transitionDuration="0.1s"
+                label="Отменить важность задачи"
+                aria-label="A tooltip">
+                <svg
+                  className={styles.star}
+                  width="16px"
+                  height="16px"
+                  fill="#78bafd"
+                  strokeWidth="3px"
+                  viewBox="0 0 64.00 64.00"
+                  enableBackground="new 0 0 64 64">
+                  <g id="SVGRepo_bgCarrier"></g>
+                  <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                  <g id="SVGRepo_iconCarrier">
+                    {' '}
+                    <path d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265 C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642 c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854 c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72 c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"></path>{' '}
+                  </g>
+                </svg>
+              </Tooltip>
             </button>
           )}
         </div>
@@ -300,24 +321,34 @@ export const TaskDetails = () => {
                     toggleToMyDay(todo);
                   }
                 }}>
-                <svg
-                  width="14px"
-                  height="14px"
-                  viewBox="-0.5 0 25 25"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M3 21.32L21 3.32001"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M3 3.32001L21 21.32"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Tooltip
+                  hasArrow
+                  fontSize="12"
+                  bg="#fff"
+                  color="#000"
+                  padding="5"
+                  transitionDuration="0.1s"
+                  label="Убрать из раздела Мой день"
+                  aria-label="A tooltip">
+                  <svg
+                    width="14px"
+                    height="14px"
+                    viewBox="-0.5 0 25 25"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 21.32L21 3.32001"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 3.32001L21 21.32"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Tooltip>
               </button>
             </div>
           ) : (
@@ -373,24 +404,34 @@ export const TaskDetails = () => {
                       resetDeadline(todo);
                     }
                   }}>
-                  <svg
-                    width="14px"
-                    height="14px"
-                    viewBox="-0.5 0 25 25"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M3 21.32L21 3.32001"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3 3.32001L21 21.32"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <Tooltip
+                    hasArrow
+                    fontSize="12"
+                    bg="#fff"
+                    color="#000"
+                    padding="5"
+                    transitionDuration="0.1s"
+                    label="Удалить дату выполнения"
+                    aria-label="A tooltip">
+                    <svg
+                      width="14px"
+                      height="14px"
+                      viewBox="-0.5 0 25 25"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M3 21.32L21 3.32001"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3 3.32001L21 21.32"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Tooltip>
                 </button>
               </div>
             </div>
@@ -466,24 +507,34 @@ export const TaskDetails = () => {
                       deleteEventGoogleCalendar(todo);
                     }
                   }}>
-                  <svg
-                    width="14px"
-                    height="14px"
-                    viewBox="-0.5 0 25 25"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M3 21.32L21 3.32001"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3 3.32001L21 21.32"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <Tooltip
+                    hasArrow
+                    fontSize="12"
+                    bg="#fff"
+                    color="#000"
+                    padding="5"
+                    transitionDuration="0.1s"
+                    label="Удалить напоминания"
+                    aria-label="A tooltip">
+                    <svg
+                      width="14px"
+                      height="14px"
+                      viewBox="-0.5 0 25 25"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M3 21.32L21 3.32001"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3 3.32001L21 21.32"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Tooltip>
                 </button>
               </div>
             </div>
@@ -529,20 +580,31 @@ export const TaskDetails = () => {
       </div>
       <div className={styles.detailsFooter}>
         <button onClick={() => dispatch(closeTaskDetails())}>
-          <svg
-            width="22px"
-            height="22px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4 12L10 6M4 12L10 18M4 12H14.5M20 12H17.5"
-              stroke="#fff"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Tooltip
+            hasArrow
+            fontSize="12"
+            bg="#fff"
+            color="#000"
+            padding="5"
+            transitionDuration="0.1s"
+            placement="top"
+            label="Скрыть панель"
+            aria-label="A tooltip">
+            <svg
+              width="22px"
+              height="22px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M4 12L10 6M4 12L10 18M4 12H14.5M20 12H17.5"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Tooltip>
         </button>
         <p>
           Cоздано {`${dateTask.dayOfWeekDateCreated}`},{' '}
@@ -554,27 +616,38 @@ export const TaskDetails = () => {
               callbackDeleteTask(todo);
             }
           }}>
-          <svg
-            width="22px"
-            height="22px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.5001 6H3.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M9.5 11L10 16" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M14.5 11L14 16" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-            <path
-              d="M6.5 6C6.55588 6 6.58382 6 6.60915 5.99936C7.43259 5.97849 8.15902 5.45491 8.43922 4.68032C8.44784 4.65649 8.45667 4.62999 8.47434 4.57697L8.57143 4.28571C8.65431 4.03708 8.69575 3.91276 8.75071 3.8072C8.97001 3.38607 9.37574 3.09364 9.84461 3.01877C9.96213 3 10.0932 3 10.3553 3H13.6447C13.9068 3 14.0379 3 14.1554 3.01877C14.6243 3.09364 15.03 3.38607 15.2493 3.8072C15.3043 3.91276 15.3457 4.03708 15.4286 4.28571L15.5257 4.57697C15.5433 4.62992 15.5522 4.65651 15.5608 4.68032C15.841 5.45491 16.5674 5.97849 17.3909 5.99936C17.4162 6 17.4441 6 17.5 6"
-              stroke="#fff"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5M18.8334 8.5L18.6334 11.5"
-              stroke="#fff"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Tooltip
+            hasArrow
+            fontSize="12"
+            bg="#fff"
+            color="#000"
+            padding="5"
+            transitionDuration="0.1s"
+            placement="top"
+            label="Удалить задачу"
+            aria-label="A tooltip">
+            <svg
+              width="22px"
+              height="22px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.5001 6H3.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M9.5 11L10 16" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M14.5 11L14 16" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M6.5 6C6.55588 6 6.58382 6 6.60915 5.99936C7.43259 5.97849 8.15902 5.45491 8.43922 4.68032C8.44784 4.65649 8.45667 4.62999 8.47434 4.57697L8.57143 4.28571C8.65431 4.03708 8.69575 3.91276 8.75071 3.8072C8.97001 3.38607 9.37574 3.09364 9.84461 3.01877C9.96213 3 10.0932 3 10.3553 3H13.6447C13.9068 3 14.0379 3 14.1554 3.01877C14.6243 3.09364 15.03 3.38607 15.2493 3.8072C15.3043 3.91276 15.3457 4.03708 15.4286 4.28571L15.5257 4.57697C15.5433 4.62992 15.5522 4.65651 15.5608 4.68032C15.841 5.45491 16.5674 5.97849 17.3909 5.99936C17.4162 6 17.4441 6 17.5 6"
+                stroke="#fff"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5M18.8334 8.5L18.6334 11.5"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </Tooltip>
         </button>
       </div>
     </div>

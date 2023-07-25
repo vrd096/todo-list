@@ -5,6 +5,7 @@ import { AppDispatch } from '../../redux/store';
 import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
 import { PropsSidebar } from '../../redux/sidebar/types';
+import { Tooltip } from '@chakra-ui/react';
 
 export const SidebarComponent = ({
   maDayTasks,
@@ -21,24 +22,35 @@ export const SidebarComponent = ({
         { [styles.sideBarOpen]: isSidebarOpen },
         { [styles.sideBarClosed]: !isSidebarOpen },
       )}>
-      <svg
-        onClick={() => dispatch(toggleSidebar())}
-        className={styles.sideBarBurger}
-        viewBox="0 0 32 32"
-        fill="transparent"
-        height="22"
-        width="22">
-        <defs></defs>
-        <title />
-        <g data-name="Layer 2" id="Layer_2" fill="currentColor">
-          <path d="M28,10H4A1,1,0,0,1,4,8H28a1,1,0,0,1,0,2Z" />
-          <path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z" />
-          <path d="M28,24H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z" />
-        </g>
-        <g id="frame">
-          <rect height="32" width="32" />
-        </g>
-      </svg>
+      <Tooltip
+        hasArrow
+        fontSize="12"
+        bg="#fff"
+        color="#000"
+        padding="5"
+        transitionDuration="0.1s"
+        placement="top"
+        label="Скрыть панель"
+        aria-label="A tooltip">
+        <svg
+          onClick={() => dispatch(toggleSidebar())}
+          className={styles.sideBarBurger}
+          viewBox="0 0 32 32"
+          fill="transparent"
+          height="22"
+          width="22">
+          <defs></defs>
+          <title />
+          <g data-name="Layer 2" id="Layer_2" fill="currentColor">
+            <path d="M28,10H4A1,1,0,0,1,4,8H28a1,1,0,0,1,0,2Z" />
+            <path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z" />
+            <path d="M28,24H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z" />
+          </g>
+          <g id="frame">
+            <rect height="32" width="32" />
+          </g>
+        </svg>
+      </Tooltip>
       <ul className={styles.list}>
         <Link to={'/today'}>
           <li>

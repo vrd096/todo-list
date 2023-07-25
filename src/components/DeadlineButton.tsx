@@ -9,6 +9,7 @@ export const DeadlineButton = ({ stylesAddDeadlineButton, setShowDeadlineCalenda
         bg="#fff"
         color="#000"
         padding="5"
+        transitionDuration="0.1s"
         label="Задайте срок задачи"
         aria-label="A tooltip">
         <svg

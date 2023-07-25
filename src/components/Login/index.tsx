@@ -76,6 +76,7 @@ export const LoginForm = () => {
             bg="#fff"
             color="#000"
             padding="5"
+            transitionDuration="0.1s"
             label="Диспетчер учетных записей"
             aria-label="A tooltip">
             <img src={userData.photoURL} />
@@ -88,6 +89,7 @@ export const LoginForm = () => {
               hasArrow
               bg="#11100f"
               padding="5"
+              transitionDuration="0.1s"
               label="Диспетчер учетных записей"
               aria-label="A tooltip">
               <svg x="0" y="0" width="20px" height="20px" viewBox="0 0 683.721 683.721" fill="#fff">

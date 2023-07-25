@@ -8,6 +8,7 @@ export const ReminderButton = ({ stylesAddDeadlineButton, setShowReminderCalenda
         bg="#fff"
         color="#000"
         padding="5"
+        transitionDuration="0.1s"
         label="Установите напоминание"
         aria-label="A tooltip">
         <svg
