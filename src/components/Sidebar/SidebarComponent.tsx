@@ -95,10 +95,10 @@ export const SidebarComponent = ({
         </Link>
         <div className={styles.lastStaticList}></div>
       </ul>
-      <div className={styles.addList}>
+      {/* <div className={styles.addList}>
         <button className={styles.addListButton}>+</button>
         <input className={styles.addListInput} type="text" placeholder="Создать список" />
-      </div>
+      </div> */}
     </div>
   );
 };

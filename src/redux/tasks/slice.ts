@@ -25,11 +25,18 @@ const todoSlice = createSlice({
           todo.title = action.payload.title;
         });
     },
-    resetTaskReminder(state, action: PayloadAction<Todo>) {
+    setTaskReminder(state, action: PayloadAction<Todo>) {
       state
         .filter((todo) => todo.id === action.payload.id)
         .forEach((todo) => {
           todo.reminder = action.payload.reminder;
+        });
+    },
+    setTaskDeadline(state, action: PayloadAction<Todo>) {
+      state
+        .filter((todo) => todo.id === action.payload.id)
+        .forEach((todo) => {
+          todo.deadline = action.payload.deadline;
         });
     },
     toggleMyDaySlice(state, action: PayloadAction<{ id: string; myDay: boolean }>) {
@@ -68,8 +75,9 @@ export const {
   removeTodo,
   setTodoStatus,
   setImportantStatus,
-  resetTaskReminder,
+  setTaskReminder,
   setTaskTitle,
   toggleMyDaySlice,
+  setTaskDeadline,
 } = todoSlice.actions;
 export const todoReducer = todoSlice.reducer;

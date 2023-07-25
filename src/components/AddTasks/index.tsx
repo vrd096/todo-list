@@ -106,7 +106,7 @@ export const AddTasks = () => {
             setShowReminderCalendar={setShowReminderCalendar}
           />
 
-          <svg
+          {/* <svg
             width="18px"
             height="18px"
             fill="#fff"
@@ -137,7 +137,7 @@ export const AddTasks = () => {
     l53.02,53.013c5.238,5.245,5.238,13.75,0,18.995C111.644,455.252,108.203,456.559,104.769,456.559z"
               />
             </g>
-          </svg>
+          </svg> */}
         </span>
         {showDeadlineCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>

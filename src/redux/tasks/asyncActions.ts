@@ -19,8 +19,9 @@ import {
   setImportantStatus,
   setTaskTitle,
   removeTodo,
-  resetTaskReminder,
+  setTaskReminder,
   toggleMyDaySlice,
+  setTaskDeadline,
 } from './slice';
 
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
@@ -120,11 +121,34 @@ export const changeMyDay = createAsyncThunk('todos/taskReminder', async (todo: T
     return thunkAPI.rejectWithValue('какая то ошибка');
   }
 });
+export const updateTaskDeadline = createAsyncThunk(
+  'todos/taskDeadline',
+  async (todo: Todo, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(setTaskDeadline(todo));
+      const user = auth.currentUser;
+
+      if (user) {
+        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
+
+        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+
+        if (docId) {
+          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
+
+          await updateDoc(docRef, { 'todo.deadline': todo.deadline });
+        }
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue('какая то ошибка');
+    }
+  },
+);
 export const updateTaskReminder = createAsyncThunk(
   'todos/taskReminder',
   async (todo: Todo, thunkAPI) => {
     try {
-      thunkAPI.dispatch(resetTaskReminder(todo));
+      thunkAPI.dispatch(setTaskReminder(todo));
       const user = auth.currentUser;
 
       if (user) {

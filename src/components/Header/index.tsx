@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search } from '../Search';
 import { Settings } from '../Settings';
 import { LoginForm } from '../Login';
+import { Tooltip } from '@chakra-ui/react';
 
 export const Header: React.FC = () => {
   return (
@@ -33,7 +34,7 @@ export const Header: React.FC = () => {
       </Link>
       {/* <Search /> */}
       <div className={styles.toolbarWrapper}>
-        <Settings />
+        {/* <Settings /> */}
         <LoginForm />
       </div>
     </div>

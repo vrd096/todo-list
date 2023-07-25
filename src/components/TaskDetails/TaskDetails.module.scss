@@ -96,6 +96,29 @@
     color: #78bafd;
   }
 }
+.deadlineTime {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &:hover button {
+    background-color: #3b3a39;
+  }
+  &:hover .myDayButtonClose {
+    stroke: #a19f9d;
+  }
+}
+.deadlineButton {
+  width: 100%;
+  cursor: auto;
+  svg {
+    margin-right: 15px;
+    vertical-align: middle;
+    stroke: #78bafd;
+  }
+  span {
+    color: #78bafd;
+  }
+}
 .importantButton {
   margin-left: 20px;
   background-color: transparent;
