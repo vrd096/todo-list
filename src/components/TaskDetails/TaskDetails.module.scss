@@ -92,8 +92,12 @@
     margin-right: 15px;
     vertical-align: middle;
   }
-  span {
+  .reminderButtonTime {
     color: #78bafd;
+  }
+  .reminderButtonDate {
+    font-size: 12px;
+    color: #eee;
   }
 }
 .deadlineTime {

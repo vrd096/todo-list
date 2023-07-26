@@ -41,9 +41,14 @@ export const TaskDetails = () => {
     dayOfWeekDeadline: '',
     monthDeadline: '',
     dayOfMonthDeadline: '',
+    hourReminder: '',
+    minuteReminder: '',
+    dayOfWeekReminder: '',
+    monthDateReminder: '',
+    dayOfMonthReminder: '',
   });
-  const [hourReminder, setHourReminder] = useState('');
-  const [minuteReminder, setMinuteReminder] = useState('');
+  // const [hourReminder, setHourReminder] = useState('');
+  // const [minuteReminder, setMinuteReminder] = useState('');
   const [inputValue, setInputValue] = useState(task.title);
   const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(false);
   const [showReminderCalendar, setShowReminderCalendar] = useState(false);
@@ -70,12 +75,12 @@ export const TaskDetails = () => {
   useEffect(() => {
     if (task.dateСreated != undefined) {
       const date = new Date(task.dateСreated);
-      setDateTask({
-        ...dateTask,
+      setDateTask((prev) => ({
+        ...prev,
         dayOfWeekDateCreated: format(date, 'EEEEEE', { locale: ruLocale }),
         monthDateCreated: format(date, 'MMMM', { locale: ruLocale }),
         dayOfMonthDateCreated: format(date, 'dd', { locale: ruLocale }),
-      });
+      }));
     }
   }, [task]);
 
@@ -165,23 +170,26 @@ export const TaskDetails = () => {
   useEffect(() => {
     if (todo?.reminder !== '' && todo?.reminder !== undefined) {
       const date = new Date(todo.reminder);
-      const reminderHour = format(date, 'H', { locale: ruLocale });
-      const reminderMinute = format(date, 'mm', { locale: ruLocale });
-      setHourReminder(reminderHour);
-      setMinuteReminder(reminderMinute);
-    }
-  }, [todo]);
 
-  useEffect(() => {
+      setDateTask((prev) => ({
+        ...prev,
+        hourReminder: format(date, 'H', { locale: ruLocale }),
+        minuteReminder: format(date, 'mm', { locale: ruLocale }),
+        dayOfWeekReminder: format(date, 'EEEEEE', { locale: ruLocale }),
+        monthDateReminder: format(date, 'MMMM', { locale: ruLocale }),
+        dayOfMonthReminder: format(date, 'dd', { locale: ruLocale }),
+      }));
+    }
+
     if (todo?.deadline !== '' && todo?.deadline !== undefined) {
       const date = new Date(todo.deadline);
 
-      setDateTask({
-        ...dateTask,
+      setDateTask((prev) => ({
+        ...prev,
         dayOfWeekDeadline: format(date, 'EEEEEE', { locale: ruLocale }),
         monthDeadline: format(date, 'MMMM', { locale: ruLocale }),
         dayOfMonthDeadline: format(date, 'dd', { locale: ruLocale }),
-      });
+      }));
     }
   }, [todo]);
 
@@ -497,7 +505,12 @@ export const TaskDetails = () => {
                       <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
                     </g>
                   </svg>
-                  <span>Напомнить мне в {`${hourReminder}:${minuteReminder} `}</span>
+                  <span className={styles.reminderButtonTime}>
+                    Напомнить мне в {`${dateTask.hourReminder}:${dateTask.minuteReminder} `}
+                  </span>
+                  <span className={styles.reminderButtonDate}>
+                    {`${dateTask.dayOfWeekReminder},${dateTask.monthDateReminder} ${dateTask.dayOfMonthReminder} `}
+                  </span>
                 </button>
                 <button
                   className={styles.myDayButtonClose}
