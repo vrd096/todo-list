@@ -123,6 +123,10 @@
 .accordionPanel {
   animation: fadein 0.25s ease-in;
 }
+.accordionTitle {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
 
 @keyframes fadein {
   0% {

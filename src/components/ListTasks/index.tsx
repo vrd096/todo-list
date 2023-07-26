@@ -144,7 +144,7 @@ export const ListTasks = ({
                           onClick={() => {
                             openTaskDetails(task);
                           }}>
-                          <span>{task.title}</span>
+                          <span className={styles.accordionTitle}>{task.title}</span>
                         </button>
                       </div>
                       {!task.important ? (
