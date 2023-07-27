@@ -30,7 +30,7 @@
   button {
     height: 52px;
     margin-top: 10px;
-    padding: 15px;
+    padding: 5px 15px;
     background-color: #252423;
     border: 0;
     color: #a19f9d;
@@ -86,6 +86,8 @@
   }
 }
 .reminderButton {
+  display: flex;
+  align-items: center;
   width: 100%;
   cursor: auto;
   svg {
@@ -97,7 +99,7 @@
   }
   .reminderButtonDate {
     font-size: 12px;
-    color: #eee;
+    color: #a19f9d;
   }
 }
 .deadlineTime {
@@ -177,7 +179,7 @@
     right: 0;
     top: 50px;
     width: 100%;
-    padding: 15px;
+    padding: 5px 15px;
     padding-bottom: 60px;
     z-index: 1;
   }

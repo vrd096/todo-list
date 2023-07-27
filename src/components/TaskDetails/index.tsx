@@ -505,12 +505,15 @@ export const TaskDetails = () => {
                       <path d="M27,26H5a1,1,0,0,1-1-1,7,7,0,0,1,3-5.75V14a9,9,0,0,1,8.94-9h.11a9,9,0,0,1,9,9v5.25A7,7,0,0,1,28,25h0A1,1,0,0,1,27,26ZM6.1,24H25.9a5,5,0,0,0-2.4-3.33,1,1,0,0,1-.5-.87V14A7,7,0,1,0,9,14v5.8a1,1,0,0,1-.5.87A5,5,0,0,0,6.1,24Z" />
                     </g>
                   </svg>
-                  <span className={styles.reminderButtonTime}>
-                    Напомнить мне в {`${dateTask.hourReminder}:${dateTask.minuteReminder} `}
-                  </span>
-                  <span className={styles.reminderButtonDate}>
-                    {`${dateTask.dayOfWeekReminder},${dateTask.monthDateReminder} ${dateTask.dayOfMonthReminder} `}
-                  </span>
+                  <div>
+                    <span className={styles.reminderButtonTime}>
+                      Напомнить мне в {`${dateTask.hourReminder}:${dateTask.minuteReminder} `}
+                    </span>
+                    <span className={styles.reminderButtonDate}>
+                      <br />
+                      {`${dateTask.dayOfWeekReminder}, ${dateTask.dayOfMonthReminder} ${dateTask.monthDateReminder} `}
+                    </span>
+                  </div>
                 </button>
                 <button
                   className={styles.myDayButtonClose}
