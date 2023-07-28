@@ -44,14 +44,36 @@
     width: 100%;
   }
 }
+
 .taskTitleButton {
   width: 100%;
   min-height: 50px;
+  padding: 5px;
   text-align: left;
   vertical-align: text-top;
   cursor: pointer;
   border: 0;
   background-color: transparent;
+  .taskTitle {
+    font-size: 16px;
+    vertical-align: middle;
+  }
+}
+
+.taskMetaDataInfo {
+  // display: flex;
+  // align-items: center;
+  span {
+    margin-right: 10px;
+    font-size: 11px;
+    color: #a19f9d;
+  }
+  svg {
+    margin-right: 5px;
+    stroke: #a19f9d;
+    fill: #a19f9d;
+    vertical-align: middle;
+  }
 }
 
 .importantButton {

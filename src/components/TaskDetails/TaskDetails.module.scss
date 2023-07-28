@@ -121,9 +121,15 @@
     vertical-align: middle;
     stroke: #78bafd;
   }
-  span {
-    color: #78bafd;
+}
+.deadlineIsExpired {
+  color: #f1707b;
+  svg {
+    stroke: #f1707b;
   }
+}
+.deadlineCurrent {
+  color: #78bafd;
 }
 .importantButton {
   margin-left: 20px;
