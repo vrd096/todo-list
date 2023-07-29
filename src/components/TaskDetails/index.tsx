@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { closeTaskDetails } from '../../redux/taskDetails/slice';
 import { TaskCompletionButton } from '../TaskCompletionButton';
 import TextareaAutosize from 'react-textarea-autosize';
-import { format } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import { TaskActiveButton } from '../TaskActiveButton';
 import {
@@ -382,7 +382,7 @@ export const TaskDetails = () => {
             <div className={styles.deadlineWrapper}>
               <div className={styles.deadlineTime}>
                 <button className={styles.deadlineButton}>
-                  {taskDeadline.getDate() + 1 < today.getDate() ? (
+                  {isBefore(taskDeadline, today) ? (
                     <span className={styles.deadlineIsExpired}>
                       <svg
                         className={styles.detailsIcon}
