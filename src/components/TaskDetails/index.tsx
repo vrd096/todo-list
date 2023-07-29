@@ -24,7 +24,7 @@ import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
 import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
-import { Tooltip } from '@chakra-ui/react';
+import { Tooltip, Divider } from '@chakra-ui/react';
 
 setDefaultLocale('ru');
 

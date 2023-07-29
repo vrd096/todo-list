@@ -171,6 +171,19 @@
     border: 0;
     background-color: transparent;
   }
+  &::before {
+    content: '';
+    display: inline;
+    position: absolute;
+    // top: 0;
+    // left: 15px;
+    right: 25px;
+    width: 315px;
+    transform: translateY(-20px);
+    // margin: 0 auto;
+    height: 1px;
+    background-color: #a19f9d;
+  }
 }
 
 .detailsOpen {
@@ -183,14 +196,25 @@
   .detailsWrapper {
     position: fixed;
     right: 0;
-    top: 50px;
+    top: 0;
     width: 100%;
-    padding: 5px 15px;
-    padding-bottom: 60px;
+    padding: 15px;
+    // padding-bottom: 60px;
     z-index: 1;
   }
   .detailsDatePicker {
     position: static;
+  }
+  .detailsFooter {
+    &::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      width: 92%;
+      height: 1px;
+      transform: translateY(-20px);
+      background-color: #a19f9d;
+    }
   }
 }
 @media (min-width: 1025px) {
