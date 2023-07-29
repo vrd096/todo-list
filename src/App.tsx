@@ -15,7 +15,7 @@ function App() {
   }, []);
 
   return (
-    <div className={`app ${isSidebarOpen ? 'app-open' : 'app-closed'}`}>
+    <div className="app">
       <div className="header">
         <Header />
       </div>
