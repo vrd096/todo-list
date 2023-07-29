@@ -1,10 +1,7 @@
 import React from 'react';
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
-import { Search } from '../Search';
-import { Settings } from '../Settings';
 import { LoginForm } from '../Login';
-import { Tooltip } from '@chakra-ui/react';
 
 export const Header: React.FC = () => {
   return (
