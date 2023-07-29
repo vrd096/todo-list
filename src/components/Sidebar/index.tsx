@@ -41,12 +41,19 @@ export const Sidebar = () => {
 
   useResizeListener(dispatch);
 
+  const handleClickPage = () => {
+    if (window.innerWidth < 1024) {
+      dispatch(toggleSidebar());
+    }
+  };
+
   return (
     <SidebarComponent
       maDayTasks={maDayTasks}
       isSidebarOpen={isSidebarOpen}
       importantTasks={importantTasks}
       allTasks={allTasks}
+      handleClickPage={handleClickPage}
     />
   );
 };

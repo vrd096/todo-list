@@ -59,7 +59,7 @@ export const ImportantHeader = () => {
 
         <span>Важное</span>
       </h2>
-      <Sort />
+      {/* <Sort /> */}
     </div>
   );
 };

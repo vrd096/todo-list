@@ -6,12 +6,14 @@ import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
 import { PropsSidebar } from '../../redux/sidebar/types';
 import { Tooltip } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 export const SidebarComponent = ({
   maDayTasks,
   isSidebarOpen,
   importantTasks,
   allTasks,
+  handleClickPage,
 }: PropsSidebar) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -53,7 +55,10 @@ export const SidebarComponent = ({
       </Tooltip>
       <ul className={styles.list}>
         <Link to={'/today'}>
-          <li>
+          <li
+            onClick={() => {
+              handleClickPage();
+            }}>
             <div className={styles.listItem}>
               <svg
                 fill="white"
@@ -70,7 +75,10 @@ export const SidebarComponent = ({
           </li>
         </Link>
         <Link to={'/important'}>
-          <li>
+          <li
+            onClick={() => {
+              handleClickPage();
+            }}>
             <div className={styles.listItem}>
               <svg
                 fill="#fff"
@@ -88,7 +96,10 @@ export const SidebarComponent = ({
           </li>
         </Link>
         <Link to={'/inbox'}>
-          <li>
+          <li
+            onClick={() => {
+              handleClickPage();
+            }}>
             <div className={styles.listItem}>
               <svg
                 fill="#fff"

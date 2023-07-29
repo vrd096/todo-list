@@ -3,4 +3,5 @@ export interface PropsSidebar {
   importantTasks: number;
   allTasks: number;
   isSidebarOpen: boolean;
+  handleClickPage: () => void;
 }

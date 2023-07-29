@@ -59,7 +59,7 @@ export const InboxHeader = () => {
 
         <span>Все задачи</span>
       </h2>
-      <Sort />
+      {/* <Sort /> */}
     </div>
   );
 };
