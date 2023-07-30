@@ -1,8 +1,7 @@
-import { MyDay } from './../../pages/MyDay';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from './types';
 import { fetchTodo } from './asyncActions';
-import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
+import { addEventGoogleCalendar } from '../../utils/googleCalendar';
 
 const initialState: Todo[] = [];
 

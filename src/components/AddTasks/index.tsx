@@ -1,4 +1,4 @@
-import { KeyboardEvent, SetStateAction, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './AddTasks.module.scss';

@@ -6,7 +6,6 @@ import { toggleSidebar } from '../../redux/sidebar/slice';
 import classNames from 'classnames';
 import { PropsSidebar } from '../../redux/sidebar/types';
 import { Tooltip } from '@chakra-ui/react';
-import { useEffect } from 'react';
 
 export const SidebarComponent = ({
   maDayTasks,

@@ -32,8 +32,6 @@ export const Tasks = ({ tasks }: PropsTasks) => {
     });
   }, [dispatch]);
 
-  // const tasks: Todo[] = useSelector((state: RootState) => state.todos);
-
   const completedTasks = tasks.filter((todo) => todo.completed == true).length;
 
   const callbackChangeToCompletedTask = (task: Todo) => {

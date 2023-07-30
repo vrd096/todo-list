@@ -1,4 +1,3 @@
-import { TaskDetails } from './../components/TaskDetails/index';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import sidebarSlice from './sidebar/slice';
