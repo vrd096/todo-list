@@ -2,17 +2,16 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import 'firebase/messaging';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import axios from 'axios';
+import { getMessaging } from 'firebase/messaging';
 
 const firebaseApp = initializeApp({
-  apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
-  authDomain: 'todotimekeeper.firebaseapp.com',
-  projectId: 'todotimekeeper',
-  storageBucket: 'todotimekeeper.appspot.com',
-  messagingSenderId: '1076102409898',
-  appId: '1:1076102409898:web:142757f96e24e9311faad3',
-  measurementId: 'G-M99G9VDTKJ',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 });
 const db: Firestore = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);

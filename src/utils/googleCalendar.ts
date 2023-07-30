@@ -1,22 +1,8 @@
-import axios from 'axios';
-import { gapi, loadAuth2, loadClientAuth2 } from 'gapi-script';
-import { useEffect, useState } from 'react';
+import { gapi } from 'gapi-script';
 import { Todo } from '../redux/tasks/types';
 
-// const config = {
-//   clientId: '1076102409898-2t7ucgvn5c14n27p269cg8jujd004tnl.apps.googleusercontent.com',
-//   apiKey: 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ',
-//   scope: 'https://www.googleapis.com/auth/calendar',
-//   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-// };
-
-interface Event {
-  summary: string;
-  id: string;
-}
-
-const calendarID = '1076102409898-2t7ucgvn5c14n27p269cg8jujd004tnl.apps.googleusercontent.com';
-const apiKey = 'AIzaSyBthLDkbwkqXMUHVGr_ONl-MpOo8CEboQQ';
+const calendarID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
+const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
 
 export const addEventGoogleCalendar = (todoTask: Todo) => {
   if (todoTask.reminder != '') {
@@ -89,30 +75,6 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
       gapi.load('client', initiate);
     };
     getAccessToken();
-
-    //   function initiate() {
-    //     gapi.client
-    //       .init({
-    //         apiKey: apiKey,
-    //       })
-    //       .then(function () {
-    //         return gapi.client.request({
-    //           path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
-    //         });
-    //       })
-    //       .then(
-    //         (response: any) => {
-    //           let events = response.result.items;
-    //           return events;
-    //         },
-    //         function (err: string) {
-    //           console.log(err);
-    //           return [false, err];
-    //         },
-    //       );
-    //   }
-    //   gapi.load('client', initiate);
-    // };
   }
 };
 
