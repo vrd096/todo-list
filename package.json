@@ -28,6 +28,7 @@
     "date-fns": "^2.30.0",
     "depcheck": "^1.4.3",
     "firebase": "^9.21.0",
+    "firebase-tools": "^12.4.6",
     "framer-motion": "^10.13.1",
     "gapi-script": "^1.2.0",
     "lodash.debounce": "^4.0.8",
