@@ -502,6 +502,7 @@ export const TaskDetails = () => {
                 onSelect={handleCloseDeadlineCalendar}
                 timeInputLabel="Время:"
                 showTimeInput
+                minDate={new Date()}
                 dateFormat="MM/dd/yyyy HH:mm"
                 timeFormat="HH:mm"
                 locale={ru}
@@ -607,6 +608,7 @@ export const TaskDetails = () => {
                 onChange={handleReminderDateChange}
                 onSelect={handleCloseReminderCalendar}
                 timeInputLabel="Время:"
+                minDate={new Date()}
                 showTimeInput
                 dateFormat="MM/dd/yyyy HH:mm"
                 timeFormat="HH:mm"

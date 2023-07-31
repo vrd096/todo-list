@@ -220,6 +220,7 @@ export const AddTasks = () => {
               onChange={handleDeadlineDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
+              minDate={new Date()}
               showTimeInput
               dateFormat="MM/dd/yyyy HH:mm"
               timeFormat="HH:mm"
@@ -235,6 +236,7 @@ export const AddTasks = () => {
               onChange={handleReminderDateChange}
               onSelect={handleCloseCalendar}
               timeInputLabel="Время:"
+              minDate={new Date()}
               showTimeInput
               dateFormat="MM/dd/yyyy HH:mm"
               timeFormat="HH:mm"

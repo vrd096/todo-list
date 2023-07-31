@@ -1,5 +1,6 @@
 import { gapi } from 'gapi-script';
 import { Todo } from '../redux/tasks/types';
+import { isEqual } from 'date-fns';
 
 const calendarID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
 const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
@@ -102,10 +103,13 @@ export const deleteEventGoogleCalendar = (task: any) => {
   }
 
   const removeEvent = async (events: any, accessToken: string) => {
-    console.log(events);
-    const eventId: string = events.filter(
-      (event: any) => event.summary === task.title && event.id !== undefined,
-    )[0]?.id;
+    const eventId: string = events.filter((event: any) => {
+      const dateCalendar = new Date(event.start.dateTime);
+      const dateTask = new Date(task.reminder);
+      if (isEqual(dateCalendar, dateTask)) {
+        return event.summary === task.title && event.id !== undefined;
+      }
+    })[0]?.id;
 
     function initiate() {
       gapi.client
