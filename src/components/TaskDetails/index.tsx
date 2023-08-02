@@ -152,7 +152,7 @@ export const TaskDetails = () => {
   const callbackDeleteTask = (task: Todo) => {
     dispatch(deleteTask(task));
     dispatch(closeTaskDetails());
-    if (todo && todo.reminder !== '') {
+    if (todo?.reminder != '') {
       deleteEventGoogleCalendar(todo);
     }
   };
