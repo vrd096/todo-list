@@ -22,24 +22,11 @@ export const Sidebar = () => {
 
   const allTasks: number = tasksData.filter((todo) => !todo.completed).length;
 
-  function handleResize(dispatch: Dispatch) {
-    if (window.innerWidth < 920) {
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
       dispatch(toggleSidebar());
     }
-  }
-
-  function useResizeListener(dispatch: Dispatch) {
-    const memoizedHandleResize = useCallback(() => handleResize(dispatch), [dispatch]);
-
-    useEffect(() => {
-      memoizedHandleResize();
-      window.addEventListener('resize', memoizedHandleResize);
-
-      return () => window.removeEventListener('resize', memoizedHandleResize);
-    }, [memoizedHandleResize]);
-  }
-
-  useResizeListener(dispatch);
+  }, []);
 
   const handleClickPage = () => {
     if (window.innerWidth < 1024) {
