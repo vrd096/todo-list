@@ -55,6 +55,7 @@ export const AddTasks = () => {
     setDeadlineDate(new Date());
     setReminderDate('');
     setImportantButton(false);
+    setImportantTask(false);
   }
 
   const addButtonHandler = () => {
