@@ -5,16 +5,16 @@ import { isEqual } from 'date-fns';
 const calendarID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
 const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
 
-export const addEventGoogleCalendar = (todoTask: Todo) => {
-  if (todoTask.reminder != '') {
+export const addEventGoogleCalendar = (task: Todo) => {
+  if (task.reminder != '') {
     const event = {
-      summary: todoTask.title,
+      summary: task.title,
       start: {
-        dateTime: new Date(todoTask.reminder),
+        dateTime: new Date(task.reminder),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       end: {
-        dateTime: new Date(new Date(todoTask.reminder).getTime() + 60 * 60 * 1000),
+        dateTime: new Date(new Date(task.reminder).getTime() + 60 * 60 * 1000),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       // повторяющееся событие recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
@@ -44,14 +44,16 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
               .getAuthInstance()
               .currentUser.get()
               .getAuthResponse().access_token;
-            addPostGoggleCalendar(accessToken);
-
+            localStorage.setItem('access_token', accessToken);
+            addPostGoggleCalendar();
             return accessToken;
           });
       });
     }
 
-    const addPostGoggleCalendar = (accessToken: string) => {
+    const addPostGoggleCalendar = () => {
+      const tokenStorage = localStorage.getItem('access_token');
+
       function initiate() {
         gapi.client
           .request({
@@ -60,22 +62,23 @@ export const addEventGoogleCalendar = (todoTask: Todo) => {
             body: event,
             headers: {
               'Content-type': 'application/json',
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${tokenStorage}`,
             },
           })
-          .then(
-            (response: any) => {
-              return [true, response];
-            },
-            function (err: string) {
-              console.log(err);
-              return [false, err];
-            },
-          );
+          .then((response: any) => {
+            return [true, response];
+          })
+          .catch((err: any) => {
+            if (err.status === 401) {
+              getAccessToken();
+            }
+            console.log(err);
+            return [false, err];
+          });
       }
       gapi.load('client', initiate);
     };
-    getAccessToken();
+    addPostGoggleCalendar();
   }
 };
 
@@ -96,13 +99,15 @@ export const deleteEventGoogleCalendar = (task: any) => {
             .getAuthInstance()
             .currentUser.get()
             .getAuthResponse().access_token;
-
-          getEvents(accessToken);
+          localStorage.setItem('access_token', accessToken);
+          getEvents();
         });
     });
   }
 
-  const removeEvent = async (events: any, accessToken: string) => {
+  const removeEvent = async (events: any) => {
+    const tokenStorage = localStorage.getItem('access_token');
+
     const eventId: string = events.filter((event: any) => {
       const dateCalendar = new Date(event.start.dateTime);
       const dateTask = new Date(task.reminder);
@@ -118,23 +123,26 @@ export const deleteEventGoogleCalendar = (task: any) => {
           method: 'DELETE',
           headers: {
             'Content-type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${tokenStorage}`,
           },
         })
-        .then(
-          (response: any) => {
-            return [true, response];
-          },
-          function (err: string) {
-            console.log(err);
-            return [false, err];
-          },
-        );
+        .then((response: any) => {
+          return [true, response];
+        })
+        .catch((err: any) => {
+          if (err.status === 401) {
+            getAccessToken();
+          }
+          console.log(err);
+          return [false, err];
+        });
     }
     gapi.load('client', initiate);
   };
 
-  const getEvents = (accessToken: string) => {
+  const getEvents = () => {
+    const tokenStorage = localStorage.getItem('access_token');
+
     function initiate() {
       gapi.client
         .init({
@@ -145,22 +153,23 @@ export const deleteEventGoogleCalendar = (task: any) => {
             path: `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
             headers: {
               'Content-type': 'application/json',
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${tokenStorage}`,
             },
           });
         })
-        .then(
-          (response: any) => {
-            let events = response.result.items;
-            removeEvent(events, accessToken);
-          },
-          function (err: string) {
-            console.log(err);
-            return [false, err];
-          },
-        );
+        .then((response: any) => {
+          let events = response.result.items;
+          removeEvent(events);
+        })
+        .catch((err: any) => {
+          if (err.status === 401) {
+            getAccessToken();
+          }
+          console.log(err);
+          return [false, err];
+        });
     }
     gapi.load('client', initiate);
   };
-  getAccessToken();
+  getEvents();
 };
