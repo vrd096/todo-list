@@ -307,7 +307,7 @@ export const TaskDetails = () => {
           )}
         </div>
         <div className={styles.managingStatusTasks}>
-          {taskDeadlineDate === todayDate || todo?.myDay === true ? (
+          {todo?.myDay ? (
             <div className={styles.myDayWrapper}>
               <button className={styles.myDayButton}>
                 <svg
