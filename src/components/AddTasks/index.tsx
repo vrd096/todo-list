@@ -10,6 +10,7 @@ import ru from 'date-fns/locale/ru';
 import { DeadlineButton } from '../DeadlineButton';
 import { ReminderButton } from '../ReminderButton';
 import { Tooltip } from '@chakra-ui/react';
+import MobilePicker from '../MobilePicker';
 
 setDefaultLocale('ru');
 
@@ -216,18 +217,27 @@ export const AddTasks = () => {
         </span>
         {showDeadlineCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>
-            <DatePicker
-              selected={deadlineDate}
-              onChange={handleDeadlineDateChange}
-              onSelect={handleCloseCalendar}
-              timeInputLabel="Время:"
-              minDate={new Date()}
-              showTimeInput
-              dateFormat="MM/dd/yyyy HH:mm"
-              timeFormat="HH:mm"
-              locale={ru}
-              open={true}
-            />
+            {window.innerWidth < 1024 ? (
+              <MobilePicker />
+            ) : (
+              <DatePicker
+                selected={deadlineDate}
+                onChange={handleDeadlineDateChange}
+                onSelect={handleCloseCalendar}
+                // timeInputLabel="Время:"
+                minDate={new Date()}
+                dateFormat="MM/dd/yyyy HH:mm"
+                timeFormat="HH:mm"
+                locale={ru}
+                showTimeSelect
+                timeCaption="Время"
+                timeIntervals={15}
+                inline
+                // withPortal
+                portalId="root-portal"
+                open={true}
+              />
+            )}
           </div>
         )}
         {showReminderCalendar && (

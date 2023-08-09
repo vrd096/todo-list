@@ -1,0 +1,89 @@
+@mixin pickerWheels {
+  //   margin-right: 10px;
+  border: 0;
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    // border-top: 1px solid #78bafd;
+    top: 173px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    // border-bottom: 1px solid #78bafd;
+    top: 205px;
+  }
+}
+
+.picker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  background-color: #11100f;
+  z-index: 1;
+}
+.pickerWrapper {
+  display: flex;
+  margin-top: 30px;
+  padding: 0 15px;
+}
+.pickerTitle {
+  text-align: center;
+  border-bottom: 1px solid #7a7676;
+  padding: 15px;
+}
+.pickerWheels {
+  text-align: center;
+}
+.pickerDay {
+  width: 50px;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 50px;
+  }
+}
+
+.pickerMonth {
+  width: 100px;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 100px;
+  }
+}
+
+.pickerYear {
+  width: 50px;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 50px;
+  }
+}
+.pickerHour {
+  width: 60px;
+  //   margin-left: 35px;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 60px;
+  }
+}
+.pickerMinute {
+  width: 50px;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 50px;
+  }
+}
+.pickerLabel {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+}
