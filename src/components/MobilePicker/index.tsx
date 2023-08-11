@@ -25,26 +25,27 @@ const MobilePicker = () => {
     return eachDayOfInterval({ start: startDate, end: endDate });
   });
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+  useEffect(() => {
     if (currentSlideIndex > dates.length - 31) {
-      console.log('if condition passed');
-      // Пользователь пролистал до последнего слайда
-      // Добавляем еще один месяц к массиву дат
       const newDates = eachDayOfInterval({
         start: addDays(dates[dates.length - 1], 1),
         end: addMonths(dates[dates.length - 1], 1),
       });
-      console.log(currentSlideIndex);
       setDates(dates.concat(newDates));
     }
   }, [currentSlideIndex, dates]);
-  //   console.log(dates);
   return (
     <div className={styles.picker}>
       <div className={styles.pickerTitle}>
         {/* {date.day}/{date.month}/{date.year}|{date.hour}:{date.minute} */}
       </div>
       <div className={styles.pickerWrapper}>
-        <div className={classNames(styles.pickerWheels, styles.pickerDay)}>
+        <div className={classNames(styles.pickerWheels, styles.pickerDate)}>
           <Swiper
             direction={'vertical'}
             centeredSlides={true}

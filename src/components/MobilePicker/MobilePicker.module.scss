@@ -5,15 +5,15 @@
     content: '';
     position: absolute;
     display: block;
-    // border-top: 1px solid #78bafd;
-    top: 173px;
+    border-top: 1px solid #78bafd;
+    top: 132px;
   }
   &::after {
     content: '';
     position: absolute;
     display: block;
-    // border-bottom: 1px solid #78bafd;
-    top: 205px;
+    border-bottom: 1px solid #78bafd;
+    top: 162px;
   }
 }
 
@@ -39,12 +39,12 @@
 .pickerWheels {
   text-align: center;
 }
-.pickerDay {
+.pickerDate {
   width: 200px;
   @include pickerWheels;
   &::before,
   &::after {
-    width: 50px;
+    width: 200px;
   }
 }
 
