@@ -1,88 +1,67 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import '../../scss/swiper/swiper-bundle.css';
-import { eachDayOfInterval, endOfMonth, startOfMonth } from 'date-fns';
-import ru from 'date-fns/locale/ru';
+import {
+  add,
+  addDays,
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  startOfMonth,
+} from 'date-fns';
+import ruLocale from 'date-fns/locale/ru';
 import styles from './MobilePicker.module.scss';
 import './swiper.css';
 import classNames from 'classnames';
 import range from 'lodash/range';
 
 const MobilePicker = () => {
-  const now = new Date();
-  const [date, setDate] = useState({
-    day: now.getDate(),
-    month: now.getMonth() + 1,
-    year: now.getFullYear(),
-    hour: now.getHours(),
-    minute: now.getMinutes(),
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [dates, setDates] = useState(() => {
+    const startDate = new Date();
+    const endDate = addMonths(startDate, 3);
+    return eachDayOfInterval({ start: startDate, end: endDate });
   });
-  const months = [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь',
-  ];
-  const years = range(1900, 2101);
-  const hours = range(0, 24);
-  const minutes = range(0, 60);
-  console.log(new Date(date.year, date.month - 1, date.day, date.hour, date.minute));
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-
-  const [days, setDays] = useState<number[]>([]);
-
-  useEffect(() => {
-    setDays(
-      eachDayOfInterval({
-        start: startOfMonth(new Date(date.year, date.month - 1)),
-        end: endOfMonth(new Date(date.year, date.month - 1)),
-      }).map((day) => day.getDate()),
-    );
-  }, [date.year, date.month]);
-
+    if (currentSlideIndex > dates.length - 31) {
+      console.log('if condition passed');
+      // Пользователь пролистал до последнего слайда
+      // Добавляем еще один месяц к массиву дат
+      const newDates = eachDayOfInterval({
+        start: addDays(dates[dates.length - 1], 1),
+        end: addMonths(dates[dates.length - 1], 1),
+      });
+      console.log(currentSlideIndex);
+      setDates(dates.concat(newDates));
+    }
+  }, [currentSlideIndex, dates]);
+  //   console.log(dates);
   return (
     <div className={styles.picker}>
       <div className={styles.pickerTitle}>
-        {date.day}/{date.month}/{date.year}|{date.hour}:{date.minute}
+        {/* {date.day}/{date.month}/{date.year}|{date.hour}:{date.minute} */}
       </div>
       <div className={styles.pickerWrapper}>
         <div className={classNames(styles.pickerWheels, styles.pickerDay)}>
-          {/* <span className={styles.pickerLabel}>День</span> */}
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
-            initialSlide={date.day - 1}
+            // initialSlide={date.day - 1}
             slidesPerView={5}
-            loop={true}
-            onSlideChange={(swiper) => {
-              // Update the date when the current slide changes
-              setDate((prevDate) => ({
-                ...prevDate,
-                day: swiper.realIndex + 1,
-              }));
-            }}
+            loop={false}
+            onSlideChange={(swiper) => setCurrentSlideIndex(swiper.activeIndex)}
             className="mySwiper">
-            {days.map((day) => (
-              <SwiperSlide key={day}>{day}</SwiperSlide>
+            {dates.map((date) => (
+              <SwiperSlide key={date.toISOString()}>
+                {/* Отображение даты внутри слайда */}
+                {format(date, 'EEEEEE, d MMM yyyy', { locale: ruLocale })}
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
-        <div className={classNames(styles.pickerWheels, styles.pickerMonth)}>
-          {/* <span className={styles.pickerLabel}>Месяц</span> */}
+        {/* <div className={classNames(styles.pickerWheels, styles.pickerMonth)}>
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
@@ -90,7 +69,6 @@ const MobilePicker = () => {
             slidesPerView={5}
             loop={true}
             onSlideChange={(swiper) => {
-              // Update the date when the current slide changes
               setDate((prevDate) => ({
                 ...prevDate,
                 month: swiper.realIndex + 1,
@@ -103,7 +81,6 @@ const MobilePicker = () => {
           </Swiper>
         </div>
         <div className={classNames(styles.pickerWheels, styles.pickerYear)}>
-          {/* <span className={styles.pickerLabel}>Год</span> */}
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
@@ -111,7 +88,6 @@ const MobilePicker = () => {
             slidesPerView={5}
             loop={true}
             onSlideChange={(swiper) => {
-              // Update the date when the current slide changes
               setDate((prevDate) => ({
                 ...prevDate,
                 year: years[swiper.realIndex],
@@ -122,9 +98,8 @@ const MobilePicker = () => {
               <SwiperSlide key={year}>{year}</SwiperSlide>
             ))}
           </Swiper>
-        </div>
-        <div className={classNames(styles.pickerWheels, styles.pickerHour)}>
-          {/* <span className={styles.pickerLabel}>Часы</span> */}
+        </div> */}
+        {/* <div className={classNames(styles.pickerWheels, styles.pickerHour)}>
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
@@ -145,7 +120,6 @@ const MobilePicker = () => {
           </Swiper>
         </div>
         <div className={classNames(styles.pickerWheels, styles.pickerMinute)}>
-          {/* <span className={styles.pickerLabel}>Минуты</span> */}
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
@@ -153,7 +127,6 @@ const MobilePicker = () => {
             slidesPerView={5}
             loop={true}
             onSlideChange={(swiper) => {
-              // Update the date when the current slide changes
               setDate((prevDate) => ({
                 ...prevDate,
                 minute: swiper.realIndex,
@@ -164,7 +137,7 @@ const MobilePicker = () => {
               <SwiperSlide key={minute}>{minute}</SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </div> */}
       </div>
     </div>
   );

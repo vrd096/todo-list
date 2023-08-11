@@ -40,7 +40,7 @@
   text-align: center;
 }
 .pickerDay {
-  width: 50px;
+  width: 200px;
   @include pickerWheels;
   &::before,
   &::after {

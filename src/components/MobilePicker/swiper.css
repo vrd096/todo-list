@@ -29,7 +29,7 @@
   .swiper-slide-active{
     font-size: 20px;
     opacity: 1;
-    box-shadow: 0 -5px 10px -5px white, 0 5px 10px -5px white;
+   
   }
   .swiper-slide-prev, .swiper-slide-next {
     font-size: 14px;
