@@ -15,7 +15,6 @@ import ruLocale from 'date-fns/locale/ru';
 import styles from './MobilePicker.module.scss';
 import './swiper.css';
 import classNames from 'classnames';
-import range from 'lodash/range';
 
 const MobilePicker = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -24,6 +23,12 @@ const MobilePicker = () => {
     const endDate = addMonths(startDate, 3);
     return eachDayOfInterval({ start: startDate, end: endDate });
   });
+  const now = new Date();
+  const [currentHourIndex, setCurrentHourIndex] = useState(now.getHours());
+  const [currentMinuteIndex, setCurrentMinuteIndex] = useState(now.getMinutes());
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const minutes = Array.from({ length: 60 }, (_, i) => i);
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -39,25 +44,29 @@ const MobilePicker = () => {
       setDates(dates.concat(newDates));
     }
   }, [currentSlideIndex, dates]);
+  console.log(dates);
   return (
     <div className={styles.picker}>
       <div className={styles.pickerTitle}>
-        {/* {date.day}/{date.month}/{date.year}|{date.hour}:{date.minute} */}
+        {format(dates[currentSlideIndex], 'd/MM/yyyy', { locale: ruLocale })}{' '}
+        {currentHourIndex.toString().padStart(2, '0')}:
+        {currentMinuteIndex.toString().padStart(2, '0')}
       </div>
+
       <div className={styles.pickerWrapper}>
         <div className={classNames(styles.pickerWheels, styles.pickerDate)}>
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
             // initialSlide={date.day - 1}
-            slidesPerView={5}
+            slidesPerView={3}
             loop={false}
-            onSlideChange={(swiper) => setCurrentSlideIndex(swiper.activeIndex)}
-            className="mySwiper">
+            onSlideChange={(swiper) => setCurrentSlideIndex(swiper.realIndex)}
+            className={styles.pickerSwiper}>
             {dates.map((date) => (
               <SwiperSlide key={date.toISOString()}>
                 {/* Отображение даты внутри слайда */}
-                {format(date, 'EEEEEE, d MMM yyyy', { locale: ruLocale })}
+                {format(date, 'EEEEEE, d MMM', { locale: ruLocale })}
               </SwiperSlide>
             ))}
           </Swiper>
@@ -100,45 +109,39 @@ const MobilePicker = () => {
             ))}
           </Swiper>
         </div> */}
-        {/* <div className={classNames(styles.pickerWheels, styles.pickerHour)}>
+        <div className={classNames(styles.pickerWheels, styles.pickerTime)}>
           <Swiper
             direction={'vertical'}
             centeredSlides={true}
-            initialSlide={date.hour}
-            slidesPerView={5}
+            initialSlide={now.getHours()}
+            slidesPerView={3}
             loop={true}
-            onSlideChange={(swiper) => {
-              // Update the date when the current slide changes
-              setDate((prevDate) => ({
-                ...prevDate,
-                hour: swiper.realIndex,
-              }));
-            }}
-            className="mySwiper">
+            onSlideChange={(swiper) => setCurrentHourIndex(swiper.realIndex)}
+            className={styles.pickerSwiper}>
             {hours.map((hour) => (
-              <SwiperSlide key={hour}>{hour}</SwiperSlide>
+              <SwiperSlide key={hour}>
+                {/* Отображение часа внутри слайда */}
+                {hour}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div className={styles.pickerTimeColon}>:</div>
+          <Swiper
+            direction={'vertical'}
+            centeredSlides={true}
+            initialSlide={now.getMinutes()}
+            slidesPerView={3}
+            loop={true}
+            onSlideChange={(swiper) => setCurrentMinuteIndex(swiper.realIndex)}
+            className={styles.pickerSwiper}>
+            {minutes.map((minute) => (
+              <SwiperSlide key={minute}>
+                {/* Отображение минуты внутри слайда */}
+                {minute}
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
-        <div className={classNames(styles.pickerWheels, styles.pickerMinute)}>
-          <Swiper
-            direction={'vertical'}
-            centeredSlides={true}
-            initialSlide={date.minute}
-            slidesPerView={5}
-            loop={true}
-            onSlideChange={(swiper) => {
-              setDate((prevDate) => ({
-                ...prevDate,
-                minute: swiper.realIndex,
-              }));
-            }}
-            className="mySwiper">
-            {minutes.map((minute) => (
-              <SwiperSlide key={minute}>{minute}</SwiperSlide>
-            ))}
-          </Swiper>
-        </div> */}
       </div>
     </div>
   );

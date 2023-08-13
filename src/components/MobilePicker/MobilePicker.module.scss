@@ -6,14 +6,14 @@
     position: absolute;
     display: block;
     border-top: 1px solid #78bafd;
-    top: 132px;
+    top: 144px;
   }
   &::after {
     content: '';
     position: absolute;
     display: block;
     border-bottom: 1px solid #78bafd;
-    top: 162px;
+    top: 190px;
   }
 }
 
@@ -28,6 +28,7 @@
 }
 .pickerWrapper {
   display: flex;
+  justify-content: space-around;
   margin-top: 30px;
   padding: 0 15px;
 }
@@ -40,12 +41,29 @@
   text-align: center;
 }
 .pickerDate {
-  width: 200px;
+  width: 160px;
   @include pickerWheels;
   &::before,
   &::after {
-    width: 200px;
+    width: 160px;
   }
+}
+.pickerTime {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  @include pickerWheels;
+  &::before,
+  &::after {
+    width: 120px;
+  }
+}
+.pickerTimeColon {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  height: 130px;
+  font-size: 20px;
 }
 
 .pickerMonth {
