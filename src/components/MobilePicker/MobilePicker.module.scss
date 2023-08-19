@@ -29,8 +29,9 @@
 .controlButton {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
   button {
+    width: 110px;
+    height: 50px;
     border: 0;
     background-color: transparent;
     color: #78bafd;

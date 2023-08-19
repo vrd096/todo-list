@@ -35,6 +35,8 @@ export const TaskDetails = () => {
   const [todo, setTodo] = useState<Todo>();
   const isDetailsOpen: boolean = useSelector((state: RootState) => state.taskDetails.isDetailsOpen);
   const [dateTask, setDateTask] = useState({
+    hourDeadline: '',
+    minuteDeadline: '',
     dayOfWeekDateCreated: '',
     monthDateCreated: '',
     dayOfMonthDateCreated: '',
@@ -188,6 +190,8 @@ export const TaskDetails = () => {
         dayOfWeekDeadline: format(date, 'EEEEEE', { locale: ruLocale }),
         monthDeadline: format(date, 'MMMM', { locale: ruLocale }),
         dayOfMonthDeadline: format(date, 'dd', { locale: ruLocale }),
+        hourDeadline: format(date, 'H', { locale: ruLocale }),
+        minuteDeadline: format(date, 'm', { locale: ruLocale }),
       }));
     }
   }, [todo]);
@@ -424,7 +428,7 @@ export const TaskDetails = () => {
                         </g>
                       </svg>
                       Срок:
-                      {` ${dateTask.dayOfWeekDeadline}, ${dateTask.dayOfMonthDeadline} ${dateTask.monthDeadline} `}
+                      {` ${dateTask.dayOfWeekDeadline}, ${dateTask.dayOfMonthDeadline} ${dateTask.monthDeadline} ${dateTask.hourDeadline}:${dateTask.minuteDeadline}`}
                     </span>
                   )}
                 </button>
