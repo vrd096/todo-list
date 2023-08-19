@@ -6,14 +6,14 @@
     position: absolute;
     display: block;
     border-top: 1px solid #78bafd;
-    top: 144px;
+    top: 174px;
   }
   &::after {
     content: '';
     position: absolute;
     display: block;
     border-bottom: 1px solid #78bafd;
-    top: 190px;
+    top: 220px;
   }
 }
 
@@ -26,10 +26,22 @@
   background-color: #11100f;
   z-index: 1;
 }
+.controlButton {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  button {
+    border: 0;
+    background-color: transparent;
+    color: #78bafd;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+}
 .pickerWrapper {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 0 15px;
 }
 .pickerTitle {

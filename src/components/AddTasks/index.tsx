@@ -218,7 +218,10 @@ export const AddTasks = () => {
         {showDeadlineCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>
             {window.innerWidth < 1024 ? (
-              <MobilePicker />
+              <MobilePicker
+                onChange={handleDeadlineDateChange}
+                closeCalendar={handleCloseCalendar}
+              />
             ) : (
               <DatePicker
                 selected={deadlineDate}
@@ -242,18 +245,25 @@ export const AddTasks = () => {
         )}
         {showReminderCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>
-            <DatePicker
-              selected={checkReminderDate(reminderDate)}
-              onChange={handleReminderDateChange}
-              onSelect={handleCloseCalendar}
-              timeInputLabel="Время:"
-              minDate={new Date()}
-              showTimeInput
-              dateFormat="MM/dd/yyyy HH:mm"
-              timeFormat="HH:mm"
-              locale={ru}
-              open={true}
-            />
+            {window.innerWidth < 1024 ? (
+              <MobilePicker
+                onChange={handleReminderDateChange}
+                closeCalendar={handleCloseCalendar}
+              />
+            ) : (
+              <DatePicker
+                selected={checkReminderDate(reminderDate)}
+                onChange={handleReminderDateChange}
+                onSelect={handleCloseCalendar}
+                timeInputLabel="Время:"
+                minDate={new Date()}
+                showTimeInput
+                dateFormat="MM/dd/yyyy HH:mm"
+                timeFormat="HH:mm"
+                locale={ru}
+                open={true}
+              />
+            )}
           </div>
         )}
         <button className={styles.addToSetButton} onClick={addButtonHandler}>
