@@ -205,7 +205,7 @@
   // left: 2px;
 }
 .react-datepicker__navigation--next {
-  transform: translateX(350px);
+  transform: translateX(210px);
   // right: 2px;
 }
 .react-datepicker__navigation--next--with-time:not(
@@ -616,12 +616,12 @@
 }
 
 .react-datepicker__input-container {
-  position: relative;
+  position: static;
   display: inline-block;
   width: 100%;
 }
 .react-datepicker__input-container .react-datepicker__calendar-icon {
-  position: absolute;
+  position: static;
   padding: 0.5rem;
 }
 

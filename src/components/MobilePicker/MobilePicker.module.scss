@@ -29,14 +29,16 @@
 .controlButton {
   display: flex;
   justify-content: space-between;
+
   button {
-    width: 110px;
-    height: 50px;
-    border: 0;
-    background-color: transparent;
-    color: #78bafd;
-    text-transform: uppercase;
-    font-size: 14px;
+    width: 110px !important;
+    height: 50px !important;
+    margin-top: 0 !important;
+    border: 0 !important;
+    background-color: transparent !important;
+    color: #78bafd !important;
+    text-transform: uppercase !important;
+    font-size: 14px !important;
   }
 }
 .pickerWrapper {

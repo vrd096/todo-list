@@ -21,7 +21,6 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const minutes = Array.from({ length: 60 }, (_, i) => i);
   const [returnDate, setReturnDate] = useState(new Date());
-
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -39,19 +38,15 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
   }, [currentSlideIndex, dates]);
 
   useEffect(() => {
-    const newDate = new Date();
-
-    newDate.setDate(dates[currentSlideIndex].getDate());
+    const newDate = new Date(dates[currentSlideIndex]);
     newDate.setHours(currentHourIndex);
     newDate.setMinutes(currentMinuteIndex);
     setReturnDate(newDate);
   }, [currentSlideIndex, currentHourIndex, currentMinuteIndex]);
 
-  console.log(returnDate);
-
   const handleButtonClickSave = () => {
     // Вызов функции onChange с текущим значением даты
-
+    console.log(returnDate);
     onChange(returnDate);
     closeCalendar();
   };

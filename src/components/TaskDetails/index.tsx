@@ -24,7 +24,8 @@ import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
 import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
-import { Tooltip, Divider } from '@chakra-ui/react';
+import { Tooltip } from '@chakra-ui/react';
+import MobilePicker from '../MobilePicker';
 
 setDefaultLocale('ru');
 
@@ -56,9 +57,7 @@ export const TaskDetails = () => {
   const [deadlineDate, setDeadlineDate] = useState(new Date());
   const [reminderDate, setReminderDate] = useState('');
   const today = new Date();
-  const taskDeadline = new Date(task.deadline);
-  const taskDeadlineDate = `${taskDeadline.getDate()}.${taskDeadline.getMonth()}.${taskDeadline.getFullYear()}`;
-  const todayDate = `${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`;
+  const [taskDeadline, setTaskDeadline] = useState(new Date(task.deadline));
 
   useEffect(() => {
     const tasksData = tasks.filter((item) => {
@@ -87,6 +86,7 @@ export const TaskDetails = () => {
   function handleDeadlineDateChange(date: any) {
     if (todo) {
       setDeadlineDate(date);
+      setTaskDeadline(date);
       todo.deadline = String(date);
     }
   }
@@ -174,7 +174,7 @@ export const TaskDetails = () => {
 
       setDateTask((prev) => ({
         ...prev,
-        hourReminder: format(date, 'H', { locale: ruLocale }),
+        hourReminder: format(date, 'HH', { locale: ruLocale }),
         minuteReminder: format(date, 'mm', { locale: ruLocale }),
         dayOfWeekReminder: format(date, 'EEEEEE', { locale: ruLocale }),
         monthDateReminder: format(date, 'MMMM', { locale: ruLocale }),
@@ -190,8 +190,8 @@ export const TaskDetails = () => {
         dayOfWeekDeadline: format(date, 'EEEEEE', { locale: ruLocale }),
         monthDeadline: format(date, 'MMMM', { locale: ruLocale }),
         dayOfMonthDeadline: format(date, 'dd', { locale: ruLocale }),
-        hourDeadline: format(date, 'H', { locale: ruLocale }),
-        minuteDeadline: format(date, 'm', { locale: ruLocale }),
+        hourDeadline: format(date, 'HH', { locale: ruLocale }),
+        minuteDeadline: format(date, 'mm', { locale: ruLocale }),
       }));
     }
   }, [todo]);
@@ -385,7 +385,11 @@ export const TaskDetails = () => {
           {todo?.deadline !== '' ? (
             <div className={styles.deadlineWrapper}>
               <div className={styles.deadlineTime}>
-                <button className={styles.deadlineButton}>
+                <button
+                  className={styles.deadlineButton}
+                  onClick={() => {
+                    setShowDeadlineCalendar(true);
+                  }}>
                   {isBefore(taskDeadline, today) ? (
                     <span className={styles.deadlineIsExpired}>
                       <svg
@@ -406,7 +410,7 @@ export const TaskDetails = () => {
                         </g>
                       </svg>
                       Просрочено
-                      {` ${dateTask.dayOfMonthDeadline} ${dateTask.monthDeadline} `}
+                      {` ${dateTask.dayOfWeekDeadline}, ${dateTask.dayOfMonthDeadline} ${dateTask.monthDeadline} ${dateTask.hourDeadline}:${dateTask.minuteDeadline}`}
                     </span>
                   ) : (
                     <span className={styles.deadlineCurrent}>
@@ -500,24 +504,40 @@ export const TaskDetails = () => {
 
           {showDeadlineCalendar && (
             <div className={styles.detailsDatePicker} ref={modalRef}>
-              <DatePicker
-                selected={checkDeadlineDate(deadlineDate)}
-                onChange={handleDeadlineDateChange}
-                onSelect={handleCloseDeadlineCalendar}
-                timeInputLabel="Время:"
-                showTimeInput
-                minDate={new Date()}
-                dateFormat="MM/dd/yyyy HH:mm"
-                timeFormat="HH:mm"
-                locale={ru}
-                open={true}
-              />
+              {window.innerWidth < 1024 ? (
+                <MobilePicker
+                  onChange={handleDeadlineDateChange}
+                  closeCalendar={handleCloseDeadlineCalendar}
+                />
+              ) : (
+                <DatePicker
+                  selected={deadlineDate}
+                  onChange={handleDeadlineDateChange}
+                  onSelect={handleCloseDeadlineCalendar}
+                  // timeInputLabel="Время:"
+                  minDate={new Date()}
+                  dateFormat="MM/dd/yyyy HH:mm"
+                  timeFormat="HH:mm"
+                  locale={ru}
+                  showTimeSelect
+                  timeCaption="Время"
+                  timeIntervals={15}
+                  inline
+                  // withPortal
+                  portalId="root-portal"
+                  open={true}
+                />
+              )}
             </div>
           )}
           {todo?.reminder !== '' ? (
             <div className={styles.remiderWrapper}>
               <div className={styles.reminderTime}>
-                <button className={styles.reminderButton}>
+                <button
+                  onClick={() => {
+                    setShowReminderCalendar(true);
+                  }}
+                  className={styles.reminderButton}>
                   <svg
                     className={styles.detailsIcon}
                     width="18px"
@@ -607,18 +627,25 @@ export const TaskDetails = () => {
           )}
           {showReminderCalendar && (
             <div className={styles.detailsDatePicker} ref={modalRef}>
-              <DatePicker
-                selected={checkReminderDate(reminderDate)}
-                onChange={handleReminderDateChange}
-                onSelect={handleCloseReminderCalendar}
-                timeInputLabel="Время:"
-                minDate={new Date()}
-                showTimeInput
-                dateFormat="MM/dd/yyyy HH:mm"
-                timeFormat="HH:mm"
-                locale={ru}
-                open={true}
-              />
+              {window.innerWidth < 1024 ? (
+                <MobilePicker
+                  onChange={handleReminderDateChange}
+                  closeCalendar={handleCloseReminderCalendar}
+                />
+              ) : (
+                <DatePicker
+                  selected={checkReminderDate(reminderDate)}
+                  onChange={handleReminderDateChange}
+                  onSelect={handleCloseReminderCalendar}
+                  timeInputLabel="Время:"
+                  minDate={new Date()}
+                  showTimeInput
+                  dateFormat="MM/dd/yyyy HH:mm"
+                  timeFormat="HH:mm"
+                  locale={ru}
+                  open={true}
+                />
+              )}
             </div>
           )}
         </div>
