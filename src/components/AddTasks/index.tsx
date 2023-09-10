@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import styles from './AddTasks.module.scss';
 import { addTask } from '../../redux/tasks/asyncActions';
-import DatePicker from 'react-datepicker';
+import DatePicker, { CalendarContainer } from 'react-datepicker';
 import './DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
@@ -18,7 +18,7 @@ setDefaultLocale('ru');
 export const AddTasks = () => {
   const [todoDescription, setTodoDescription] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(true);
+  const [showDeadlineCalendar, setShowDeadlineCalendar] = useState(false);
   const [showReminderCalendar, setShowReminderCalendar] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [deadlineDate, setDeadlineDate] = useState(new Date());
@@ -27,9 +27,11 @@ export const AddTasks = () => {
   const [importantTask, setImportantTask] = useState(false);
 
   function handleDeadlineDateChange(date: any) {
+    console.log(date);
     setDeadlineDate(date);
   }
   function handleReminderDateChange(date: any) {
+    console.log(date);
     setReminderDate(date);
   }
 
@@ -122,6 +124,14 @@ export const AddTasks = () => {
       </button>
     </Tooltip>
   ));
+  const datePickerContainer = ({ children }: any) => {
+    return (
+      <CalendarContainer className={styles.datePickerContainer}>
+        <button className={styles.datePickerContainerButton}>Закрыть</button>
+        <div style={{ position: 'relative' }}>{children}</div>
+      </CalendarContainer>
+    );
+  };
 
   return (
     <div className={styles.addToTop}>
@@ -162,8 +172,9 @@ export const AddTasks = () => {
               withPortal
               customInput={<CustomInputDeadline />}
               portalId="root-portal"
-              shouldCloseOnSelect={false}
-              open={showDeadlineCalendar}
+              shouldCloseOnSelect={true}
+              open={true}
+              // calendarContainer={datePickerContainer}
               // onClickOutside={() => setShowDeadlineCalendar(false)}
               // onInputClick={() => setShowDeadlineCalendar(true)}
             />
@@ -175,8 +186,8 @@ export const AddTasks = () => {
             />
           ) : (
             <DatePicker
-              selected={deadlineDate}
-              onChange={handleDeadlineDateChange}
+              selected={checkReminderDate(reminderDate)}
+              onChange={handleReminderDateChange}
               // onSelect={handleCloseCalendar}
               // timeInputLabel="Время:"
               minDate={new Date()}
@@ -190,8 +201,8 @@ export const AddTasks = () => {
               withPortal
               customInput={<CustomInputReminder />}
               portalId="root-portal"
-              shouldCloseOnSelect={false}
-              open={showDeadlineCalendar}
+              shouldCloseOnSelect={true}
+              open={true}
               // onClickOutside={() => setShowDeadlineCalendar(false)}
               // onInputClick={() => setShowDeadlineCalendar(true)}
             />
@@ -302,91 +313,23 @@ export const AddTasks = () => {
               </button>
             </Tooltip>
           )}
-
-          {/* <svg
-            width="18px"
-            height="18px"
-            fill="#fff"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            viewBox="0 0 456.559 456.559">
-            <g>
-              <path
-                d="M351.79,151.874c-3.434,0-6.875-1.308-9.498-3.931c-5.238-5.245-5.238-13.75,0-18.995l53.02-53.006l-53.02-53.013
-    c-5.238-5.245-5.238-13.75,0-18.995c5.245-5.245,13.75-5.245,18.995,0l62.511,62.511c2.518,2.518,3.931,5.938,3.931,9.498
-    c0,3.56-1.413,6.98-3.931,9.498l-62.511,62.504C358.665,150.566,355.224,151.874,351.79,151.874z"
-              />
-              <path
-                d="M42.958,227.428c-7.413,0-13.428-6.015-13.428-13.428v-80.932c0-38.907,31.647-70.554,70.554-70.554h314.218
-    c7.413,0,13.428,6.015,13.428,13.428c0,7.413-6.015,13.428-13.428,13.428H100.083c-24.094,0-43.697,19.604-43.697,43.697V214
-    C56.386,221.414,50.371,227.428,42.958,227.428z"
-              />
-              <path
-                d="M357.162,394.049H42.258c-7.413,0-13.428-6.015-13.428-13.428s6.015-13.428,13.428-13.428h314.903
-    c24.101,0,43.704-19.604,43.704-43.697v-82.534c0-7.413,6.015-13.428,13.428-13.428c7.413,0,13.428,6.015,13.428,13.428v82.534
-    C427.722,362.402,396.068,394.049,357.162,394.049z"
-              />
-              <path
-                d="M104.769,456.559c-3.434,0-6.875-1.308-9.498-3.931l-62.511-62.511c-2.518-2.518-3.931-5.938-3.931-9.498
-    s1.413-6.98,3.931-9.498l62.511-62.504c5.245-5.245,13.75-5.245,18.995,0c5.238,5.245,5.238,13.75,0,18.995l-53.02,53.006
-    l53.02,53.013c5.238,5.245,5.238,13.75,0,18.995C111.644,455.252,108.203,456.559,104.769,456.559z"
-              />
-            </g>
-          </svg> */}
         </div>
-        {/* {showDeadlineCalendar && (
+        {showDeadlineCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>
-            {window.innerWidth < 1024 ? (
+            {window.innerWidth < 1024 && (
               <MobilePicker
                 onChange={handleDeadlineDateChange}
                 closeCalendar={handleCloseCalendar}
-              />
-            ) : (
-              <DatePicker
-                selected={deadlineDate}
-                onChange={handleDeadlineDateChange}
-                // onSelect={handleCloseCalendar}
-                // timeInputLabel="Время:"
-                minDate={new Date()}
-                dateFormat="MM/dd/yyyy HH:mm"
-                timeFormat="HH:mm"
-                locale={ru}
-                showTimeSelect
-                timeCaption="Время"
-                timeIntervals={15}
-                // inline
-                withPortal
-                customInput={<CustomInputDeadline />}
-                portalId="root-portal"
-                shouldCloseOnSelect={false}
-                open={showDeadlineCalendar}
-                // onClickOutside={() => setShowDeadlineCalendar(false)}
-                // onInputClick={() => setShowDeadlineCalendar(true)}
               />
             )}
           </div>
-        )} */}
+        )}
         {showReminderCalendar && (
           <div className={styles.addToTopDatePicker} ref={modalRef}>
-            {window.innerWidth < 1024 ? (
+            {window.innerWidth < 1024 && (
               <MobilePicker
                 onChange={handleReminderDateChange}
                 closeCalendar={handleCloseCalendar}
-              />
-            ) : (
-              <DatePicker
-                selected={checkReminderDate(reminderDate)}
-                onChange={handleReminderDateChange}
-                onSelect={handleCloseCalendar}
-                timeInputLabel="Время:"
-                minDate={new Date()}
-                showTimeInput
-                dateFormat="MM/dd/yyyy HH:mm"
-                timeFormat="HH:mm"
-                locale={ru}
-                open={true}
               />
             )}
           </div>
