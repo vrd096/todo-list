@@ -1828,6 +1828,22 @@
   dependencies:
     lodash "^4.17.21"
 
+"@maxim_mazurok/gapi.client.calendar-v3@latest":
+  version "0.0.20230901"
+  resolved "https://registry.yarnpkg.com/@maxim_mazurok/gapi.client.calendar-v3/-/gapi.client.calendar-v3-0.0.20230901.tgz#1bc2bd453eb548c9f39ddfdbea9fb95dbe1f73ef"
+  integrity sha512-foJCaGterVt1/IYUWwGcGm5bjQrFk2lLzzWbYMenQKswkXfzwwaZyXIWge5sIDqV9hYlhXyz+tWGb3hkBHjjeg==
+  dependencies:
+    "@types/gapi.client" "*"
+    "@types/gapi.client.discovery-v1" "*"
+
+"@maxim_mazurok/gapi.client.discovery-v1@latest":
+  version "0.0.20200806"
+  resolved "https://registry.yarnpkg.com/@maxim_mazurok/gapi.client.discovery-v1/-/gapi.client.discovery-v1-0.0.20200806.tgz#c257738ef5bbf9fefa5b10b0decd444a5f3328b4"
+  integrity sha512-0pZtrElj8bc0YROIo7nH8VVvks/iww/L68l7r74oC9+ksSVO3Lum1zUR8dXTvJ7TqLGaNYiiNaUZianK6doh/w==
+  dependencies:
+    "@types/gapi.client" "*"
+    "@types/gapi.client.discovery" "*"
+
 "@npmcli/fs@^3.1.0":
   version "3.1.0"
   resolved "https://registry.npmjs.org/@npmcli/fs/-/fs-3.1.0.tgz"
@@ -2023,6 +2039,44 @@
   dependencies:
     firebase "*"
 
+"@types/gapi.auth2@^0.0.57":
+  version "0.0.57"
+  resolved "https://registry.yarnpkg.com/@types/gapi.auth2/-/gapi.auth2-0.0.57.tgz#5544a696d97fc979044d48a8bf7de5e2b35899b5"
+  integrity sha512-2nYF2OZlEqWvF5rLk0nrQlAkk51Abe9zLHvA85NZqpIauYT/TluDNsPWkncI969BR/Ts5mdKrXgiWE/f4N6mMQ==
+  dependencies:
+    "@types/gapi" "*"
+
+"@types/gapi.client.calendar@^3.0.12":
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client.calendar/-/gapi.client.calendar-3.0.12.tgz#42ccf73fa248219c8f992e0cef7fdac51d2ac800"
+  integrity sha512-3H4hubmAuOkYHGSoVkxYAz6zg2g5LhQ1Y0/GLDIt1AkebKZgGiK+5JNFq4Nn2qDkjFh8pMY3TLIC/J5ueMd6YA==
+  dependencies:
+    "@maxim_mazurok/gapi.client.calendar-v3" latest
+
+"@types/gapi.client.discovery-v1@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client.discovery-v1/-/gapi.client.discovery-v1-0.0.1.tgz#98028d68437906a968c2b318c4ec941a5cbc3c57"
+  integrity sha512-xHW6FW+ERNxqFYNhC6yo1yZjBMmigqQIkX11VY8S6NFteZAX8eWpzvSrmmwFEUm4OOLTJhz8dxEyUAs4ltIMnw==
+  dependencies:
+    "@maxim_mazurok/gapi.client.discovery-v1" latest
+
+"@types/gapi.client.discovery@*":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client.discovery/-/gapi.client.discovery-1.0.9.tgz#e2472989baa01f2e32a2d5a80981da8513f875ae"
+  integrity sha512-51fXpt7DM7+zPG5pgwnNr3KaRXmyszznu66VPpV7+FAu0LGtpTohvdfvkRCnCn2Z6EgNTq/baFAtCa/9ylHOug==
+  dependencies:
+    "@maxim_mazurok/gapi.client.discovery-v1" latest
+
+"@types/gapi.client@*", "@types/gapi.client@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client/-/gapi.client-1.0.5.tgz#a6eb97e664fe51656c5b52258bd0afef28c76308"
+  integrity sha512-OTpbBMuzfC4lkvaomxqskI/iWRGW3zOZbDXZLNSyiuswTiSSGgILRLkg0POuZ4EgzEdaYaTlXpnXiCp07ri/Yw==
+
+"@types/gapi@*", "@types/gapi@^0.0.44":
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/@types/gapi/-/gapi-0.0.44.tgz#f097f7a0f59d63a59098a08a62a560ca168426fb"
+  integrity sha512-hsgJMfZ/pMwI15UlAYHMNwj8DRoigo1odhbPwEXdp19ZQwQAXbcRrpzaDsfc+9XM6RtGpvl4Ja7uW8A+KPCa7w==
+
 "@types/glob@*":
   version "8.1.0"
   resolved "https://registry.npmjs.org/@types/glob/-/glob-8.1.0.tgz"
@@ -2179,9 +2233,9 @@
     csstype "^3.0.2"
 
 "@types/react@^18.2.18":
-  version "18.2.19"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.19.tgz#f77cb2c8307368e624d464a25b9675fa35f95a8b"
-  integrity sha512-e2S8wmY1ePfM517PqCG80CcE48Xs5k0pwJzuDZsfE8IZRRBfOMCF+XqnFxu6mWtyivum1MQm4aco+WIt6Coimw==
+  version "18.2.21"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.21.tgz#774c37fd01b522d0b91aed04811b58e4e0514ed9"
+  integrity sha512-neFKG/sBAwGxHgXiIxnbm3/AAVQ/cMRS93hvBpg8xYRbeQSPVABp9U2bRnPf0iI4+Ucdv3plSxKK+3CW2ENJxA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -4157,9 +4211,9 @@ fs.realpath@^1.0.0:
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
 fsevents@~2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
-  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.1:
   version "1.1.1"
@@ -5385,7 +5439,7 @@ lodash.mergewith@4.6.2:
 
 lodash.range@^3.2.0:
   version "3.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.range/-/lodash.range-3.2.0.tgz#f461e588f66683f7eadeade513e38a69a565a15d"
+  resolved "https://registry.npmjs.org/lodash.range/-/lodash.range-3.2.0.tgz"
   integrity sha512-Fgkb7SinmuzqgIhNhAElo0BL/R1rHCnhwSZf78omqSwvWqD0kD2ssOAutQonDKH/ldS8BxA72ORYI09qAY9CYg==
 
 lodash.snakecase@^4.1.1:
@@ -7283,9 +7337,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 swiper@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-10.1.0.tgz#02536bcf34ba0c37cf837c5193005a8e87aa43c8"
-  integrity sha512-E+wh+hcSbwlRfXuwBTclcOOikOjNdSF0a2Sdg3J4cIWtHO64A7SaLRfezfrJ67CW3GEc15AduYU2YKlElsjqsQ==
+  version "10.2.0"
+  resolved "https://registry.npmjs.org/swiper/-/swiper-10.2.0.tgz"
+  integrity sha512-nktQsOtBInJjr3f5DicxC8eHYGcLXDVIGPSon0QoXRaO6NjKnATCbQ8SZsD3dN1Ph1RH4EhVPwSYCcuDRFWHGQ==
 
 tar-stream@^2.2.0:
   version "2.2.0"
@@ -7466,9 +7520,9 @@ typedarray-to-buffer@^3.1.5:
     is-typedarray "^1.0.0"
 
 typescript@^5.0.4:
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
-  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
+  integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"

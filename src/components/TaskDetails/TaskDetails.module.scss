@@ -114,7 +114,7 @@
   }
 }
 .deadlineTimeCustom {
-  transform: translateX(-10px);
+  // transform: translateX(-10px);
 }
 .deadlineButton {
   width: 100%;
@@ -161,11 +161,11 @@
   resize: none;
   overflow: hidden;
 }
-.detailsDatePicker {
-  position: relative;
-  top: 0;
-  right: -10px;
-}
+// .detailsDatePicker {
+//   position: relative;
+//   top: 0;
+//   right: -10px;
+// }
 
 .detailsFooter {
   display: flex;
