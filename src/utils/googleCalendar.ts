@@ -85,31 +85,39 @@ const scope = 'https://www.googleapis.com/auth/calendar.events';
 // accessToken.js
 function getAccessToken(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    gapi.load('client:auth2', () => {
-      gapi.client
-        .init({
-          apiKey: apiKey,
-          clientId: calendarID,
-          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-          scope: scope,
-        })
-        .then(() => {
-          gapi.auth2
-            .getAuthInstance()
-            .signIn()
-            .then(() => {
-              const accessToken = gapi.auth2
-                .getAuthInstance()
-                .currentUser.get()
-                .getAuthResponse().access_token;
-              localStorage.setItem('access_token', accessToken);
-              resolve();
-            });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    const tokenStorage = localStorage.getItem('access_token');
+    if (tokenStorage) {
+      // Проверьте, действителен ли токен
+      // Если он действителен, просто верните его
+      resolve(tokenStorage);
+    } else {
+      // Если токена нет или он недействителен, начните процесс авторизации
+      gapi.load('client:auth2', () => {
+        gapi.client
+          .init({
+            apiKey: apiKey,
+            clientId: calendarID,
+            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+            scope: scope,
+          })
+          .then(() => {
+            gapi.auth2
+              .getAuthInstance()
+              .signIn()
+              .then(() => {
+                const accessToken = gapi.auth2
+                  .getAuthInstance()
+                  .currentUser.get()
+                  .getAuthResponse().access_token;
+                localStorage.setItem('access_token', accessToken);
+                resolve(accessToken);
+              });
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    }
   });
 }
 
@@ -168,6 +176,7 @@ export const addEventGoogleCalendar = async (task: Todo) => {
   };
 
   try {
+    await getAccessToken();
     await addPostGoggleCalendar();
   } catch (error) {
     console.log(error);
@@ -263,6 +272,7 @@ export const deleteEventGoogleCalendar = async (task: Todo) => {
   };
 
   try {
+    await getAccessToken();
     const events = await getEvents();
     await removeEvent(events);
   } catch (error) {

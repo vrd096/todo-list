@@ -105,13 +105,6 @@ export const TaskDetails = () => {
       todo.reminder = String(date);
     }
   }
-  const handleCloseReminderCalendar = () => {
-    setShowReminderCalendar(false);
-    if (todo) {
-      dispatch(updateTaskReminder(todo));
-      addEventGoogleCalendar(todo);
-    }
-  };
 
   // useEffect(() => {
   //   const handleClickOutside = (e: MouseEvent) => {
@@ -170,6 +163,16 @@ export const TaskDetails = () => {
     if (todo?.reminder != '') {
       await deleteEventGoogleCalendar(task);
       resetReminder(task);
+    }
+  };
+
+  const handleCloseReminderCalendar = async () => {
+    setShowReminderCalendar(false);
+
+    if (todo) {
+      await clearTaskReminder(todo);
+      await dispatch(updateTaskReminder(todo));
+      await addEventGoogleCalendar(todo);
     }
   };
 
