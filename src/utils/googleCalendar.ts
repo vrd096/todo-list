@@ -86,9 +86,11 @@ const scope = 'https://www.googleapis.com/auth/calendar.events';
 function getAccessToken(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const tokenStorage = localStorage.getItem('access_token');
-    if (tokenStorage) {
-      // Проверьте, действителен ли токен
-      // Если он действителен, просто верните его
+    const expiryTime = localStorage.getItem('expiry_time');
+    const now = new Date().getTime();
+
+    if (tokenStorage && expiryTime && now < Number(expiryTime)) {
+      // Токен действителен, просто верните его
       resolve(tokenStorage);
     } else {
       // Если токена нет или он недействителен, начните процесс авторизации
@@ -105,11 +107,14 @@ function getAccessToken(): Promise<void> {
               .getAuthInstance()
               .signIn()
               .then(() => {
-                const accessToken = gapi.auth2
+                const authResponse = gapi.auth2
                   .getAuthInstance()
                   .currentUser.get()
-                  .getAuthResponse().access_token;
+                  .getAuthResponse();
+                const accessToken = authResponse.access_token;
+                const expiryTime = authResponse.expires_at;
                 localStorage.setItem('access_token', accessToken);
+                localStorage.setItem('expiry_time', expiryTime.toString());
                 resolve(accessToken);
               });
           })
@@ -141,6 +146,7 @@ export const addEventGoogleCalendar = async (task: Todo) => {
     };
 
     return new Promise((resolve, reject) => {
+      let attemptCount = 0;
       function initiate() {
         gapi.client
           .request({
@@ -156,7 +162,9 @@ export const addEventGoogleCalendar = async (task: Todo) => {
             resolve([true, response]);
           })
           .catch((err: any) => {
-            if (err.status === 401) {
+            if (err.status === 401 && attemptCount < 3) {
+              // Ограничьте количество попыток до 3
+              attemptCount++;
               getAccessToken()
                 .then(() => {
                   initiate();
@@ -196,6 +204,7 @@ export const deleteEventGoogleCalendar = async (task: Todo) => {
     })[0]?.id;
 
     return new Promise((resolve, reject) => {
+      let attemptCount = 0;
       function initiate() {
         gapi.client
           .request({
@@ -210,7 +219,9 @@ export const deleteEventGoogleCalendar = async (task: Todo) => {
             resolve([true, response]);
           })
           .catch((err: any) => {
-            if (err.status === 401) {
+            if (err.status === 401 && attemptCount < 3) {
+              // Ограничьте количество попыток до 3
+              attemptCount++;
               getAccessToken()
                 .then(() => {
                   initiate();
@@ -233,6 +244,7 @@ export const deleteEventGoogleCalendar = async (task: Todo) => {
     const tokenStorage = localStorage.getItem('access_token');
 
     return new Promise((resolve, reject) => {
+      let attemptCount = 0;
       function initiate() {
         gapi.client
           .init({
@@ -252,7 +264,9 @@ export const deleteEventGoogleCalendar = async (task: Todo) => {
             resolve(events);
           })
           .catch((err: any) => {
-            if (err.status === 401) {
+            if (err.status === 401 && attemptCount < 3) {
+              // Ограничьте количество попыток до 3
+              attemptCount++;
               getAccessToken()
                 .then(() => {
                   initiate();
