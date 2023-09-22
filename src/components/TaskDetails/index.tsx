@@ -85,7 +85,6 @@ export const TaskDetails = () => {
 
   function handleDeadlineDateChange(date: any) {
     if (todo) {
-      console.log(date);
       setDeadlineDate(date);
       setTaskDeadline(date);
       todo.deadline = String(date);
@@ -102,8 +101,6 @@ export const TaskDetails = () => {
   function handleReminderDateChange(date: any) {
     if (todo) {
       setReminderDate(date);
-      todo.reminder = String(date);
-      console.log(todo.reminder);
     }
   }
 
@@ -148,14 +145,13 @@ export const TaskDetails = () => {
     dispatch(toggleImportant(task));
   };
   const currentDeleteTask = (task: Todo) => {
-    console.log(task);
     dispatch(deleteTask(task));
     dispatch(closeTaskDetails());
-    if (todo?.reminder != '') {
-      console.log(todo);
+    if (todo && todo.reminder != '') {
       deleteEventGoogleCalendar(todo);
     }
   };
+
   const resetReminder = async (task: Todo) => {
     task.reminder = '';
     dispatch(updateTaskReminder(task));
@@ -175,8 +171,9 @@ export const TaskDetails = () => {
       // if (todo?.reminder != '') {
       // }
       if (todo) {
-        // todo.reminder = String(reminderDate);
         await clearTaskReminder(todo); // Дождитесь завершения этой функции
+        todo.reminder = String(reminderDate);
+
         await dispatch(updateTaskReminder(todo)); // Затем вызовите эти функции
         await addEventGoogleCalendar(todo);
       }

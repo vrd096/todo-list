@@ -83,8 +83,8 @@ const scope = 'https://www.googleapis.com/auth/calendar.events';
 // };
 
 // accessToken.js
-function getAccessToken(): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+function getAccessToken(): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     const tokenStorage = localStorage.getItem('access_token');
     const expiryTime = localStorage.getItem('expiry_time');
     const now = new Date().getTime();
