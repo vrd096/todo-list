@@ -98,12 +98,6 @@ export const TaskDetails = () => {
     }
   };
 
-  function handleReminderDateChange(date: any) {
-    if (todo) {
-      setReminderDate(date);
-    }
-  }
-
   // useEffect(() => {
   //   const handleClickOutside = (e: MouseEvent) => {
   //     if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
@@ -163,19 +157,31 @@ export const TaskDetails = () => {
       await resetReminder(task);
     }
   };
+  const reminderToString = async () => {
+    if (todo) {
+      const updatedTodo = { ...todo, reminder: String(reminderDate) };
+      // setTodo(updatedTodo);
+      return updatedTodo;
+    }
+  };
+
+  const handleReminderDateChange = (date: any) => {
+    setReminderDate(date);
+  };
+  useEffect(() => {
+    reminderToString();
+  }, [reminderDate]);
 
   const handleCloseReminderCalendar = async () => {
     try {
       setShowReminderCalendar(false);
-
-      // if (todo?.reminder != '') {
-      // }
-      if (todo) {
-        await clearTaskReminder(todo); // Дождитесь завершения этой функции
-        todo.reminder = String(reminderDate);
-
-        await dispatch(updateTaskReminder(todo)); // Затем вызовите эти функции
-        await addEventGoogleCalendar(todo);
+      const updatedTodo = await reminderToString();
+      if (todo && todo?.reminder != '') {
+        await clearTaskReminder(todo);
+      }
+      if (updatedTodo) {
+        await dispatch(updateTaskReminder(updatedTodo));
+        await addEventGoogleCalendar(updatedTodo);
       }
     } catch (error) {
       console.error(error);

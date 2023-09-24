@@ -44,22 +44,26 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
     setReturnDate(newDate);
   }, [currentSlideIndex, currentHourIndex, currentMinuteIndex]);
 
-  const handleButtonClickSave = () => {
-    // Вызов функции onChange с текущим значением даты
-    console.log(returnDate);
+  useEffect(() => {
     onChange(returnDate);
-    closeCalendar();
+  }, [returnDate]);
+
+  const handleButtonClickSave = async () => {
+    // Вызов функции onChange с текущим значением даты
+    // console.log(returnDate);
+    // await onChange(returnDate);
+    await closeCalendar();
   };
 
   return (
     <div className={styles.picker}>
       <div className={styles.controlButton}>
-        <button
+        {/* <button
           onClick={() => {
             closeCalendar();
           }}>
           Отменить
-        </button>
+        </button> */}
         <button
           onClick={() => {
             handleButtonClickSave();
