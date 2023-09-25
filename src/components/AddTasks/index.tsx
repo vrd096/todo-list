@@ -27,11 +27,9 @@ export const AddTasks = () => {
   const [importantTask, setImportantTask] = useState(false);
 
   function handleDeadlineDateChange(date: any) {
-    console.log(date);
     setDeadlineDate(date);
   }
   function handleReminderDateChange(date: any) {
-    console.log(date);
     setReminderDate(date);
   }
 

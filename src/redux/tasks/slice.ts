@@ -11,7 +11,9 @@ const todoSlice = createSlice({
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.unshift(action.payload);
-      addEventGoogleCalendar(action.payload);
+      if (action.payload.reminder != '') {
+        addEventGoogleCalendar(action.payload);
+      }
     },
     removeTodo(state, action: PayloadAction<Todo>) {
       const filteredState = state.filter((todo: Todo) => todo.id !== action.payload.id);
