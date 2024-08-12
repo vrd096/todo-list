@@ -7,7 +7,7 @@ interface SpeechToTextProps {
 const SpeechToText: React.FC<SpeechToTextProps> = ({ onTextCapture }) => {
   const [listening, setListening] = useState(false);
   const capturedTextRef = useRef(''); // Используем useRef для текущего текста
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<InstanceType<typeof SpeechRecognition> | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const SpeechRecognition =
@@ -33,8 +33,8 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTextCapture }) => {
     };
 
     recognition.onresult = (event: any) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0].transcript)
+      const transcript = Array.from(event.results as SpeechRecognitionResultList)
+        .map((result) => (result as SpeechRecognitionResult)[0].transcript)
         .join('');
 
       // Обновляем текстовое значение
