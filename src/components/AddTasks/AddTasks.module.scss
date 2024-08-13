@@ -20,6 +20,11 @@
   display: flex;
   align-items: center;
 }
+
+.addToTopCloseButton {
+  background-color: transparent;
+  border: 0;
+}
 .addToTopDatePicker {
   position: static;
   top: 10px;
