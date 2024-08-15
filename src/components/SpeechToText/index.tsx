@@ -69,7 +69,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTextCapture }) => {
     }
   };
   return (
-    <div onClick={startListening} style={{ cursor: 'pointer' }}>
+    <div onClick={startListening} style={{ display: 'flex', cursor: 'pointer' }}>
       {!SpeechRecognition ? (
         <svg
           width="24px"
