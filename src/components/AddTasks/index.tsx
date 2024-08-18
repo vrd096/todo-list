@@ -53,10 +53,7 @@ export const AddTasks = () => {
   };
 
   const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    const isEnterKey = e.key === 'Enter';
-    const isTodoDescriptionValid = todoDescription.trim() !== '';
-
-    if (isEnterKey && isTodoDescriptionValid) {
+    if (e.key === 'Enter' && todoDescription.trim()) {
       addDispatchData();
     }
   };
