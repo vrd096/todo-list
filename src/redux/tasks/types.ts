@@ -6,6 +6,8 @@ export interface Todo {
   completed: boolean;
   myDay: boolean;
   important: boolean;
+  dateCreated: string;
+  [key: string]: any;
 }
 export interface PropsListTasks {
   tasks: Todo[];

@@ -1,9 +1,12 @@
 import './scss/app.scss';
+import React, { Suspense, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Todolist } from './components/Todolist';
-import { useEffect } from 'react';
-import { TaskDetails } from './components/TaskDetails';
+
+const LazyTaskDetails = React.lazy(
+  () => import(/* webpackChunkName: "TaskDetails" */ './components/TaskDetails'),
+);
 
 function App() {
   useEffect(() => {
@@ -22,7 +25,9 @@ function App() {
         <Todolist />
       </div>
       <div className="details">
-        <TaskDetails />
+        <Suspense fallback={<div>Loading…</div>}>
+          <LazyTaskDetails />
+        </Suspense>
       </div>
     </div>
   );

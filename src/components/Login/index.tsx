@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import 'firebase/auth';
-import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { firebaseApp, auth, onAuthStateChanged } from '../../firebase';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import styles from './Login.module.scss';
 import { Tooltip } from '@chakra-ui/react';
 
@@ -13,22 +13,31 @@ export const LoginForm = () => {
     displayName: '',
   });
   const modalRef = useRef<HTMLDivElement>(null);
-  const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user: any) => {
-      if (user) {
-        setUser(user);
-        setUserData({
-          photoURL: String(user.photoURL),
-          email: String(user.email),
-          displayName: String(user.displayName),
-        });
-      } else {
-        setUser(null);
-      }
-    });
+    const initializeFirebase = async () => {
+      await firebaseApp(); // Убедитесь, что Firebase App инициализирован
+      const authInstance = await auth();
+      const unsubscribe = await onAuthStateChanged((user: any) => {
+        if (user) {
+          setUser(user);
+          setUserData({
+            photoURL: String(user.photoURL),
+            email: String(user.email),
+            displayName: String(user.displayName),
+          });
+        } else {
+          setUser(null);
+        }
+      });
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    };
+
+    initializeFirebase();
   }, []);
 
   useEffect(() => {
@@ -45,23 +54,23 @@ export const LoginForm = () => {
     };
   }, [modalRef]);
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
+  const signInWithGoogle = useCallback(async () => {
+    const authInstance = await auth();
+    signInWithPopup(authInstance, provider)
       .then((result) => {
         console.log(result.user);
-
         setShowForm(false);
       })
       .catch((error) => {
         console.log(error.message);
       });
-  };
+  }, []);
 
-  const signOut = () => {
-    auth.signOut();
+  const signOut = useCallback(async () => {
+    const authInstance = await auth();
+    await authInstance.signOut();
     setShowForm(false);
-  };
-
+  }, []);
   return (
     <div>
       {user ? (

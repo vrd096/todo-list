@@ -18,35 +18,47 @@ export const Tasks = ({ tasks }: PropsTasks) => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user: User | null) => {
-      if (user) {
-        setUser(user);
-        try {
-          await dispatch(fetchTodo());
-        } catch (error) {
-          console.error(error);
+    const initializeFirebase = async () => {
+      const unsubscribe = await onAuthStateChanged(async (user: User | null) => {
+        if (user) {
+          setUser(user);
+          try {
+            await dispatch(fetchTodo());
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          setUser(null);
         }
-      } else {
-        setUser(null);
-      }
-    });
+      });
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    };
+
+    initializeFirebase();
   }, [dispatch]);
 
-  const completedTasks = tasks.filter((todo) => todo.completed == true).length;
+  const completedTasks = tasks.filter((todo) => todo.completed).length;
 
   const callbackChangeToCompletedTask = (task: Todo) => {
     dispatch(toggleCompletedTask(task));
   };
+
   const callbackChangeToActiveTask = (task: Todo) => {
     dispatch(toggleCompletedTask(task));
   };
+
   const callbackAddImportant = (task: Todo) => {
     dispatch(toggleImportant(task));
   };
+
   const callbackRemoveImportant = (task: Todo) => {
     dispatch(toggleImportant(task));
   };
-  const openTaskDetails = (task: any) => {
+
+  const openTaskDetails = (task: Todo) => {
     dispatch(dataTaskDetails(task));
     dispatch(openDetails());
   };

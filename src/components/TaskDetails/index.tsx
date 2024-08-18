@@ -29,7 +29,7 @@ import MobilePicker from '../MobilePicker';
 
 setDefaultLocale('ru');
 
-export const TaskDetails = () => {
+const TaskDetails = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
   const task: any = useSelector((state: RootState) => state.taskDetails.data);
   const dispatch = useDispatch<AppDispatch>();
@@ -954,3 +954,5 @@ export const TaskDetails = () => {
     </div>
   );
 };
+
+export default TaskDetails;

@@ -4,12 +4,13 @@ import {
   collection,
   addDoc,
   getDocs,
-  orderBy,
   query,
   serverTimestamp,
   doc,
   updateDoc,
   deleteDoc,
+  QuerySnapshot,
+  orderBy,
 } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,10 +25,39 @@ import {
   setTaskDeadline,
 } from './slice';
 
+// Вспомогательная функция для получения ID документа
+const getTodoDocId = async (todoId: string, userId: string): Promise<string | null> => {
+  const dbInstance = await db();
+  const querySnapshot = await getDocs(query(collection(dbInstance, `users/${userId}/todos`)));
+  const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todoId)?.id;
+  return docId || null;
+};
+
+// Вспомогательная функция для изменения поля задачи
+const updateTodoField = async (
+  userId: string,
+  todoId: string,
+  field: string,
+  value: any,
+): Promise<void> => {
+  const dbInstance = await db();
+  const docId = await getTodoDocId(todoId, userId);
+  if (docId) {
+    const docRef = doc(dbInstance, `users/${userId}/todos/${docId}`);
+    await updateDoc(docRef, { [`todo.${field}`]: value });
+  }
+};
+
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
   try {
+    const dbInstance = await db();
+    const authInstance = await auth();
+    const user = authInstance.currentUser;
+
+    if (!user) throw new Error('User not authenticated');
+
     const querySnapshot = await getDocs(
-      query(collection(db, `users/${auth.currentUser?.uid}/todos`), orderBy('myTimestamp', 'desc')),
+      query(collection(dbInstance, `users/${user.uid}/todos`), orderBy('myTimestamp', 'desc')),
     );
 
     const tasks: Todo[] = querySnapshot.docs.map((doc) => {
@@ -58,18 +88,21 @@ export const addTask = createAsyncThunk<
       myDay: false,
       deadline,
       reminder,
-      dateСreated: String(new Date()),
+      dateCreated: String(new Date()),
     };
     thunkAPI.dispatch(addTodo(todoTask));
 
-    const user = auth.currentUser;
-    if (user) {
-      await addDoc(collection(db, `users/${user?.uid}/todos`), {
-        todo: todoTask,
-        myTimestamp: serverTimestamp(),
-      });
-      return todoTask;
-    }
+    const dbInstance = await db();
+    const authInstance = await auth();
+    const user = authInstance.currentUser;
+
+    if (!user) throw new Error('User not authenticated');
+
+    await addDoc(collection(dbInstance, `users/${user.uid}/todos`), {
+      todo: todoTask,
+      myTimestamp: serverTimestamp(),
+    });
+
     return todoTask;
   } catch (error) {
     console.error(error);
@@ -77,159 +110,87 @@ export const addTask = createAsyncThunk<
   }
 });
 
-export const toggleCompletedTask = createAsyncThunk(
+// Общая функция для изменения статуса задачи
+const createTodoFieldUpdateThunk = (actionType: string, field: string, actionCreator: Function) =>
+  createAsyncThunk(actionType, async (todo: Todo, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(actionCreator(todo));
+      const dbInstance = await db();
+      const authInstance = await auth();
+      const user = authInstance.currentUser;
+
+      if (!user) throw new Error('User not authenticated');
+
+      await updateTodoField(user.uid, todo.id, field, !todo[field]);
+    } catch (error) {
+      return thunkAPI.rejectWithValue('Some error occurred');
+    }
+  });
+
+export const toggleCompletedTask = createTodoFieldUpdateThunk(
   'todos/completedTask',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setTodoStatus(todo));
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.completed': !todo.completed });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
+  'completed',
+  setTodoStatus,
 );
 
-export const changeMyDay = createAsyncThunk('todos/taskReminder', async (todo: Todo, thunkAPI) => {
-  try {
-    thunkAPI.dispatch(toggleMyDaySlice(todo));
+export const changeMyDay = createTodoFieldUpdateThunk(
+  'todos/changeMyDay',
+  'myDay',
+  toggleMyDaySlice,
+);
 
-    const user = auth.currentUser;
+export const toggleImportant = createTodoFieldUpdateThunk(
+  'todos/toggleImportantTask',
+  'important',
+  setImportantStatus,
+);
 
-    if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
+// Функция для обновления задач
+const createTaskUpdateThunk = (actionType: string, field: string, actionCreator: Function) =>
+  createAsyncThunk(actionType, async (todo: Todo, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(actionCreator(todo));
+      const dbInstance = await db();
+      const authInstance = await auth();
+      const user = authInstance.currentUser;
 
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
+      if (!user) throw new Error('User not authenticated');
 
-      if (docId) {
-        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-        await updateDoc(docRef, { 'todo.myDay': !todo.myDay });
-      }
+      await updateTodoField(user.uid, todo.id, field, todo[field]);
+    } catch (error) {
+      return thunkAPI.rejectWithValue('Some error occurred');
     }
-  } catch (error) {
-    return thunkAPI.rejectWithValue('какая то ошибка');
-  }
-});
-export const updateTaskDeadline = createAsyncThunk(
+  });
+
+export const updateTaskDeadline = createTaskUpdateThunk(
   'todos/taskDeadline',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setTaskDeadline(todo));
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.deadline': todo.deadline });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
+  'deadline',
+  setTaskDeadline,
 );
-export const updateTaskReminder = createAsyncThunk(
+
+export const updateTaskReminder = createTaskUpdateThunk(
   'todos/taskReminder',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setTaskReminder(todo));
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.reminder': todo.reminder });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
+  'reminder',
+  setTaskReminder,
 );
-export const updateTaskTitle = createAsyncThunk('todos/taskTitle', async (todo: Todo, thunkAPI) => {
-  try {
-    thunkAPI.dispatch(setTaskTitle(todo));
 
-    const user = auth.currentUser;
+export const updateTaskTitle = createTaskUpdateThunk('todos/taskTitle', 'title', setTaskTitle);
 
-    if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-      if (docId) {
-        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-        await updateDoc(docRef, { 'todo.title': todo.title.trim() });
-      }
-    }
-  } catch (error) {
-    return thunkAPI.rejectWithValue('какая то ошибка');
-  }
-});
 export const deleteTask = createAsyncThunk('todos/deleteTask', async (todo: Todo, thunkAPI) => {
   try {
     thunkAPI.dispatch(removeTodo(todo));
+    const dbInstance = await db();
+    const authInstance = await auth();
+    const user = authInstance.currentUser;
 
-    const user = auth.currentUser;
+    if (!user) throw new Error('User not authenticated');
 
-    if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-      if (docId) {
-        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-        await deleteDoc(docRef);
-      }
+    const docId = await getTodoDocId(todo.id, user.uid);
+    if (docId) {
+      const docRef = doc(dbInstance, `users/${user.uid}/todos/${docId}`);
+      await deleteDoc(docRef);
     }
   } catch (error) {
-    return thunkAPI.rejectWithValue('какая то ошибка');
+    return thunkAPI.rejectWithValue('Some error occurred');
   }
 });
-
-export const toggleImportant = createAsyncThunk(
-  'todos/toggleImportantTask',
-  async (todo: Todo, thunkAPI) => {
-    try {
-      thunkAPI.dispatch(setImportantStatus(todo));
-      const user = auth.currentUser;
-
-      if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.important': !todo.important });
-        }
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue('какая то ошибка');
-    }
-  },
-);

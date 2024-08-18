@@ -4,7 +4,7 @@ import { Todo } from '../redux/tasks/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
-export const Important = () => {
+const Important = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
 
   const importantTask = tasks.filter((task) => {
@@ -18,3 +18,4 @@ export const Important = () => {
     </div>
   );
 };
+export default Important;

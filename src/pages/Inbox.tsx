@@ -4,7 +4,7 @@ import { Tasks } from '../components/Tasks';
 import { Todo } from '../redux/tasks/types';
 import { RootState } from '../redux/store';
 
-export const Inbox = () => {
+const Inbox = () => {
   const tasks: Todo[] = useSelector((state: RootState) => state.todos);
 
   return (
@@ -14,3 +14,5 @@ export const Inbox = () => {
     </div>
   );
 };
+
+export default Inbox;
