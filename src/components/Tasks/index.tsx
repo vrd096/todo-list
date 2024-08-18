@@ -8,57 +8,53 @@ import { fetchTodo, toggleCompletedTask, toggleImportant } from '../../redux/tas
 import { AddTasks } from '../AddTasks';
 import { ListTasks } from '../ListTasks';
 import { PropsTasks, Todo } from '../../redux/tasks/types';
-import { auth, onAuthStateChanged } from '../../firebase';
+import { onAuthStateChanged } from '../../firebase';
 import { User } from 'firebase/auth';
 import { dataTaskDetails, openDetails } from '../../redux/taskDetails/slice';
 
 export const Tasks = ({ tasks }: PropsTasks) => {
   const [user, setUser] = useState<User | null>(null);
-
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    let unsubscribe: () => void;
+
     const initializeFirebase = async () => {
-      const unsubscribe = await onAuthStateChanged(async (user: User | null) => {
+      unsubscribe = await onAuthStateChanged(async (user: User | null) => {
+        setUser(user);
         if (user) {
-          setUser(user);
           try {
             await dispatch(fetchTodo());
           } catch (error) {
             console.error(error);
           }
-        } else {
-          setUser(null);
         }
       });
-
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
     };
 
     initializeFirebase();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe(); // Отписываемся корректно
+      }
+    };
   }, [dispatch]);
 
   const completedTasks = tasks.filter((todo) => todo.completed).length;
 
-  const callbackChangeToCompletedTask = (task: Todo) => {
+  // Коллбек для изменения статуса задачи
+  const handleToggleCompleted = (task: Todo) => {
     dispatch(toggleCompletedTask(task));
   };
 
-  const callbackChangeToActiveTask = (task: Todo) => {
-    dispatch(toggleCompletedTask(task));
-  };
-
-  const callbackAddImportant = (task: Todo) => {
+  // Коллбек для изменения статуса важности задачи
+  const handleToggleImportant = (task: Todo) => {
     dispatch(toggleImportant(task));
   };
 
-  const callbackRemoveImportant = (task: Todo) => {
-    dispatch(toggleImportant(task));
-  };
-
-  const openTaskDetails = (task: Todo) => {
+  // Коллбек для открытия деталей задачи
+  const handleOpenTaskDetails = (task: Todo) => {
     dispatch(dataTaskDetails(task));
     dispatch(openDetails());
   };
@@ -69,11 +65,11 @@ export const Tasks = ({ tasks }: PropsTasks) => {
       <ListTasks
         tasks={tasks}
         completedTasks={completedTasks}
-        callbackChangeToActiveTask={callbackChangeToActiveTask}
-        callbackChangeToCompletedTask={callbackChangeToCompletedTask}
-        callbackAddImportant={callbackAddImportant}
-        callbackRemoveImportant={callbackRemoveImportant}
-        openTaskDetails={openTaskDetails}
+        callbackChangeToActiveTask={handleToggleCompleted}
+        callbackChangeToCompletedTask={handleToggleCompleted}
+        callbackAddImportant={handleToggleImportant}
+        callbackRemoveImportant={handleToggleImportant}
+        openTaskDetails={handleOpenTaskDetails}
       />
     </div>
   );
