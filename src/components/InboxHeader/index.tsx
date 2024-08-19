@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Sort } from '../Sort';
 import styles from './InboxHeader.module.scss';
 import { AppDispatch, RootState } from '../../redux/store';
 import { toggleSidebar } from '../../redux/sidebar/slice';
 import { Tooltip } from '@chakra-ui/react';
+import React from 'react';
 
-export const InboxHeader = () => {
+export const InboxHeader = React.memo(() => {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isSidebarOpen);
   const dispatch = useDispatch<AppDispatch>();
   return (
@@ -59,7 +59,6 @@ export const InboxHeader = () => {
 
         <span>Все задачи</span>
       </h2>
-      {/* <Sort /> */}
     </div>
   );
-};
+});

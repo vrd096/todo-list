@@ -38,6 +38,7 @@ export const AddTasks = () => {
     const deadline = String(deadlineDate);
     const reminder = String(reminderDate);
     const important = importantTask;
+
     dispatch(addTask({ title: todoDescription.trim(), deadline, reminder, important }));
     setTodoDescription('');
     setDeadlineDate(new Date());
