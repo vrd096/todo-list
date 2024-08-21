@@ -1,6 +1,9 @@
 import { gapi } from 'gapi-script';
 import { Todo } from '../redux/tasks/types';
 import { isEqual } from 'date-fns';
+import { updateTodoEventId } from '../redux/tasks/slice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../redux/store';
 
 const calendarID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
 const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
@@ -95,8 +98,10 @@ export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
     });
+
     const eventId = response.result.id;
-    // task.eventId = eventId;
+
+    // updateTodoEventId({ id: task.id, eventId });
 
     return eventId;
   } catch (error: any) {
@@ -113,12 +118,7 @@ export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
 export const deleteEventGoogleCalendar = async (task: Todo): Promise<void> => {
   try {
     await initGapiClient(); // Инициализация клиента перед использованием
-    // console.log(task);
     const eventId = task.eventId;
-    // if (!eventId) {
-    //   console.log('Event ID не найден, удаление невозможно.');
-    //   return;
-    // }
 
     const tokenStorage = localStorage.getItem('access_token');
     if (!tokenStorage) {
@@ -133,18 +133,65 @@ export const deleteEventGoogleCalendar = async (task: Todo): Promise<void> => {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
     });
-    console.log(response.result.id);
-    if (eventId == response.result.id) {
-      console.log('есть совпадение по id');
-    } else {
-      console.log('Event ID не найден, удаление невозможно.');
-    }
 
     console.log('Event deleted successfully:', response);
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();
       return deleteEventGoogleCalendar(task);
+    } else {
+      console.log(error);
+      throw error;
+    }
+  }
+};
+
+export const updateEventGoogleCalendar = async (task: Todo): Promise<void> => {
+  try {
+    await initGapiClient(); // Инициализация клиента перед использованием
+
+    const tokenStorage = localStorage.getItem('access_token');
+    if (!tokenStorage) {
+      await getAccessToken();
+    }
+
+    const eventId = task.eventId;
+    if (!eventId) {
+      console.log('Event ID не найден, обновление невозможно.');
+      return;
+    }
+
+    const event = {
+      summary: task.title,
+      start: {
+        dateTime: new Date(task.reminder),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+      end: {
+        dateTime: new Date(new Date(task.reminder).getTime() + 60 * 60 * 1000),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+      reminders: {
+        useDefault: false,
+        overrides: [{ method: 'popup', minutes: 0 }],
+      },
+    };
+
+    const response = await gapi.client.request({
+      path: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+      method: 'PATCH',
+      body: JSON.stringify(event), // Убедитесь, что body - это строка.
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
+
+    console.log('Event updated successfully:', response);
+  } catch (error: any) {
+    if (error.status === 401) {
+      await getAccessToken();
+      return updateEventGoogleCalendar(task);
     } else {
       console.log(error);
       throw error;

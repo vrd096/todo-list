@@ -161,6 +161,7 @@ export const updateTaskReminder = createAsyncThunk(
   'todos/taskReminder',
   async (todo: Todo, thunkAPI) => {
     try {
+      console.log('updateTaskReminder');
       thunkAPI.dispatch(setTaskReminder(todo));
       const user = auth.currentUser;
 

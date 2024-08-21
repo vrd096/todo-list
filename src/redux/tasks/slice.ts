@@ -13,6 +13,7 @@ const todoSlice = createSlice({
       state.unshift(action.payload);
     },
     updateTodoEventId: (state, action: PayloadAction<{ id: string; eventId: string }>) => {
+      console.log('updateTodoEventId');
       const { id, eventId } = action.payload;
       const todo = state.find((task) => task.id === id);
       if (todo) {

@@ -23,9 +23,14 @@ import DatePicker from 'react-datepicker';
 import './../AddTasks/DatePicker.scss';
 import { setDefaultLocale } from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
-import { addEventGoogleCalendar, deleteEventGoogleCalendar } from '../../utils/googleCalendar';
+import {
+  addEventGoogleCalendar,
+  deleteEventGoogleCalendar,
+  updateEventGoogleCalendar,
+} from '../../utils/googleCalendar';
 import { Tooltip } from '@chakra-ui/react';
 import MobilePicker from '../MobilePicker';
+import { setTaskReminder, updateTodoEventId } from '../../redux/tasks/slice';
 
 setDefaultLocale('ru');
 
@@ -152,9 +157,14 @@ const TaskDetails = () => {
   };
 
   const clearTaskReminder = async (task: Todo) => {
-    if (todo?.reminder != '') {
-      await deleteEventGoogleCalendar(task);
-      await resetReminder(task);
+    const updatedTask = await reminderToString();
+
+    if (task?.reminder != '') {
+      if (task) {
+        await deleteEventGoogleCalendar(task);
+
+        await resetReminder(task);
+      }
     }
   };
   const reminderToString = async () => {
@@ -175,14 +185,40 @@ const TaskDetails = () => {
   const handleCloseReminderCalendar = async () => {
     try {
       setShowReminderCalendar(false);
-      const updatedTodo = await reminderToString();
-      if (todo && todo?.reminder != '') {
-        await clearTaskReminder(todo);
+      const updatedTask = await reminderToString();
+
+      if (updatedTask) {
+        dispatch(updateTaskReminder(updatedTask));
       }
-      if (updatedTodo) {
-        await dispatch(updateTaskReminder(updatedTodo));
-        await addEventGoogleCalendar(updatedTodo);
+      if (updatedTask?.reminder != '') {
+        try {
+          if (updatedTask) {
+            // await addEventGoogleCalendar(updatedTask);
+
+            const eventId = await addEventGoogleCalendar(updatedTask);
+            console.log(eventId);
+            dispatch(updateTodoEventId({ id: updatedTask.id, eventId }));
+          }
+          // // Добавляем задачу с новым eventId
+        } catch (error) {
+          console.error('Failed to add event to Google Calendar:', error);
+        }
       }
+      // if (updatedTask?.reminder != '') {
+      //   try {
+      //     // console.log(updatedTask);
+      //     if (updatedTask) {
+      //       updateEventGoogleCalendar(updatedTask);
+      //     }
+      //     // Обновляем задачу с новым eventId
+      //   } catch (error) {
+      //     console.error('Failed to add event to Google Calendar:', error);
+      //   }
+      // }
+      // if (updatedTask) {
+      //   await dispatch(updateTaskReminder(updatedTask));
+      //   // await addEventGoogleCalendar(updatedTask);
+      // }
     } catch (error) {
       console.error(error);
     }
