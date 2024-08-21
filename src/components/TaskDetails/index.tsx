@@ -186,17 +186,15 @@ const TaskDetails = () => {
     try {
       setShowReminderCalendar(false);
       const updatedTask = await reminderToString();
-
+      // console.log(todo);
       if (updatedTask) {
         dispatch(updateTaskReminder(updatedTask));
       }
-      if (updatedTask?.reminder != '') {
+      if (todo?.reminder == '') {
         try {
           if (updatedTask) {
-            // await addEventGoogleCalendar(updatedTask);
-
             const eventId = await addEventGoogleCalendar(updatedTask);
-            console.log(eventId);
+
             dispatch(updateTodoEventId({ id: updatedTask.id, eventId }));
           }
           // // Добавляем задачу с новым eventId
@@ -204,21 +202,21 @@ const TaskDetails = () => {
           console.error('Failed to add event to Google Calendar:', error);
         }
       }
-      // if (updatedTask?.reminder != '') {
-      //   try {
-      //     // console.log(updatedTask);
-      //     if (updatedTask) {
-      //       updateEventGoogleCalendar(updatedTask);
-      //     }
-      //     // Обновляем задачу с новым eventId
-      //   } catch (error) {
-      //     console.error('Failed to add event to Google Calendar:', error);
-      //   }
-      // }
-      // if (updatedTask) {
-      //   await dispatch(updateTaskReminder(updatedTask));
-      //   // await addEventGoogleCalendar(updatedTask);
-      // }
+      if (todo?.reminder != '') {
+        try {
+          // console.log(updatedTask);
+          if (updatedTask) {
+            updateEventGoogleCalendar(updatedTask);
+          }
+          // Обновляем задачу с новым eventId
+        } catch (error) {
+          console.error('Failed to add event to Google Calendar:', error);
+        }
+      }
+      if (updatedTask) {
+        await dispatch(updateTaskReminder(updatedTask));
+        // await addEventGoogleCalendar(updatedTask);
+      }
     } catch (error) {
       console.error(error);
     }
