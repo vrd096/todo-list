@@ -26,10 +26,20 @@ import {
 } from './slice';
 import { addEventGoogleCalendar } from '../../utils/googleCalendar';
 
+const getUserTodosCollection = (userId: string) => collection(db, `users/${userId}/todos`);
+
+const getDocId = async (userId: string, todoId: string) => {
+  const querySnapshot = await getDocs(query(getUserTodosCollection(userId)));
+  return querySnapshot.docs.find((doc) => doc.data().todo.id === todoId)?.id;
+};
+
 export const fetchTodo = createAsyncThunk<Todo[], void>('todo/fetchTaskStatus', async () => {
   try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('User not authenticated');
+
     const querySnapshot = await getDocs(
-      query(collection(db, `users/${auth.currentUser?.uid}/todos`), orderBy('myTimestamp', 'desc')),
+      query(getUserTodosCollection(user.uid), orderBy('myTimestamp', 'desc')),
     );
 
     const tasks: Todo[] = querySnapshot.docs.map((doc) => {
@@ -69,8 +79,6 @@ export const addTask = createAsyncThunk<
       try {
         const eventId = await addEventGoogleCalendar(todoTask);
         todoTask = { ...todoTask, eventId };
-
-        // Обновляем задачу с новым eventId
         thunkAPI.dispatch(updateTodoEventId({ id: todoTask.id, eventId }));
       } catch (error) {
         console.error('Failed to add event to Google Calendar:', error);
@@ -79,7 +87,7 @@ export const addTask = createAsyncThunk<
 
     const user = auth.currentUser;
     if (user) {
-      await addDoc(collection(db, `users/${user?.uid}/todos`), {
+      await addDoc(getUserTodosCollection(user.uid), {
         todo: todoTask,
         myTimestamp: serverTimestamp(),
       });
@@ -92,6 +100,14 @@ export const addTask = createAsyncThunk<
   }
 });
 
+const updateTodoField = async (userId: string, todoId: string, field: string, value: any) => {
+  const docId = await getDocId(userId, todoId);
+  if (docId) {
+    const docRef = doc(db, `users/${userId}/todos/${docId}`);
+    await updateDoc(docRef, { [`todo.${field}`]: value });
+  }
+};
+
 export const toggleCompletedTask = createAsyncThunk(
   'todos/completedTask',
   async (todo: Todo, thunkAPI) => {
@@ -100,15 +116,7 @@ export const toggleCompletedTask = createAsyncThunk(
       const user = auth.currentUser;
 
       if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.completed': !todo.completed });
-        }
+        await updateTodoField(user.uid, todo.id, 'completed', !todo.completed);
       }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
@@ -123,19 +131,13 @@ export const changeMyDay = createAsyncThunk('todos/taskReminder', async (todo: T
     const user = auth.currentUser;
 
     if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-      if (docId) {
-        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-        await updateDoc(docRef, { 'todo.myDay': !todo.myDay });
-      }
+      await updateTodoField(user.uid, todo.id, 'myDay', !todo.myDay);
     }
   } catch (error) {
     return thunkAPI.rejectWithValue('какая то ошибка');
   }
 });
+
 export const updateTaskDeadline = createAsyncThunk(
   'todos/taskDeadline',
   async (todo: Todo, thunkAPI) => {
@@ -144,21 +146,14 @@ export const updateTaskDeadline = createAsyncThunk(
       const user = auth.currentUser;
 
       if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.deadline': todo.deadline });
-        }
+        await updateTodoField(user.uid, todo.id, 'deadline', todo.deadline);
       }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
   },
 );
+
 export const updateTaskReminder = createAsyncThunk(
   'todos/taskReminder',
   async (todo: Todo, thunkAPI) => {
@@ -167,22 +162,15 @@ export const updateTaskReminder = createAsyncThunk(
       const user = auth.currentUser;
 
       if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.reminder': todo.reminder });
-          await updateDoc(docRef, { 'todo.eventId': todo.eventId });
-        }
+        await updateTodoField(user.uid, todo.id, 'reminder', todo.reminder);
+        await updateTodoField(user.uid, todo.id, 'eventId', todo.eventId);
       }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
     }
   },
 );
+
 export const updateTaskTitle = createAsyncThunk('todos/taskTitle', async (todo: Todo, thunkAPI) => {
   try {
     thunkAPI.dispatch(setTaskTitle(todo));
@@ -190,20 +178,13 @@ export const updateTaskTitle = createAsyncThunk('todos/taskTitle', async (todo: 
     const user = auth.currentUser;
 
     if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-      if (docId) {
-        const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-        await updateDoc(docRef, { 'todo.title': todo.title.trim() });
-      }
+      await updateTodoField(user.uid, todo.id, 'title', todo.title.trim());
     }
   } catch (error) {
     return thunkAPI.rejectWithValue('какая то ошибка');
   }
 });
+
 export const deleteTask = createAsyncThunk('todos/deleteTask', async (todo: Todo, thunkAPI) => {
   try {
     thunkAPI.dispatch(removeTodo(todo));
@@ -211,13 +192,9 @@ export const deleteTask = createAsyncThunk('todos/deleteTask', async (todo: Todo
     const user = auth.currentUser;
 
     if (user) {
-      const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-      const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
+      const docId = await getDocId(user.uid, todo.id);
       if (docId) {
         const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
         await deleteDoc(docRef);
       }
     }
@@ -234,15 +211,7 @@ export const toggleImportant = createAsyncThunk(
       const user = auth.currentUser;
 
       if (user) {
-        const querySnapshot = await getDocs(query(collection(db, `users/${user.uid}/todos`)));
-
-        const docId = querySnapshot.docs.find((doc) => doc.data().todo.id === todo.id)?.id;
-
-        if (docId) {
-          const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
-
-          await updateDoc(docRef, { 'todo.important': !todo.important });
-        }
+        await updateTodoField(user.uid, todo.id, 'important', !todo.important);
       }
     } catch (error) {
       return thunkAPI.rejectWithValue('какая то ошибка');
