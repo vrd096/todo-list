@@ -52,7 +52,7 @@ export const addTask = createAsyncThunk<
   { title: string; deadline: string; reminder: string; important: boolean }
 >('todos/addTask', async ({ title, deadline, reminder, important }, thunkAPI) => {
   try {
-    const todoTask: Todo = {
+    let todoTask: Todo = {
       id: uuidv4(),
       title,
       completed: false,
@@ -68,6 +68,8 @@ export const addTask = createAsyncThunk<
     if (reminder !== '') {
       try {
         const eventId = await addEventGoogleCalendar(todoTask);
+        todoTask = { ...todoTask, eventId };
+
         // Обновляем задачу с новым eventId
         thunkAPI.dispatch(updateTodoEventId({ id: todoTask.id, eventId }));
       } catch (error) {
@@ -161,7 +163,6 @@ export const updateTaskReminder = createAsyncThunk(
   'todos/taskReminder',
   async (todo: Todo, thunkAPI) => {
     try {
-      console.log('updateTaskReminder');
       thunkAPI.dispatch(setTaskReminder(todo));
       const user = auth.currentUser;
 
@@ -174,6 +175,7 @@ export const updateTaskReminder = createAsyncThunk(
           const docRef = doc(db, `users/${user.uid}/todos/${docId}`);
 
           await updateDoc(docRef, { 'todo.reminder': todo.reminder });
+          await updateDoc(docRef, { 'todo.eventId': todo.eventId });
         }
       }
     } catch (error) {

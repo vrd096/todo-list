@@ -115,10 +115,15 @@ export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
   }
 };
 
-export const deleteEventGoogleCalendar = async (task: Todo): Promise<void> => {
+export const deleteEventGoogleCalendar = async (task: Todo): Promise<string> => {
   try {
     await initGapiClient(); // Инициализация клиента перед использованием
     const eventId = task.eventId;
+
+    if (!eventId) {
+      // console.log('Event ID не найден, удаление невозможно.');
+      return '';
+    }
 
     const tokenStorage = localStorage.getItem('access_token');
     if (!tokenStorage) {
@@ -134,7 +139,8 @@ export const deleteEventGoogleCalendar = async (task: Todo): Promise<void> => {
       },
     });
 
-    console.log('Event deleted successfully:', response);
+    // console.log('Event deleted successfully:', response);
+    return eventId;
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();
@@ -157,7 +163,7 @@ export const updateEventGoogleCalendar = async (task: Todo): Promise<void> => {
 
     const eventId = task.eventId;
     if (!eventId) {
-      console.log('Event ID не найден, обновление невозможно.');
+      // console.log('Event ID не найден, обновление невозможно.');
       return;
     }
 
@@ -187,7 +193,7 @@ export const updateEventGoogleCalendar = async (task: Todo): Promise<void> => {
       },
     });
 
-    console.log('Event updated successfully:', response);
+    // console.log('Event updated successfully:', response);
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();

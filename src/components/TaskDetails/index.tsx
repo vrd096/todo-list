@@ -153,15 +153,14 @@ const TaskDetails = () => {
 
   const resetReminder = async (task: Todo) => {
     task.reminder = '';
+    task.eventId = '';
     dispatch(updateTaskReminder(task));
   };
 
   const clearTaskReminder = async (task: Todo) => {
-    const updatedTask = await reminderToString();
-    console.log(task);
     if (task?.reminder != '') {
       if (task) {
-        const eventId: void = await deleteEventGoogleCalendar(task);
+        const eventId = await deleteEventGoogleCalendar(task);
         dispatch(updateTodoEventId({ id: task.id, eventId }));
         await resetReminder(task);
       }
@@ -186,7 +185,7 @@ const TaskDetails = () => {
     try {
       setShowReminderCalendar(false);
       const updatedTask = await reminderToString();
-      console.log(updatedTask);
+
       if (updatedTask) {
         dispatch(updateTaskReminder(updatedTask));
       }
@@ -204,7 +203,6 @@ const TaskDetails = () => {
       }
       if (todo?.reminder != '') {
         try {
-          // console.log(updatedTask);
           if (updatedTask) {
             updateEventGoogleCalendar(updatedTask);
           }
