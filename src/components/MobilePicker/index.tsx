@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import '../../scss/swiper/swiper-bundle.css';
 import { addDays, addMonths, eachDayOfInterval, format } from 'date-fns';
@@ -23,12 +22,14 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
   );
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const [returnDate, setReturnDate] = useState(new Date());
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
+
   useEffect(() => {
     if (currentSlideIndex > dates.length - 31) {
       const newDates = eachDayOfInterval({
@@ -51,27 +52,13 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
   }, [returnDate]);
 
   const handleButtonClickSave = async () => {
-    // Вызов функции onChange с текущим значением даты
-    // console.log(returnDate);
-    // await onChange(returnDate);
     await closeCalendar();
   };
 
   return (
     <div className={styles.picker}>
       <div className={styles.controlButton}>
-        {/* <button
-          onClick={() => {
-            closeCalendar();
-          }}>
-          Отменить
-        </button> */}
-        <button
-          onClick={() => {
-            handleButtonClickSave();
-          }}>
-          Сохранить
-        </button>
+        <button onClick={handleButtonClickSave}>Сохранить</button>
       </div>
       <div className={styles.pickerTitle}>
         {format(dates[currentSlideIndex], 'dd/MM/yyyy', { locale: ruLocale })}{' '}
@@ -118,8 +105,10 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
             loop={true}
             onSlideChange={(swiper) => setCurrentMinuteIndex(swiper.realIndex)}
             className={styles.pickerSwiper}>
-            {minutes.map((minute) => (
-              <SwiperSlide key={minute}>{minute.toString().padStart(2, '0')}</SwiperSlide>
+            {minutes.map((minute, index) => (
+              <SwiperSlide key={`${minute}-${index}`}>
+                {minute.toString().padStart(2, '0')}
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
