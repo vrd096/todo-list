@@ -1,56 +1,49 @@
 import { gapi } from 'gapi-script';
 import { Todo } from '../redux/tasks/types';
-import { isEqual } from 'date-fns';
-import { updateTodoEventId } from '../redux/tasks/slice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
 
 const calendarID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
 const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
 const scope = 'https://www.googleapis.com/auth/calendar.events';
 
-function getAccessToken(): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    const tokenStorage = localStorage.getItem('access_token');
-    const expiryTime = localStorage.getItem('expiry_time');
-    const now = new Date().getTime();
+async function getAccessToken(): Promise<string> {
+  const tokenStorage = localStorage.getItem('access_token');
+  const expiryTime = localStorage.getItem('expiry_time');
+  const now = new Date().getTime();
 
-    if (tokenStorage && expiryTime && now < Number(expiryTime)) {
-      resolve(tokenStorage);
-    } else {
-      gapi.load('client:auth2', () => {
-        gapi.client
-          .init({
-            apiKey: apiKey,
-            clientId: calendarID,
-            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-            scope: scope,
-          })
-          .then(() => {
-            gapi.auth2
-              .getAuthInstance()
-              .signIn()
-              .then(() => {
-                const authResponse = gapi.auth2
-                  .getAuthInstance()
-                  .currentUser.get()
-                  .getAuthResponse();
-                const accessToken = authResponse.access_token;
-                const expiryTime = authResponse.expires_at;
-                localStorage.setItem('access_token', accessToken);
-                localStorage.setItem('expiry_time', expiryTime.toString());
-                resolve(accessToken);
-              });
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
-    }
+  if (tokenStorage && expiryTime && now < Number(expiryTime)) {
+    return tokenStorage;
+  }
+
+  return new Promise<string>((resolve, reject) => {
+    gapi.load('client:auth2', () => {
+      gapi.client
+        .init({
+          apiKey: apiKey,
+          clientId: calendarID,
+          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+          scope: scope,
+        })
+        .then(() => {
+          gapi.auth2
+            .getAuthInstance()
+            .signIn()
+            .then(() => {
+              const authResponse = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse();
+              const accessToken = authResponse.access_token;
+              const expiryTime = authResponse.expires_at;
+              localStorage.setItem('access_token', accessToken);
+              localStorage.setItem('expiry_time', expiryTime.toString());
+              resolve(accessToken);
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   });
 }
 
-async function initGapiClient() {
+async function initGapiClient(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     gapi.load('client', () => {
       gapi.client
@@ -64,14 +57,18 @@ async function initGapiClient() {
   });
 }
 
+async function ensureGapiClientAndToken(): Promise<string> {
+  await initGapiClient();
+  const tokenStorage = localStorage.getItem('access_token');
+  if (!tokenStorage) {
+    return getAccessToken();
+  }
+  return tokenStorage;
+}
+
 export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
   try {
-    await initGapiClient(); // Инициализация клиента перед использованием
-
-    const tokenStorage = localStorage.getItem('access_token');
-    if (!tokenStorage) {
-      await getAccessToken();
-    }
+    const accessToken = await ensureGapiClientAndToken();
 
     const event = {
       summary: task.title,
@@ -92,24 +89,20 @@ export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
     const response = await gapi.client.request({
       path: 'https://www.googleapis.com/calendar/v3/calendars/primary/events',
       method: 'POST',
-      body: JSON.stringify(event), // Убедитесь, что body - это строка.
+      body: JSON.stringify(event),
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    const eventId = response.result.id;
-
-    // updateTodoEventId({ id: task.id, eventId });
-
-    return eventId;
+    return response.result.id;
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();
       return addEventGoogleCalendar(task);
     } else {
-      console.log(error);
+      console.error('Error adding event:', error);
       throw error;
     }
   }
@@ -117,36 +110,30 @@ export const addEventGoogleCalendar = async (task: Todo): Promise<string> => {
 
 export const deleteEventGoogleCalendar = async (task: Todo): Promise<string> => {
   try {
-    await initGapiClient(); // Инициализация клиента перед использованием
+    const accessToken = await ensureGapiClientAndToken();
     const eventId = task.eventId;
 
     if (!eventId) {
-      // console.log('Event ID не найден, удаление невозможно.');
+      console.warn('Event ID not found, deletion not possible.');
       return '';
     }
 
-    const tokenStorage = localStorage.getItem('access_token');
-    if (!tokenStorage) {
-      await getAccessToken();
-    }
-
-    const response = await gapi.client.request({
+    await gapi.client.request({
       path: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    // console.log('Event deleted successfully:', response);
     return eventId;
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();
       return deleteEventGoogleCalendar(task);
     } else {
-      console.log(error);
+      console.error('Error deleting event:', error);
       throw error;
     }
   }
@@ -154,16 +141,11 @@ export const deleteEventGoogleCalendar = async (task: Todo): Promise<string> => 
 
 export const updateEventGoogleCalendar = async (task: Todo): Promise<void> => {
   try {
-    await initGapiClient(); // Инициализация клиента перед использованием
-
-    const tokenStorage = localStorage.getItem('access_token');
-    if (!tokenStorage) {
-      await getAccessToken();
-    }
-
+    const accessToken = await ensureGapiClientAndToken();
     const eventId = task.eventId;
+
     if (!eventId) {
-      // console.log('Event ID не найден, обновление невозможно.');
+      console.warn('Event ID not found, update not possible.');
       return;
     }
 
@@ -183,23 +165,21 @@ export const updateEventGoogleCalendar = async (task: Todo): Promise<void> => {
       },
     };
 
-    const response = await gapi.client.request({
+    await gapi.client.request({
       path: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
       method: 'PATCH',
-      body: JSON.stringify(event), // Убедитесь, что body - это строка.
+      body: JSON.stringify(event),
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
-
-    // console.log('Event updated successfully:', response);
   } catch (error: any) {
     if (error.status === 401) {
       await getAccessToken();
       return updateEventGoogleCalendar(task);
     } else {
-      console.log(error);
+      console.error('Error updating event:', error);
       throw error;
     }
   }
