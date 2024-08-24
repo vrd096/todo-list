@@ -8,9 +8,9 @@ const LazyTaskDetails = React.lazy(
   () => import(/* webpackChunkName: "TaskDetails" */ './components/TaskDetails'),
 );
 
-function App() {
+const App: React.FC = () => {
   useEffect(() => {
-    window.process = { ...window.process };
+    // window.process = { ...window.process };
   }, []);
 
   return (
@@ -31,6 +31,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
