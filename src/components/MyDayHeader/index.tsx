@@ -67,7 +67,6 @@ export const MyDayHeader = () => {
           {month} {dayOfMonth}, {dayOfWeek}
         </p>
       </h2>
-      {/* <Sort /> */}
     </div>
   );
 };

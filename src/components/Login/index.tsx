@@ -1,75 +1,82 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'firebase/auth';
-import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  User,
+} from 'firebase/auth';
 import styles from './Login.module.scss';
 import { Tooltip } from '@chakra-ui/react';
 
-export const LoginForm = () => {
+interface UserData {
+  photoURL: string;
+  email: string;
+  displayName: string;
+}
+
+export const LoginForm: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState({
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData>({
     photoURL: '',
     email: '',
     displayName: '',
   });
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user: any) => {
-      if (user) {
-        setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
         setUserData({
-          photoURL: String(user.photoURL),
-          email: String(user.email),
-          displayName: String(user.displayName),
+          photoURL: currentUser.photoURL || '',
+          email: currentUser.email || '',
+          displayName: currentUser.displayName || '',
         });
       } else {
         setUser(null);
+        setUserData({ photoURL: '', email: '', displayName: '' });
       }
     });
-  }, []);
+
+    return () => unsubscribe();
+  }, [auth]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as HTMLElement)) {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         setShowForm(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [modalRef]);
+  }, []);
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result.user);
-
-        setShowForm(false);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setShowForm(false);
+    } catch (error: any) {
+      console.error(error.message);
+    }
   };
 
-  const signOut = () => {
-    auth.signOut();
+  const signOut = async () => {
+    await auth.signOut();
     setShowForm(false);
   };
 
   return (
     <div>
       {user ? (
-        <button
-          className={styles.buttonExitAccount}
-          onClick={() => {
-            setShowForm(true);
-          }}>
+        <button className={styles.buttonExitAccount} onClick={() => setShowForm(true)}>
           <Tooltip
             hasArrow
             fontSize="12"
@@ -79,7 +86,7 @@ export const LoginForm = () => {
             transitionDuration="0.1s"
             label="Диспетчер учетных записей"
             aria-label="A tooltip">
-            <img src={userData.photoURL} />
+            <img src={userData.photoURL || ''} alt="User Avatar" />
           </Tooltip>
         </button>
       ) : (
@@ -128,31 +135,25 @@ export const LoginForm = () => {
               <div className={styles.modalHeader}>
                 <div className={styles.modalLogo}>
                   <svg id="sw-js-blob-svg" viewBox="0 0 100 100" width="30" height="30">
-                    {' '}
                     <defs>
-                      {' '}
                       <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
-                        {' '}
-                        <stop
-                          id="stop1"
-                          stopColor="rgba(55, 120.514, 248, 1)"
-                          offset="0%"></stop>{' '}
-                        <stop id="stop2" stopColor="rgba(31, 224.917, 251, 1)" offset="100%"></stop>{' '}
-                      </linearGradient>{' '}
-                    </defs>{' '}
+                        <stop id="stop1" stopColor="rgba(55, 120.514, 248, 1)" offset="0%"></stop>
+                        <stop id="stop2" stopColor="rgba(31, 224.917, 251, 1)" offset="100%"></stop>
+                      </linearGradient>
+                    </defs>
                     <path
                       fill="none"
                       d="M15.2,-22C20,-17.5,24.2,-13.4,29.1,-7.3C34.1,-1.2,39.8,6.8,36,9.6C32.2,12.5,19,10.2,11.4,10.2C3.8,10.2,1.9,12.4,-3.1,16.7C-8.1,20.9,-16.3,27.3,-19.1,25.8C-21.8,24.2,-19.2,14.8,-19.1,7.9C-19,1,-21.5,-3.4,-19.8,-5.8C-18.1,-8.2,-12.3,-8.5,-8.3,-13.3C-4.3,-18,-2.2,-27.2,1.5,-29.3C5.2,-31.4,10.5,-26.5,15.2,-22Z"
                       transform="translate(50 50)"
                       strokeWidth="3"
-                      stroke="url(#sw-gradient)"></path>{' '}
+                      stroke="url(#sw-gradient)"></path>
                   </svg>
                   <p>TimeKeeper</p>
                 </div>
                 <button onClick={signOut}>Выйти</button>
               </div>
               <div className={styles.aboutAccount}>
-                <img src={userData.photoURL} />
+                <img src={userData.photoURL || ''} alt="User" />
                 <div className={styles.aboutDataAccount}>
                   <p>{userData.displayName}</p>
                   <p>{userData.email}</p>
@@ -168,28 +169,20 @@ export const LoginForm = () => {
                 viewBox="0 0 186.69 190.5">
                 <g transform="translate(1184.583 765.171)">
                   <path
-                    clipPath="none"
-                    mask="none"
                     d="M-1089.333-687.239v36.888h51.262c-2.251 11.863-9.006 21.908-19.137 28.662l30.913 23.986c18.011-16.625 28.402-41.044 28.402-70.052 0-6.754-.606-13.249-1.732-19.483z"
                     fill="#4285f4"
                   />
                   <path
-                    clipPath="none"
-                    mask="none"
                     d="M-1142.714-651.791l-6.972 5.337-24.679 19.223h0c15.673 31.086 47.796 52.561 85.03 52.561 25.717 0 47.278-8.486 63.038-23.033l-30.913-23.986c-8.486 5.715-19.31 9.179-32.125 9.179-24.765 0-45.806-16.712-53.34-39.226z"
                     fill="#34a853"
                   />
                   <path
-                    clipPath="none"
-                    mask="none"
                     d="M-1174.365-712.61c-6.494 12.815-10.217 27.276-10.217 42.689s3.723 29.874 10.217 42.689c0 .086 31.693-24.592 31.693-24.592-1.905-5.715-3.031-11.776-3.031-18.098s1.126-12.383 3.031-18.098z"
                     fill="#fbbc05"
                   />
                   <path
                     d="M-1089.333-727.244c14.028 0 26.497 4.849 36.455 14.201l27.276-27.276c-16.539-15.413-38.013-24.852-63.731-24.852-37.234 0-69.359 21.388-85.032 52.561l31.692 24.592c7.533-22.514 28.575-39.226 53.34-39.226z"
                     fill="#ea4335"
-                    clipPath="none"
-                    mask="none"
                   />
                 </g>
               </svg>
