@@ -1,27 +1,41 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import '../../scss/swiper/swiper-bundle.css';
+import 'swiper/swiper-bundle.css';
 import { addDays, addMonths, eachDayOfInterval, format } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
+import classNames from 'classnames';
 import styles from './MobilePicker.module.scss';
 import './swiper.css';
-import classNames from 'classnames';
 
-const MobilePicker = ({ onChange, closeCalendar }: any) => {
+interface MobilePickerProps {
+  onChange: (date: Date) => void;
+  closeCalendar: () => Promise<void>;
+}
+
+const MINUTES_INTERVAL = 15;
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const INITIAL_MINUTES = [0, 15, 30, 45, 0, 15, 30, 45];
+
+const MobilePicker: React.FC<MobilePickerProps> = ({ onChange, closeCalendar }) => {
+  const now = new Date();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [currentHourIndex, setCurrentHourIndex] = useState(now.getHours());
+  const [currentMinuteIndex, setCurrentMinuteIndex] = useState(
+    INITIAL_MINUTES.indexOf(now.getMinutes() - (now.getMinutes() % MINUTES_INTERVAL)),
+  );
+
   const [dates, setDates] = useState(() => {
     const startDate = new Date();
     const endDate = addMonths(startDate, 3);
     return eachDayOfInterval({ start: startDate, end: endDate });
   });
-  const now = new Date();
-  const [currentHourIndex, setCurrentHourIndex] = useState(now.getHours());
-  const minutes = [0, 15, 30, 45, 0, 15, 30, 45];
-  const [currentMinuteIndex, setCurrentMinuteIndex] = useState(
-    minutes.indexOf(now.getMinutes() - (now.getMinutes() % 15)),
-  );
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const [returnDate, setReturnDate] = useState(new Date());
+
+  const formattedReturnDate = useMemo(() => {
+    const newDate = new Date(dates[currentSlideIndex]);
+    newDate.setHours(currentHourIndex);
+    newDate.setMinutes(INITIAL_MINUTES[currentMinuteIndex % 4]);
+    return newDate;
+  }, [currentSlideIndex, currentHourIndex, currentMinuteIndex, dates]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -36,20 +50,13 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
         start: addDays(dates[dates.length - 1], 1),
         end: addMonths(dates[dates.length - 1], 1),
       });
-      setDates(dates.concat(newDates));
+      setDates((prevDates) => [...prevDates, ...newDates]);
     }
   }, [currentSlideIndex, dates]);
 
   useEffect(() => {
-    const newDate = new Date(dates[currentSlideIndex]);
-    newDate.setHours(currentHourIndex);
-    newDate.setMinutes(minutes[currentMinuteIndex % 4]);
-    setReturnDate(newDate);
-  }, [currentSlideIndex, currentHourIndex, currentMinuteIndex]);
-
-  useEffect(() => {
-    onChange(returnDate);
-  }, [returnDate]);
+    onChange(formattedReturnDate);
+  }, [formattedReturnDate, onChange]);
 
   const handleButtonClickSave = async () => {
     await closeCalendar();
@@ -61,9 +68,9 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
         <button onClick={handleButtonClickSave}>Сохранить</button>
       </div>
       <div className={styles.pickerTitle}>
-        {format(dates[currentSlideIndex], 'dd/MM/yyyy', { locale: ruLocale })}{' '}
+        {format(dates[currentSlideIndex], 'dd/MM/yyyy', { locale: ruLocale })}
         {currentHourIndex.toString().padStart(2, '0')}:
-        {minutes[currentMinuteIndex].toString().padStart(2, '0')}
+        {INITIAL_MINUTES[currentMinuteIndex].toString().padStart(2, '0')}
       </div>
 
       <div className={styles.pickerWrapper}>
@@ -91,7 +98,7 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
             loop={true}
             onSlideChange={(swiper) => setCurrentHourIndex(swiper.realIndex)}
             className={styles.pickerSwiper}>
-            {hours.map((hour) => (
+            {HOURS.map((hour) => (
               <SwiperSlide key={hour}>{hour.toString().padStart(2, '0')}</SwiperSlide>
             ))}
           </Swiper>
@@ -105,7 +112,7 @@ const MobilePicker = ({ onChange, closeCalendar }: any) => {
             loop={true}
             onSlideChange={(swiper) => setCurrentMinuteIndex(swiper.realIndex)}
             className={styles.pickerSwiper}>
-            {minutes.map((minute, index) => (
+            {INITIAL_MINUTES.map((minute, index) => (
               <SwiperSlide key={`${minute}-${index}`}>
                 {minute.toString().padStart(2, '0')}
               </SwiperSlide>
