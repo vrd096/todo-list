@@ -9,7 +9,7 @@ import './swiper.css';
 
 interface MobilePickerProps {
   onChange: (date: Date) => void;
-  closeCalendar: () => Promise<void>;
+  closeCalendar: () => void;
 }
 
 const MINUTES_INTERVAL = 15;
